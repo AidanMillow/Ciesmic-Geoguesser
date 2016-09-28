@@ -2,6 +2,23 @@ import math, random
 from flask import Flask, redirect, session, url_for, escape, render_template, request, flash
 app = Flask(__name__)
 
+photolist = [{'PhotoNum':55233,'latitude':-43.5329,'longitude':172.639},
+			{'PhotoNum':64422,'latitude':-43.5396,'longitude':172.6373},
+			{'PhotoNum':81851,'latitude':-43.5321,'longitude':172.6374},
+			{'PhotoNum':135054, 'latitude':-43.5306, 'longitude':172.631},
+			{'PhotoNum':149953, 'latitude':-43.5312, 'longitude':172.6413},
+			{'PhotoNum':173308, 'latitude':-43.5316, 'longitude':172.6323},
+			{'PhotoNum':175357, 'latitude':-43.5322, 'longitude':172.6391},
+			{'PhotoNum':175561, 'latitude':-43.5312, 'longitude':172.6394},
+			{'PhotoNum':176751, 'latitude':-43.5322, 'longitude':172.6372}]
+
+selectionindex = []
+i=0
+for photo in photolist:
+	selectionindex.append(i)
+	i+=1
+
+
 @app.route('/geoguess')
 def init():
 	return redirect(url_for('guess_photo',PhotoNo = random_photo()))
@@ -13,42 +30,19 @@ def guess_photo(PhotoNo):
 @app.route('/geoguess/check/<int:PhotoNo>', methods =['POST', 'GET'])
 def check_guess(PhotoNo):
     if request.method == 'POST':
-		if PhotoNo == 55233:
-			latitude = -43.5329
-			longitude = 172.639
-		if PhotoNo == 64422:
-			latitude = -43.5396
-			longitude = 172.6373
-		if PhotoNo == 81851:
-			latitude = -43.5321
-			longitude = 172.6374
-		if PhotoNo == 135054:
-			latitude = -43.5306
-			longitude = 172.631
-		if PhotoNo == 149953:
-			latitude = -43.5312
-			longitude = 172.6413
-		if PhotoNo == 173308:
-			latitude = -43.5316
-			longitude = 172.6323
-		if PhotoNo == 175357:
-			latitude = -43.5322
-			longitude = 172.6391
-		if PhotoNo == 175561:
-			latitude = -43.5312
-			longitude = 172.6394
-		if PhotoNo == 176751:
-			latitude =-43.5322
-			longitude =172.6372
-		Guessdifference=math.sqrt(pow(110.574*(float(request.form['latitude'])-latitude),2)+pow(111.32*math.cos(math.radians(latitude))*(float(request.form['longitude'])-longitude),2))*1000
-		Printdifference='{0:.3f}'.format(Guessdifference)
-		return render_template('guess.html', photo = random_photo(), difference = Guessdifference, Printdiff = Printdifference)
+		for photo in photolist:
+			if PhotoNo == photo['PhotoNum']:
+				latitude = photo['latitude']
+				longitude = photo['longitude']
+		Guessdifference=math.sqrt(pow(110.574*(float(request.form['latitude'])-latitude),2)+pow(111.32*math.cos(math.radians(latitude))*(float(request.form['longitude'])-longitude),2))
+		Guessdifference=float("%.3f" % Guessdifference)
+		return render_template('guess.html', photo = random_photo(), difference = Guessdifference)
+    else:
+		return redirect(url_for('guess_photo',PhotoNo = random_photo()))
 def random_photo():
-	selection=[55233,64422,81851,135054,149953,173308,175357,175561,176751]
-	myChoice=random.choice(selection)
-	selection.remove(myChoice)
-	return myChoice
-	
+	myChoice=random.choice(selectionindex)
+	selectionindex.remove(myChoice)
+	return photolist[myChoice]['PhotoNum']
 
 if __name__ == '__main__':
 	app.run(debug=True)
