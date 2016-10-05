@@ -7,6 +7,8 @@ app.secret_key = "something-something-something-dark-side"
 app.sqlalchemy_database_uri = 'sqlite:///' + os.path.join(basedir, 'app.db') #path to database file, required by SQLAlchemy extention
 app.sqlalchemy_track_modifications = True
 db = SQLAlchemy(app)
+#API key=AIzaSyB6RMRQRaSaFs3eKtk3JxRn7vNtQX5MQ38
+
 totaldifference=0
 photolist = [{'PhotoNum':55233,'latitude':-43.5329,'longitude':172.639},
 			{'PhotoNum':64422,'latitude':-43.5396,'longitude':172.6373},
@@ -78,8 +80,7 @@ def check_guess(PhotoNo):
 		if selectionindex == []:
 			return redirect(url_for('finished_round'))
 		report(Guessdifference)
-		return render_template('guess.html', photo = random_photo())
-
+		return render_template('guess.html', photo = random_photo(), guess=0)
     else:
 		return redirect(url_for('guess_photo',PhotoNo = random_photo()))
 def random_photo():
