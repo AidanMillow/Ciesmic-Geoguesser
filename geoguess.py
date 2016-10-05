@@ -2,6 +2,7 @@ import math, random
 from flask import Flask, redirect, session, url_for, escape, render_template, request, flash
 app = Flask(__name__)
 app.secret_key = "something-something-something-dark-side"
+#API key=AIzaSyB6RMRQRaSaFs3eKtk3JxRn7vNtQX5MQ38
 
 totaldifference=0
 photolist = [{'PhotoNum':55233,'latitude':-43.5329,'longitude':172.639},
@@ -43,8 +44,7 @@ def check_guess(PhotoNo):
 		if selectionindex == []:
 			return redirect(url_for('finished_round'))
 		report(Guessdifference)
-		return render_template('guess.html', photo = random_photo())
-
+		return render_template('guess.html', photo = random_photo(), guess=0)
     else:
 		return redirect(url_for('guess_photo',PhotoNo = random_photo()))
 def random_photo():
