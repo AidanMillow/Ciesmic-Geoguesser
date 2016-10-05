@@ -1,6 +1,7 @@
 import math, random
 from flask import Flask, redirect, session, url_for, escape, render_template, request, flash
 app = Flask(__name__)
+app.secret_key = "something-something-something-dark-side"
 
 totaldifference=0
 photolist = [{'PhotoNum':55233,'latitude':-43.5329,'longitude':172.639},
@@ -41,7 +42,9 @@ def check_guess(PhotoNo):
 		Guessdifference=float("%.3f" % Guessdifference)
 		if selectionindex == []:
 			return redirect(url_for('finished_round'))
-		return render_template('guess.html', photo = random_photo(), difference = Guessdifference)
+		report(Guessdifference)
+		return render_template('guess.html', photo = random_photo())
+
     else:
 		return redirect(url_for('guess_photo',PhotoNo = random_photo()))
 def random_photo():
@@ -49,11 +52,26 @@ def random_photo():
 	selectionindex.remove(myChoice)
 	return photolist[myChoice]['PhotoNum']
 	
+
 @app.route('/geoguess/finish')
 def finished_round():
 	global totaldifference
 	totaldifference=float("%.3f" % totaldifference)
-	return render_template('finish.html', difference=totaldifference)
+	return render_template('finish.html', difference=totaldifference)	
+
+def report(diff):
+	message = "Your last guess was "+str(diff)+" m away from the actual location"
+	flash(message)
+	if diff >= 10000.1:
+		message = "Pretty sure that's not even in the country (-_-;)"
+	elif diff >= 1000.1:
+		message = "A bit far out, try again ('.')"
+	elif diff >= 100.1:
+		message = "Getting there, but try and get a bit closer ('u')"
+	else:
+		message = "That's really close, good job! \\(^o^)/"
+	flash(message)
+
 
 if __name__ == '__main__':
 	app.run(debug=True)
