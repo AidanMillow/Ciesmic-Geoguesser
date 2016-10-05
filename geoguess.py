@@ -1,8 +1,12 @@
-import math, random
+import math, random, os
 from flask import Flask, redirect, session, url_for, escape, render_template, request, flash
+from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
+basedir = os.path.abspath(os.path.dirname(__file__))
 app.secret_key = "something-something-something-dark-side"
-
+app.sqlalchemy_database_uri = 'sqlite:///' + os.path.join(basedir, 'app.db') #path to database file, required by SQLAlchemy extention
+app.sqlalchemy_track_modifications = True
+db = SQLAlchemy(app)
 totaldifference=0
 photolist = [{'PhotoNum':55233,'latitude':-43.5329,'longitude':172.639},
 			{'PhotoNum':64422,'latitude':-43.5396,'longitude':172.6373},
@@ -20,7 +24,38 @@ for photo in photolist:
 	selectionindex.append(i)
 	i+=1
 
+class User(db.Model):
+	id = db.Column(db.Integer, primary_key = True)
+	username = db.Column(db.String(80), unique = True)
+	password = db.Column(db.String(20))
+	
+	def __init__(self, username, password):
+		self.username = username
+		self.password = password
+		
+	def __repr__(self):
+		return '<User %r>' % self.username
+		
+class Score(db.Model):
+	id = db.Column(db.Integer, primary_key = True)
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	user = db.relationship('User', backref=db.backref('scores', lazy='dynamic'))
+	score = db.Column(db.Float)
+	
+	def __init__(self, user_id, score):
+		self.user_id = user_id
+		self.score = score
+	
+	def __repr__(self):
+		return '<Score %r>' % self.score
 
+db.create_all()
+brad = User('Brad', 'something')
+aidan = User('Aidan', 'something')
+db.session.add(brad)
+db.session.add(aidan)
+db.session.commit()
+	
 @app.route('/geoguess')
 def init():
 	return redirect(url_for('guess_photo',PhotoNo = random_photo()))
@@ -63,7 +98,7 @@ def report(diff):
 	message = "Your last guess was "+str(diff)+" m away from the actual location"
 	flash(message)
 	if diff >= 10000.1:
-		message = "Pretty sure that's not even in the country (-_-;)"
+		message = "Woah! That is really far away! (-_-;)"
 	elif diff >= 1000.1:
 		message = "A bit far out, try again ('.')"
 	elif diff >= 100.1:
