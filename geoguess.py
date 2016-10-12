@@ -111,7 +111,7 @@ def login():
 
 @app.route('/geoguess/guess/<int:PhotoNo>')
 def guess_photo(PhotoNo):
-	return render_template('guess.html', photo = PhotoNo, difference=-1)
+    return render_template('guess.html', photo = PhotoNo, difference=-1)
 
 @app.route('/geoguess/check/<int:PhotoNo>', methods =['POST', 'GET'])
 def check_guess(PhotoNo):
@@ -171,6 +171,10 @@ def report(diff):
 	else:
 		message = "That's really close, good job!"
 	flash(message)
+	
+@app.route('/geoguess/feedback')
+def get_feedback():
+	return render_template('feedback.html')
 
 
 if __name__ == '__main__':
