@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+   <body>
+	{% with messages = get_flashed_messages() %}
+		{% if messages %}
+			{% for message in messages %}
+				<h1>{{ message }}</h1>
+			{% endfor %}
+		{% endif %}
+	{% endwith %}
+	<h2>Welcome to Ciesmic's Geoguesser, sign in to start</h2>
+      <form action = "http://localhost:5000/geoguess/login" method = 'POST' 
+         enctype = "multipart/form-data">
+		 <label for="latitude">username:</label>
+         <input type = "text" name = "username" /><br>
+		 <label for="longitude">password:</label>
+		 <input type = "password" name = "password" /><br>
+		 <input type = "radio" name = "type" value = "signin" checked> Sign in<br>
+		 <input type = "radio" name = "type" value = "register"> Register<br>
+         <input type = "submit"/>
+      </form>
+
+   </body>
+</html>

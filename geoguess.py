@@ -72,10 +72,42 @@ db.session.add(aidan)
 db.session.add(testuser)
 db.session.commit()
 CurrentUser = User.query.get(3)
+
+def directrender(*args):
+	if CurrentUser == None:
+		return redirect(url_for('login'))
+	else:
+		return render_template(args)
 	
 @app.route('/geoguess')
 def init():
+	for thing in User.query.filter_by(username='Test'):
+		flash(thing.username)
 	return redirect(url_for('guess_photo',PhotoNo = random_photo()))
+	
+@app.route('/geoguess/login', methods = ['POST', 'GET'])
+def login():
+	if request.method == 'POST':
+		if request.form['type'] == 'register':
+			exist = None
+			for row in User.query.filter_by(username=str(request.form['username'])):
+				exist = row
+			if exist == None:
+				newuser = User(str(request.form['username']),str(request.form['password']))
+				db.session.add(newuser)
+				db.session.commit()
+				for row in User.query.filter_by(username=str(request.form['username'])):
+					exist = row
+				if exist != None:
+					CurrentUser = exist
+					return redirect(url_for('init'))
+				else:
+					flash("There was an error during registration")
+			else:
+				flash("A user with that name already exists")
+		elif request.form['type'] == 'signin':
+			flash("This function will be added later")
+	return render_template('login.html')
 
 @app.route('/geoguess/guess/<int:PhotoNo>')
 def guess_photo(PhotoNo):
@@ -120,7 +152,7 @@ def finished_round():
 	db.session.add(sessionscore)
 	db.session.commit()
 	scoretable = []
-	for item in Score.query.all():
+	for item in Score.query.order_by(Score.score.asc()):
 		scoretable.append({'user':item.user.username,'score':item.score})
 	buildselect()
 	return render_template('finish.html', difference=showdifference, table = HighScores(scoretable))
@@ -133,11 +165,11 @@ def report(diff):
 	elif diff >= 5000.1:
 		message = "That's a long way off"
 	elif diff >= 1000.1:
-		message = "Getting there, but try and get a bit closer ('u')"
+		message = "Getting there, try and get a bit closer"
 	elif diff >= 100.1:
 		message = "You're in the right area, but you can still do better"
 	else:
-		message = "That's really close, good job! \\(^o^)/"
+		message = "That's really close, good job!"
 	flash(message)
 
 
