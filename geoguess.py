@@ -22,9 +22,12 @@ photolist = [{'PhotoNum':55233,'latitude':-43.5329,'longitude':172.639},
 
 selectionindex = []
 i=0
-for photo in photolist:
-	selectionindex.append(i)
-	i+=1
+reset_selections();
+
+def reset_selections():
+	for photo in photolist:
+		selectionindex.append(i)
+		i+=1
 
 class User(db.Model):
 	id = db.Column(db.Integer, primary_key = True)
@@ -64,7 +67,7 @@ def init():
 
 @app.route('/geoguess/guess/<int:PhotoNo>')
 def guess_photo(PhotoNo):
-    return render_template('guess.html', photo = PhotoNo, difference=-1, lat=0)
+    return render_template('guess.html', photo = PhotoNo, difference=-1)
 
 @app.route('/geoguess/check/<int:PhotoNo>', methods =['POST', 'GET'])
 def check_guess(PhotoNo):
@@ -100,6 +103,7 @@ def confirm_values(PhotoNo):
 def finished_round():
 	global totaldifference
 	totaldifference=float("%.3f" % totaldifference)
+	reset_selections()
 	return render_template('finish.html', difference=totaldifference)	
 
 def report(diff):
