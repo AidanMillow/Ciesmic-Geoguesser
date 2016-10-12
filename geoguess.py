@@ -1,6 +1,7 @@
 import math, random, os
 from flask import Flask, redirect, session, url_for, escape, render_template, request, flash
 from flask_sqlalchemy import SQLAlchemy
+from flask_table import Table, Col
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.secret_key = "something-something-something-dark-side"
@@ -9,7 +10,8 @@ app.sqlalchemy_track_modifications = True
 db = SQLAlchemy(app)
 #API key=AIzaSyB6RMRQRaSaFs3eKtk3JxRn7vNtQX5MQ38
 
-totaldifference=0
+totaldifference = 0
+selectionindex = []
 photolist = [{'PhotoNum':55233,'latitude':-43.5329,'longitude':172.639},
 			{'PhotoNum':64422,'latitude':-43.5396,'longitude':172.6373},
 			{'PhotoNum':81851,'latitude':-43.5321,'longitude':172.6374},
@@ -20,14 +22,17 @@ photolist = [{'PhotoNum':55233,'latitude':-43.5329,'longitude':172.639},
 			{'PhotoNum':175561, 'latitude':-43.5312, 'longitude':172.6394},
 			{'PhotoNum':176751, 'latitude':-43.5322, 'longitude':172.6372}]
 
-selectionindex = []
-i=0
-reset_selections();
-
-def reset_selections():
+def buildselect():
+	global selectionindex
+	global totaldifference
+	totaldifference=0
+	selectionindex = []
+	i=0
 	for photo in photolist:
 		selectionindex.append(i)
 		i+=1
+			
+buildselect()
 
 class User(db.Model):
 	id = db.Column(db.Integer, primary_key = True)
@@ -54,12 +59,19 @@ class Score(db.Model):
 	def __repr__(self):
 		return '<Score %r>' % self.score
 
+class HighScores(Table):
+	user = Col('User')
+	score = Col('Score')
+		
 db.create_all()
 brad = User('Brad', 'something')
 aidan = User('Aidan', 'something')
+testuser = User('Test', 'something')
 db.session.add(brad)
 db.session.add(aidan)
+db.session.add(testuser)
 db.session.commit()
+CurrentUser = User.query.get(3)
 	
 @app.route('/geoguess')
 def init():
@@ -103,8 +115,15 @@ def confirm_values(PhotoNo):
 def finished_round():
 	global totaldifference
 	totaldifference=float("%.3f" % totaldifference)
-	reset_selections()
-	return render_template('finish.html', difference=totaldifference)	
+	showdifference = totaldifference
+	sessionscore = Score(CurrentUser.id, totaldifference)
+	db.session.add(sessionscore)
+	db.session.commit()
+	scoretable = []
+	for item in Score.query.all():
+		scoretable.append({'user':item.user.username,'score':item.score})
+	buildselect()
+	return render_template('finish.html', difference=showdifference, table = HighScores(scoretable))
 
 def report(diff):
 	message = "Your last guess was "+str(diff)+" m away from the actual location"
@@ -120,6 +139,10 @@ def report(diff):
 	else:
 		message = "That's really close, good job! \\(^o^)/"
 	flash(message)
+	
+@app.route('/geoguess/feedback')
+def get_feedback():
+	return render_template('feedback.html')
 
 
 if __name__ == '__main__':
