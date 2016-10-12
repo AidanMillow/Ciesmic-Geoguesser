@@ -95,13 +95,20 @@ def check_guess(PhotoNo):
 		if selectionindex == []:
 			return redirect(url_for('finished_round'))
 		report(Guessdifference)
-		return render_template('guess.html', photo = random_photo(), guess=0)
+		return render_template('guess.html', photo = random_photo())
     else:
 		return redirect(url_for('guess_photo',PhotoNo = random_photo()))
 def random_photo():
 	myChoice=random.choice(selectionindex)
 	selectionindex.remove(myChoice)
 	return photolist[myChoice]['PhotoNum']
+	
+@app.route('/geoguess/set_values/<int:PhotoNo>', methods =['POST', 'GET'])
+def confirm_values(PhotoNo):
+	if request.method == 'POST':
+		latitude=request.form['latitude']
+		longitude=request.form['longitude']
+		return render_template('confirm.html', photo=PhotoNo, lat=latitude, long=longitude)
 	
 
 @app.route('/geoguess/finish')
@@ -121,12 +128,14 @@ def finished_round():
 def report(diff):
 	message = "Your last guess was "+str(diff)+" m away from the actual location"
 	flash(message)
-	if diff >= 10000.1:
-		message = "Woah! That is really far away! (-_-;)"
+	if diff >= 37000.1:
+		message = "Was that even in christchurch?"
+	elif diff >= 5000.1:
+		message = "That's a long way off"
 	elif diff >= 1000.1:
-		message = "A bit far out, try again ('.')"
-	elif diff >= 100.1:
 		message = "Getting there, but try and get a bit closer ('u')"
+	elif diff >= 100.1:
+		message = "You're in the right area, but you can still do better"
 	else:
 		message = "That's really close, good job! \\(^o^)/"
 	flash(message)
