@@ -10,8 +10,8 @@ app.sqlalchemy_track_modifications = True
 db = SQLAlchemy(app)
 #API key=AIzaSyB6RMRQRaSaFs3eKtk3JxRn7vNtQX5MQ38
 
-totaldifference = 0
-selectionindex = []
+totaldifference = 0 #used to calculate the user's total score
+selectionindex = [] #array for building a random order for photos to be guessed with
 photolist = [{'PhotoNum':55233,'latitude':-43.5329,'longitude':172.639},
 			{'PhotoNum':64422,'latitude':-43.5396,'longitude':172.6373},
 			{'PhotoNum':81851,'latitude':-43.5321,'longitude':172.6374},
@@ -23,6 +23,7 @@ photolist = [{'PhotoNum':55233,'latitude':-43.5329,'longitude':172.639},
 			{'PhotoNum':176751, 'latitude':-43.5322, 'longitude':172.6372}]
 
 def buildselect():
+	#This function adds a number for each photo in the photolist dictionary
 	global selectionindex
 	global totaldifference
 	totaldifference=0
@@ -34,11 +35,15 @@ def buildselect():
 			
 buildselect()
 
+''' The following classes are tables in the database, used for its construction and querying. '''
+
 class User(db.Model):
+	#Represents the list of users in the database. Users have an ID, username, and password
 	id = db.Column(db.Integer, primary_key = True)
 	username = db.Column(db.String(80), unique = True)
 	password = db.Column(db.String(20))
 	
+	#IDs are generated automatically. When a user is declared, only the username and password needs to be set
 	def __init__(self, username, password):
 		self.username = username
 		self.password = password
@@ -47,6 +52,7 @@ class User(db.Model):
 		return '<User %r>' % self.username
 		
 class Score(db.Model):
+	#Represents the high scores list in the database. Scores have a many to one relationship with Users
 	id = db.Column(db.Integer, primary_key = True)
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 	user = db.relationship('User', backref=db.backref('scores', lazy='dynamic'))
@@ -59,10 +65,14 @@ class Score(db.Model):
 	def __repr__(self):
 		return '<Score %r>' % self.score
 
+		
 class HighScores(Table):
+	#This class represents the HTML table that will be built on the final page of the application
 	user = Col('User')
 	score = Col('Score')
 		
+''' The following code builds the database and adds test users to it. The test users may be removed once the application is complete '''		
+
 db.create_all()
 brad = User('Brad', 'something')
 aidan = User('Aidan', 'something')
@@ -71,66 +81,104 @@ db.session.add(brad)
 db.session.add(aidan)
 db.session.add(testuser)
 db.session.commit()
-CurrentUser = User.query.get(3)
+CurrentUser = None #This is the variable that tracks which user is currently logged in
 
 def directrender(*args):
-	if CurrentUser == None:
-		return redirect(url_for('login'))
+	#This method is meant to replace render_template methods to check if a user is signed in, but it doesn't work yet
+	global CurrentUser
+	if CurrentUser != None:
+		for row in User.query.filter_by(username=str(CurrentUser.username)):
+			exist = row
+		if exist != None:
+			return render_template(args)
 	else:
-		return render_template(args)
+		flash("No user is currently signed in")
+		return redirect(url_for('login'))
 	
 @app.route('/geoguess')
 def init():
-	for thing in User.query.filter_by(username='Test'):
-		flash(thing.username)
+	#The default url on startup
 	return redirect(url_for('guess_photo',PhotoNo = random_photo()))
 	
 @app.route('/geoguess/login', methods = ['POST', 'GET'])
 def login():
+	#The login page for the application
+	global CurrentUser
 	if request.method == 'POST':
+		exist = None
 		if request.form['type'] == 'register':
-			exist = None
+			#This is what transpires if the user chooses to create a new account
 			for row in User.query.filter_by(username=str(request.form['username'])):
 				exist = row
 			if exist == None:
+				#A new user is only added when the username does not already exist
 				newuser = User(str(request.form['username']),str(request.form['password']))
 				db.session.add(newuser)
 				db.session.commit()
 				for row in User.query.filter_by(username=str(request.form['username'])):
+					#This query is just to catch potential database failures
 					exist = row
 				if exist != None:
 					CurrentUser = exist
-					return redirect(url_for('init'))
+					flash("Welcome "+ CurrentUser.username +", let us begin")
 				else:
 					flash("There was an error during registration")
 			else:
 				flash("A user with that name already exists")
 		elif request.form['type'] == 'signin':
-			flash("This function will be added later")
+			#This is what transpires when the user chooses to get back on an existing account
+			for row in User.query.filter_by(username=str(request.form['username']), password=str(request.form['password'])):
+				exist = row
+			if exist != None:
+				#The query checks for username and password, they must both be correct to gain access
+				CurrentUser = exist
+				flash("Welcome back "+ CurrentUser.username +", let us begin")
+			else:
+				flash("Your username or password was incorrect")
+	exist = None
+	#Once the CurrentUser has been set (or not), the page will be rendered depending on its validity
+	if CurrentUser != None:
+		#If the user is not set, the login page displays as normal
+		for row in User.query.filter_by(username=str(CurrentUser.username)):
+			exist = row
+		if exist != None:
+			if request.method == 'GET':
+				#If the CurrentUser is set and the user manually reopens the login page, they will be notified as such
+				flash("You are already signed in")
+			return redirect(url_for('init'))
 	return render_template('login.html')
 
 @app.route('/geoguess/guess/<int:PhotoNo>')
 def guess_photo(PhotoNo):
+	#The page used to view and guess any of the photos in the photolist
     return render_template('guess.html', photo = PhotoNo, difference=-1)
 
 @app.route('/geoguess/check/<int:PhotoNo>', methods =['POST', 'GET'])
 def check_guess(PhotoNo):
+	#The page used to calculate the user's score
     if request.method == 'POST':
 		global totaldifference
 		for photo in photolist:
+			#finds the photo the user was guessing, then removes it from the selectionindex
 			if PhotoNo == photo['PhotoNum']:
 				latitude = photo['latitude']
 				longitude = photo['longitude']
+				#photoindex = photolist.index(photo)
+				#selectionindex.remove(selectionindex.index())  Tried this but it produced an error, was going to make a check but didn't have time to find out what to check for
+		#calculates the distance between the user's guess and the actual location, then adds it to the total
 		Guessdifference=math.sqrt(pow(110.574*(float(request.form['latitude'])-latitude),2)+pow(111.32*math.cos(math.radians(latitude))*(float(request.form['longitude'])-longitude),2))*1000
 		totaldifference += Guessdifference
 		Guessdifference=float("%.3f" % Guessdifference)
 		if selectionindex == []:
+			#selectionindex will be empty once the user has guessed all photos. The user will then be redirected
 			return redirect(url_for('finished_round'))
 		report(Guessdifference)
 		return render_template('guess.html', photo = random_photo())
     else:
 		return redirect(url_for('guess_photo',PhotoNo = random_photo()))
 def random_photo():
+	#picks a random photo from the list, then removes it from the selectionindex
+	''' This needs to be fixed! Loading the page without submitting an answer will remove the photo from the index anyway! '''
 	myChoice=random.choice(selectionindex)
 	selectionindex.remove(myChoice)
 	return photolist[myChoice]['PhotoNum']
@@ -145,12 +193,15 @@ def confirm_values(PhotoNo):
 
 @app.route('/geoguess/finish')
 def finished_round():
+	#The end screen for the app when a user has guessed through all photos
 	global totaldifference
-	totaldifference=float("%.3f" % totaldifference)
-	showdifference = totaldifference
+	totaldifference=float("%.3f" % totaldifference) #rounds the difference to 3 decimal places
+	showdifference = totaldifference #saves the difference to show so that it can safely be reset
+	#the score is then saved to the database
 	sessionscore = Score(CurrentUser.id, totaldifference)
 	db.session.add(sessionscore)
 	db.session.commit()
+	#Then we build and show the high score table and rebuild the selectindex
 	scoretable = []
 	for item in Score.query.order_by(Score.score.asc()):
 		scoretable.append({'user':item.user.username,'score':item.score})
@@ -158,6 +209,7 @@ def finished_round():
 	return render_template('finish.html', difference=showdifference, table = HighScores(scoretable))
 
 def report(diff):
+	#This function flashes a message for the user depending on how close they got
 	message = "Your last guess was "+str(diff)+" m away from the actual location"
 	flash(message)
 	if diff >= 37000.1:
