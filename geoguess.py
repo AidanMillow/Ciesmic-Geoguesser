@@ -161,28 +161,29 @@ def check_guess(PhotoNo):
 		for photo in photolist:
 			#finds the photo the user was guessing, then removes it from the selectionindex
 			if PhotoNo == photo['PhotoNum']:
-				latitude = photo['latitude']
-				longitude = photo['longitude']
-				#photoindex = photolist.index(photo)
-				#selectionindex.remove(selectionindex.index())  Tried this but it produced an error, was going to make a check but didn't have time to find out what to check for
-		#calculates the distance between the user's guess and the actual location, then adds it to the total
+				latitude=photo['latitude']
+				longitude=photo['longitude']
+				Photo={'latitude': photo['latitude'], 'longitude': photo['longitude']}
 		Guessdifference=math.sqrt(pow(110.574*(float(request.form['latitude'])-latitude),2)+pow(111.32*math.cos(math.radians(latitude))*(float(request.form['longitude'])-longitude),2))*1000
 		totaldifference += Guessdifference
 		Guessdifference=float("%.3f" % Guessdifference)
+		Photo=str(latitude)+','+str(longitude)
+		Guess=str(request.form['latitude'])+','+str(request.form['longitude'])
 		if selectionindex == []:
 			#selectionindex will be empty once the user has guessed all photos. The user will then be redirected
 			return redirect(url_for('finished_round'))
 		report(Guessdifference)
-		return render_template('guess.html', photo = random_photo())
+		return redirect(url_for('get_feedback', myPhoto=Photo, myGuess=Guess))
     else:
-		return redirect(url_for('guess_photo',PhotoNo = random_photo()))
+		return redirect(url_for('next_photo'))
 def random_photo():
 	#picks a random photo from the list, then removes it from the selectionindex
 	''' This needs to be fixed! Loading the page without submitting an answer will remove the photo from the index anyway! '''
 	myChoice=random.choice(selectionindex)
 	selectionindex.remove(myChoice)
 	return photolist[myChoice]['PhotoNum']
-	
+
+
 @app.route('/geoguess/set_values/<int:PhotoNo>', methods =['POST', 'GET'])
 def confirm_values(PhotoNo):
 	if request.method == 'POST':
@@ -224,9 +225,24 @@ def report(diff):
 		message = "That's really close, good job!"
 	flash(message)
 	
-@app.route('/geoguess/feedback')
-def get_feedback():
-	return render_template('feedback.html')
+@app.route('/geoguess/feedback/<myPhoto>/<myGuess>')
+def get_feedback(myPhoto, myGuess):
+	Guess=myGuess.split(",")
+	guesslat=(Guess[0])
+	guesslong=(Guess[1])
+	Actual=myPhoto.split(",")
+	actuallat=(Actual[0])
+	actuallong=(Actual[1])
+	return render_template('feedback.html', actlat=actuallat, actlong=actuallong, glat=guesslat, glong=guesslong)
+
+@app.route('/geoguess/next_photo', methods =['POST', 'GET'])
+def next_photo():
+	return redirect(url_for('guess_photo',PhotoNo = random_photo()))
+	
+def random_photo():
+	myChoice=random.choice(selectionindex)
+	selectionindex.remove(myChoice)
+	return photolist[myChoice]['PhotoNum']
 
 
 if __name__ == '__main__':
