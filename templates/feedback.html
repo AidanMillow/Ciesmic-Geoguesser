@@ -12,10 +12,14 @@
 		{% endif %}
 	{% endwith %}
 	<div id="map" style="width: 500px; height: 400px;"></div>
-	<script type="text/javascript">
-	var map = new google.maps.Map(document.getElementById('map'), {zoom: 10, center: new google.maps.LatLng(-43.5321,172.6362), mapTypeId: google.maps.MapTypeId.ROADMAP});
-	var GuessMarker = new google.maps.Marker({position: new google.maps.LatLng(-43.5321,172.6362), map: map});
-	var LocationMarker = new google.maps.Marker({position: new google.maps.LatLng(-43.5321,172.6362), map: map});
+	<script type="text/javascript">	
+	var map = new google.maps.Map(document.getElementById('map'), {zoom: 12, center: new google.maps.LatLng(-43.5321,172.6362), mapTypeId: google.maps.MapTypeId.ROADMAP});
+	var GuessMarker = new google.maps.Marker({position: new google.maps.LatLng(parseFloat({{glat}}), parseFloat({{glong}})), map: map, Label: '?'});
+	var LocationMarker = new google.maps.Marker({position: new google.maps.LatLng(parseFloat({{actlat}}), parseFloat({{actlong}})), map: map, Label: '!'});
 	</script>
+	<form action = "http://localhost:5000/geoguess/next_photo" method = 'POST' 
+    enctype = "multipart/form-data">
+		<input type = "submit" value="Next Photo"/>
+	</form>
    </body>
 </html>
