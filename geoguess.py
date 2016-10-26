@@ -6,7 +6,7 @@ app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.secret_key = "something-something-something-dark-side"
 app.sqlalchemy_database_uri = 'sqlite:///' + os.path.join(basedir, 'app.db') #path to database file, required by SQLAlchemy extention
-app.sqlalchemy_track_modifications = True
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 #API key=AIzaSyB6RMRQRaSaFs3eKtk3JxRn7vNtQX5MQ38
 
@@ -15,12 +15,12 @@ selectionindex = [] #array for building a random order for photos to be guessed 
 photolist = [{'PhotoNum':55233,'latitude':-43.5329,'longitude':172.639},
 			{'PhotoNum':64422,'latitude':-43.5396,'longitude':172.6373},
 			{'PhotoNum':81851,'latitude':-43.5321,'longitude':172.6374},
+			{'PhotoNum':95497,'latitude':-43.5366,'longitude':172.6446},			
 			{'PhotoNum':135054, 'latitude':-43.5306, 'longitude':172.631},
-			{'PhotoNum':149953, 'latitude':-43.5312, 'longitude':172.6413},
+			{'PhotoNum':163358,'latitude':-43.5323,'longitude':172.6398},
+			{'PhotoNum':172289,'latitude':-43.5383,'longitude':172.6465},
 			{'PhotoNum':173308, 'latitude':-43.5316, 'longitude':172.6323},
-			{'PhotoNum':175357, 'latitude':-43.5322, 'longitude':172.6391},
-			{'PhotoNum':175561, 'latitude':-43.5312, 'longitude':172.6394},
-			{'PhotoNum':176751, 'latitude':-43.5322, 'longitude':172.6372}]
+			{'PhotoNum':283179, 'latitude':-43.5361, 'longitude':172.6365}]
 
 def buildselect():
 	#This function adds a number for each photo in the photolist dictionary
@@ -163,24 +163,18 @@ def check_guess(PhotoNo):
 			if PhotoNo == photo['PhotoNum']:
 				latitude=photo['latitude']
 				longitude=photo['longitude']
-				Photo={'latitude': photo['latitude'], 'longitude': photo['longitude']}
+				Photo=photolist.index(photo)
 		Guessdifference=math.sqrt(pow(110.574*(float(request.form['latitude'])-latitude),2)+pow(111.32*math.cos(math.radians(latitude))*(float(request.form['longitude'])-longitude),2))*1000
 		totaldifference += Guessdifference
 		Guessdifference=float("%.3f" % Guessdifference)
-		Photo=str(latitude)+','+str(longitude)
 		Guess=str(request.form['latitude'])+','+str(request.form['longitude'])
-		if selectionindex == []:
-			#selectionindex will be empty once the user has guessed all photos. The user will then be redirected
-			return redirect(url_for('finished_round'))
 		report(Guessdifference)
 		return redirect(url_for('get_feedback', myPhoto=Photo, myGuess=Guess))
     else:
 		return redirect(url_for('next_photo'))
 def random_photo():
 	#picks a random photo from the list, then removes it from the selectionindex
-	''' This needs to be fixed! Loading the page without submitting an answer will remove the photo from the index anyway! '''
 	myChoice=random.choice(selectionindex)
-	selectionindex.remove(myChoice)
 	return photolist[myChoice]['PhotoNum']
 
 
@@ -215,9 +209,9 @@ def report(diff):
 	flash(message)
 	if diff >= 37000.1:
 		message = "Was that even in christchurch?"
-	elif diff >= 5000.1:
+	elif diff >= 2500.1:
 		message = "That's a long way off"
-	elif diff >= 1000.1:
+	elif diff >= 500.1:
 		message = "Getting there, try and get a bit closer"
 	elif diff >= 100.1:
 		message = "You're in the right area, but you can still do better"
@@ -227,22 +221,24 @@ def report(diff):
 	
 @app.route('/geoguess/feedback/<myPhoto>/<myGuess>')
 def get_feedback(myPhoto, myGuess):
+	#Gathers values for latitude and longitude of the guess and the actual location and feeds them to an html page to place markers on a map.
 	Guess=myGuess.split(",")
 	guesslat=(Guess[0])
 	guesslong=(Guess[1])
-	Actual=myPhoto.split(",")
-	actuallat=(Actual[0])
-	actuallong=(Actual[1])
+	myPhoto=int(myPhoto)
+	selectionindex.remove(myPhoto)
+	Actual=photolist[myPhoto]
+	actuallat=Actual['latitude']
+	actuallong=Actual['longitude']
 	return render_template('feedback.html', actlat=actuallat, actlong=actuallong, glat=guesslat, glong=guesslong)
 
 @app.route('/geoguess/next_photo', methods =['POST', 'GET'])
 def next_photo():
-	return redirect(url_for('guess_photo',PhotoNo = random_photo()))
-	
-def random_photo():
-	myChoice=random.choice(selectionindex)
-	selectionindex.remove(myChoice)
-	return photolist[myChoice]['PhotoNum']
+	if selectionindex == []:
+		#selectionindex will be empty once the user has guessed all photos. The user will then be redirected
+		return redirect(url_for('finished_round'))
+	else:
+		return redirect(url_for('guess_photo',PhotoNo = random_photo()))
 
 
 if __name__ == '__main__':
