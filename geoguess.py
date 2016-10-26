@@ -83,14 +83,14 @@ db.session.add(testuser)
 db.session.commit()
 CurrentUser = None #This is the variable that tracks which user is currently logged in
 
-def directrender(*args):
+def directrender(url, **kwargs):
 	#This method is meant to replace render_template methods to check if a user is signed in, but it doesn't work yet
 	global CurrentUser
 	if CurrentUser != None:
 		for row in User.query.filter_by(username=str(CurrentUser.username)):
 			exist = row
 		if exist != None:
-			return render_template(args)
+			return render_template(url, **kwargs)
 	else:
 		flash("No user is currently signed in")
 		return redirect(url_for('login'))
@@ -98,7 +98,7 @@ def directrender(*args):
 @app.route('/geoguess')
 def init():
 	#The default url on startup
-	return redirect(url_for('guess_photo',PhotoNo = random_photo()))
+	return redirect(url_for('login',PhotoNo = random_photo()))
 	
 @app.route('/geoguess/login', methods = ['POST', 'GET'])
 def login():
@@ -120,6 +120,7 @@ def login():
 					exist = row
 				if exist != None:
 					CurrentUser = exist
+					buildselect()
 					flash("Welcome "+ CurrentUser.username +", let us begin")
 				else:
 					flash("There was an error during registration")
@@ -132,6 +133,7 @@ def login():
 			if exist != None:
 				#The query checks for username and password, they must both be correct to gain access
 				CurrentUser = exist
+				buildselect()
 				flash("Welcome back "+ CurrentUser.username +", let us begin")
 			else:
 				flash("Your username or password was incorrect")
@@ -145,13 +147,13 @@ def login():
 			if request.method == 'GET':
 				#If the CurrentUser is set and the user manually reopens the login page, they will be notified as such
 				flash("You are already signed in")
-			return redirect(url_for('init'))
+			return redirect(url_for('guess_photo', PhotoNo = random_photo()))
 	return render_template('login.html')
 
 @app.route('/geoguess/guess/<int:PhotoNo>')
 def guess_photo(PhotoNo):
 	#The page used to view and guess any of the photos in the photolist
-    return render_template('guess.html', photo = PhotoNo, difference=-1)
+    return directrender('guess.html', photo = PhotoNo, difference=-1)
 
 @app.route('/geoguess/check/<int:PhotoNo>', methods =['POST', 'GET'])
 def check_guess(PhotoNo):
@@ -189,7 +191,7 @@ def confirm_values(PhotoNo):
 	if request.method == 'POST':
 		latitude=request.form['latitude']
 		longitude=request.form['longitude']
-		return render_template('confirm.html', photo=PhotoNo, lat=latitude, long=longitude)
+		return directrender('confirm.html', photo=PhotoNo, lat=latitude, long=longitude)
 	
 
 @app.route('/geoguess/finish')
@@ -199,15 +201,16 @@ def finished_round():
 	totaldifference=float("%.3f" % totaldifference) #rounds the difference to 3 decimal places
 	showdifference = totaldifference #saves the difference to show so that it can safely be reset
 	#the score is then saved to the database
-	sessionscore = Score(CurrentUser.id, totaldifference)
-	db.session.add(sessionscore)
-	db.session.commit()
+	if CurrentUser != None:
+		sessionscore = Score(CurrentUser.id, totaldifference)
+		db.session.add(sessionscore)
+		db.session.commit()
 	#Then we build and show the high score table and rebuild the selectindex
 	scoretable = []
 	for item in Score.query.order_by(Score.score.asc()):
 		scoretable.append({'user':item.user.username,'score':item.score})
 	buildselect()
-	return render_template('finish.html', difference=showdifference, table = HighScores(scoretable))
+	return directrender('finish.html', difference=showdifference, table = HighScores(scoretable))
 
 def report(diff):
 	#This function flashes a message for the user depending on how close they got
@@ -233,10 +236,11 @@ def get_feedback(myPhoto, myGuess):
 	Actual=myPhoto.split(",")
 	actuallat=(Actual[0])
 	actuallong=(Actual[1])
-	return render_template('feedback.html', actlat=actuallat, actlong=actuallong, glat=guesslat, glong=guesslong)
+	return directrender('feedback.html', actlat=actuallat, actlong=actuallong, glat=guesslat, glong=guesslong)
 
 @app.route('/geoguess/next_photo', methods =['POST', 'GET'])
 def next_photo():
+	#simple redirect that moves to the next photo in the list
 	return redirect(url_for('guess_photo',PhotoNo = random_photo()))
 	
 def random_photo():
@@ -244,6 +248,12 @@ def random_photo():
 	selectionindex.remove(myChoice)
 	return photolist[myChoice]['PhotoNum']
 
+@app.route('/geoguess/logout')
+def logout():
+	#redirect page that logs out the user and returns to the login screen
+	global CurrentUser
+	CurrentUser = None
+	return redirect(url_for('login'))
 
 if __name__ == '__main__':
 	app.run(debug=True)
