@@ -95,12 +95,12 @@ def directrender(url, **kwargs):
 		flash("No user is currently signed in")
 		return redirect(url_for('login'))
 	
-@app.route('/geoguess')
+@app.route('/')
 def init():
 	#The default url on startup
 	return redirect(url_for('login',PhotoNo = random_photo()))
 	
-@app.route('/geoguess/login', methods = ['POST', 'GET'])
+@app.route('/login', methods = ['POST', 'GET'])
 def login():
 	#The login page for the application
 	global CurrentUser
@@ -150,12 +150,12 @@ def login():
 			return redirect(url_for('guess_photo', PhotoNo = random_photo()))
 	return render_template('login.html')
 
-@app.route('/geoguess/guess/<int:PhotoNo>')
+@app.route('/guess/<int:PhotoNo>')
 def guess_photo(PhotoNo):
 	#The page used to view and guess any of the photos in the photolist
     return directrender('guess.html', photo = PhotoNo, difference=-1)
 
-@app.route('/geoguess/check/<int:PhotoNo>', methods =['POST', 'GET'])
+@app.route('/check/<int:PhotoNo>', methods =['POST', 'GET'])
 def check_guess(PhotoNo):
 	#The page used to calculate the user's score
     if request.method == 'POST':
@@ -180,7 +180,7 @@ def random_photo():
 	return photolist[myChoice]['PhotoNum']
 
 
-@app.route('/geoguess/set_values/<int:PhotoNo>', methods =['POST', 'GET'])
+@app.route('/set_values/<int:PhotoNo>', methods =['POST', 'GET'])
 def confirm_values(PhotoNo):
 	if request.method == 'POST':
 		latitude=request.form['latitude']
@@ -188,7 +188,7 @@ def confirm_values(PhotoNo):
 		return directrender('confirm.html', photo=PhotoNo, lat=latitude, long=longitude)
 	
 
-@app.route('/geoguess/finish')
+@app.route('/finish')
 def finished_round():
 	#The end screen for the app when a user has guessed through all photos
 	global totaldifference
@@ -222,7 +222,7 @@ def report(diff):
 		message = "That's really close, good job!"
 	flash(message)
 	
-@app.route('/geoguess/feedback/<myPhoto>/<myGuess>')
+@app.route('/feedback/<myPhoto>/<myGuess>')
 def get_feedback(myPhoto, myGuess):
 	#Gathers values for latitude and longitude of the guess and the actual location and feeds them to an html page to place markers on a map.
 	Guess=myGuess.split(",")
@@ -235,7 +235,7 @@ def get_feedback(myPhoto, myGuess):
 	actuallong=Actual['longitude']
 	return render_template('feedback.html', actlat=actuallat, actlong=actuallong, glat=guesslat, glong=guesslong)
 
-@app.route('/geoguess/next_photo', methods =['POST', 'GET'])
+@app.route('/next_photo', methods =['POST', 'GET'])
 def next_photo():
 	if selectionindex == []:
 		#selectionindex will be empty once the user has guessed all photos. The user will then be redirected
@@ -243,7 +243,7 @@ def next_photo():
 	else:
 		return redirect(url_for('guess_photo',PhotoNo = random_photo()))
 
-@app.route('/geoguess/logout')
+@app.route('/logout')
 def logout():
 	#redirect page that logs out the user and returns to the login screen
 	global CurrentUser
