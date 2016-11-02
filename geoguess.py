@@ -166,7 +166,13 @@ def check_guess(PhotoNo):
 				latitude=photo['latitude']
 				longitude=photo['longitude']
 				Photo=photolist.index(photo)
-		Guessdifference=math.sqrt(pow(110.574*(float(request.form['latitude'])-latitude),2)+pow(111.32*math.cos(math.radians(latitude))*(float(request.form['longitude'])-longitude),2))*1000
+		try:
+			formlat = float(request.form['latitude'])
+			formlong = float(request.form['longitude'])
+		except ValueError:
+			flash("Please select a location")
+			return redirect(url_for('guess_photo', PhotoNo = PhotoNo))
+		Guessdifference=math.sqrt(pow(110.574*(float(formlat)-latitude),2)+pow(111.32*math.cos(math.radians(latitude))*(float(formlong)-longitude),2))*1000
 		totaldifference += Guessdifference
 		Guessdifference=float("%.3f" % Guessdifference)
 		Guess=str(request.form['latitude'])+','+str(request.form['longitude'])
