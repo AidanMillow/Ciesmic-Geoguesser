@@ -84,7 +84,7 @@ db.session.commit()
 CurrentUser = None #This is the variable that tracks which user is currently logged in
 
 def directrender(url, **kwargs):
-	#This method is meant to replace render_template methods to check if a user is signed in, but it doesn't work yet
+	#This method is meant to replace render_template methods to check if a user is signed in
 	global CurrentUser
 	if CurrentUser != None:
 		for row in User.query.filter_by(username=str(CurrentUser.username)):
@@ -166,18 +166,27 @@ def check_guess(PhotoNo):
 				latitude=photo['latitude']
 				longitude=photo['longitude']
 				Photo=photolist.index(photo)
-		Guessdifference=math.sqrt(pow(110.574*(float(request.form['latitude'])-latitude),2)+pow(111.32*math.cos(math.radians(latitude))*(float(request.form['longitude'])-longitude),2))*1000
+		try:
+			formlat = float(request.form['latitude'])
+			formlong = float(request.form['longitude'])
+		except ValueError:
+			flash("Please select a location")
+			return redirect(url_for('guess_photo', PhotoNo = PhotoNo))
+		Guessdifference=math.sqrt(pow(110.574*(float(formlat)-latitude),2)+pow(111.32*math.cos(math.radians(latitude))*(float(formlong)-longitude),2))*1000
 		totaldifference += Guessdifference
 		Guessdifference=float("%.3f" % Guessdifference)
 		Guess=str(request.form['latitude'])+','+str(request.form['longitude'])
-		report(Guessdifference)
-		return redirect(url_for('get_feedback', myPhoto=Photo, myGuess=Guess))
+		try:
+			selectionindex.remove(Photo)
+		except ValueError:
+			totaldifference -= Guessdifference
+		return redirect(url_for('get_feedback', myPhoto=Photo, myGuess=Guess, myDiff=Guessdifference))
     else:
 		return redirect(url_for('next_photo'))
 def random_photo():
 	#picks a random photo from the list, then removes it from the selectionindex
 	myChoice=random.choice(selectionindex)
-	return photolist[myChoice]['PhotoNum']	
+	return photolist[myChoice]['PhotoNum']
 
 @app.route('/finish')
 def finished_round():
@@ -186,7 +195,7 @@ def finished_round():
 	totaldifference=float("%.3f" % totaldifference) #rounds the difference to 3 decimal places
 	showdifference = totaldifference #saves the difference to show so that it can safely be reset
 	#the score is then saved to the database
-	if CurrentUser != None:
+	if CurrentUser != None and selectionindex == []:
 		sessionscore = Score(CurrentUser.id, totaldifference)
 		db.session.add(sessionscore)
 		db.session.commit()
@@ -199,32 +208,35 @@ def finished_round():
 
 def report(diff):
 	#This function flashes a message for the user depending on how close they got
-	message = "Your last guess was "+str(diff)+" m away from the actual location"
-	flash(message)
+	message = "<h1>Your last guess was "+str(diff)+" m away from the actual location<br>"
+	try:
+		diff=float(diff)
+	except Exception:
+		return "There was an error reporting your score"
 	if diff >= 37000.1:
-		message = "Was that even in christchurch?"
+		message += "Was that even in christchurch?</h1>"
 	elif diff >= 2500.1:
-		message = "That's a long way off"
+		message += "That's a long way off</h1>"
 	elif diff >= 500.1:
-		message = "Getting there, try and get a bit closer"
+		message += "Getting there, try and get a bit closer</h1>"
 	elif diff >= 100.1:
-		message = "You're in the right area, but you can still do better"
+		message += "You're in the right area, but you can still do better</h1>"
 	else:
-		message = "That's really close, good job!"
-	flash(message)
+		message += "That's really close, good job!</h1>"
+	return message
 	
-@app.route('/feedback/<myPhoto>/<myGuess>')
-def get_feedback(myPhoto, myGuess):
+@app.route('/feedback/<myPhoto>/<myGuess>/<myDiff>')
+def get_feedback(myPhoto, myGuess, myDiff):
 	#Gathers values for latitude and longitude of the guess and the actual location and feeds them to an html page to place markers on a map.
 	Guess=myGuess.split(",")
 	guesslat=(Guess[0])
 	guesslong=(Guess[1])
 	myPhoto=int(myPhoto)
-	selectionindex.remove(myPhoto)
 	Actual=photolist[myPhoto]
 	actuallat=Actual['latitude']
 	actuallong=Actual['longitude']
-	return render_template('feedback.html', actlat=actuallat, actlong=actuallong, glat=guesslat, glong=guesslong)
+	scoreReport = report(myDiff)
+	return directrender('feedback.html', actlat=actuallat, actlong=actuallong, glat=guesslat, glong=guesslong, scoreReport=scoreReport)
 
 @app.route('/next_photo', methods =['POST', 'GET'])
 def next_photo():
