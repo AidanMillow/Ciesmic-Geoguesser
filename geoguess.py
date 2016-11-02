@@ -177,16 +177,7 @@ def check_guess(PhotoNo):
 def random_photo():
 	#picks a random photo from the list, then removes it from the selectionindex
 	myChoice=random.choice(selectionindex)
-	return photolist[myChoice]['PhotoNum']
-
-
-@app.route('/set_values/<int:PhotoNo>', methods =['POST', 'GET'])
-def confirm_values(PhotoNo):
-	if request.method == 'POST':
-		latitude=request.form['latitude']
-		longitude=request.form['longitude']
-		return directrender('confirm.html', photo=PhotoNo, lat=latitude, long=longitude)
-	
+	return photolist[myChoice]['PhotoNum']	
 
 @app.route('/finish')
 def finished_round():
