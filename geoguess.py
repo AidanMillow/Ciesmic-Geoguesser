@@ -182,21 +182,6 @@ def random_photo():
 	myChoice=random.choice(selectionindex)
 	return photolist[myChoice]['PhotoNum']
 
-
-@app.route('/set_values/<int:PhotoNo>', methods =['POST', 'GET'])
-def confirm_values(PhotoNo):
-	if request.method == 'POST':
-		latitude=request.form['latitude']
-		longitude=request.form['longitude']
-		try:
-			latitude=float(latitude)
-			longitude=float(longitude)
-		except ValueError:
-			flash("The coordinates you input are not valid, use real numbers")
-			return redirect(url_for('guess_photo', PhotoNo = PhotoNo))
-		return directrender('confirm.html', photo=PhotoNo, lat=latitude, long=longitude)
-	
-
 @app.route('/finish')
 def finished_round():
 	#The end screen for the app when a user has guessed through all photos

@@ -1,5 +1,8 @@
 <!doctype html>
 <html>
+<head>
+<script src="http://maps.google.com/maps/api/js?key=AIzaSyAKo-dw8hYVazrmnpBjzIKbQduh3OkgXSQ" type="text/javascript"></script>
+</head>
    <body>
 	{% with messages = get_flashed_messages() %}
 		{% if messages %}
@@ -10,12 +13,20 @@
 	{% endwith %}
 	<img src="https://quakestudies.canterbury.ac.nz/sites/default/files/styles/large/public/qsr-part_{{photo}}.jpeg?">
 	<h2>Where is this image?</h2>
-      <form action = "http://localhost:5000/set_values/{{photo}}" method = 'POST' 
+	<div id="map" style="width: 500px; height: 400px;"></div>
+	<script type="text/javascript">	
+	var map = new google.maps.Map(document.getElementById('map'), {zoom: 12, center: new google.maps.LatLng(-43.5321,172.6362), mapTypeId: google.maps.MapTypeId.ROADMAP});
+	google.maps.event.addListener(map,'click', function(event){
+		var pos = event.latLng;
+		var NewMarker = new google.maps.Marker({position: pos, map: map, Label: 'A'})
+		document.getElementById('lat').value=pos.lat();
+		document.getElementById('long').value=pos.lng();
+	});
+	</script>
+      <form action = "http://localhost:5000/check/{{photo}}" method = 'POST' 
          enctype = "multipart/form-data">
-		 <label for="latitude">lat</label>
-         <input type = "text" name = "latitude" />
-		 <label for="longitude">long</label>
-		 <input type = "text" name = "longitude" />
+		 <input type="hidden" id="lat" name="latitude"/>
+		 <input type="hidden" id="long" name="longitude"/>
          <input type = "submit"/>
       </form>
    </body>
