@@ -1,25 +1,13 @@
-<!doctype html>
-<html>
-<head>
-<script src="http://maps.google.com/maps/api/js?key=AIzaSyAKo-dw8hYVazrmnpBjzIKbQduh3OkgXSQ" type="text/javascript"></script>
-</head>
-   <body>
-	{% with messages = get_flashed_messages() %}
-		{% if messages %}
-			{% for message in messages %}
-				<h1>{{ message }}</h1>
-			{% endfor %}
-		{% endif %}
-	{% endwith %}
+{% extends "base.html" %}
+{% block content %}
 	<div id="map" style="width: 500px; height: 400px;"></div>
 	<script type="text/javascript">	
 	var map = new google.maps.Map(document.getElementById('map'), {zoom: 12, center: new google.maps.LatLng(-43.5321,172.6362), mapTypeId: google.maps.MapTypeId.ROADMAP});
 	var GuessMarker = new google.maps.Marker({position: new google.maps.LatLng(parseFloat({{glat}}), parseFloat({{glong}})), map: map, Label: '?'});
 	var LocationMarker = new google.maps.Marker({position: new google.maps.LatLng(parseFloat({{actlat}}), parseFloat({{actlong}})), map: map, Label: '!'});
 	</script>
-	<form action = "http://localhost:5000/next_photo" method = 'POST' 
+	<form action = "/next_photo" method = 'POST' 
     enctype = "multipart/form-data">
 		<input type = "submit" value="Next Photo"/>
 	</form>
-   </body>
-</html>
+{% endblock %}

@@ -1,0 +1,57 @@
+body {
+    padding-top: 100px;
+
+}
+
+.thumb {
+max-width: 200px;
+max-height: 200px;
+
+}
+
+.container {
+margin-left: 50px;
+margin-right: 50px;
+}
+
+.navbar-inverse {
+    border-color: #b9bb00;
+    border-width: 0 0 9px;
+    background-color: #000000
+}   
+
+.navbar-inverse .navbar-text {
+color: #ffffff;
+}
+
+.navbar-brand  img{
+    clip: rect(0px, 0px, 10px, 0px);
+}
+
+.navbar-right {
+padding-top: 5px;
+margin-right: 1px;
+}
+.navbar-text {
+color: #ffffff;
+}
+
+.navbar-text {
+margin-top: 0;
+margin-bottom: 0;
+padding-top: 8px;
+font-size: 12px;
+}
+
+.navbar-form  .form-control{
+font-size: 8px;
+}
+
+.navbar-form  .form-control {
+height: 50%;
+}
+
+.navbar-right  button {
+font-size: 10px;
+padding: 4px 8px;
+}
