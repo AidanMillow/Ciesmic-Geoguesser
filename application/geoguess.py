@@ -104,6 +104,7 @@ def check_guess():
                 latitude = photo['latitude']
                 longitude = photo['longitude']
                 Photo=photolist.index(photo)
+                myPhoto=photo
         try:
             formlat = float(request.form['latitude'])
             formlong = float(request.form['longitude'])
@@ -117,8 +118,14 @@ def check_guess():
         try:
             selection_index.remove(Photo)
         except ValueError:
-            totaldifference -= Guessdifference
-        return redirect(url_for('get_feedback', myPhoto=Photo, myGuess=Guess, myDiff=Guessdifference))
+			totaldifference -= Guessdifference
+        Guess=Guess.split(',')
+        guesslat=(Guess[0])
+        guesslong=(Guess[1])
+        actuallat=myPhoto['latitude']
+        actuallong=myPhoto['longitude']
+        scoreReport = report(Guessdifference)
+        return render_template('feedback.html', actlat=actuallat, actlong=actuallong, glat=guesslat, glong=guesslong, scoreReport=scoreReport)		
     else:
         return redirect(url_for('next_photo'))
 
@@ -140,7 +147,7 @@ def finished_round():
 	for item in Score.query.order_by(Score.score.asc()):
 		scoretable.append({'user':item.user.username,'score':item.score})
 	buildselect(photolist)
-	return directrender('finish.html', difference=showdifference, table = HighScores(scoretable))
+	return render_template('finish.html', difference=showdifference, table = HighScores(scoretable))
 
 def report(diff):
 	#This function flashes a message for the user depending on how close they got
@@ -160,19 +167,6 @@ def report(diff):
 	else:
 		message += "That's really close, good job!</h1>"
 	return message
-	
-@app.route('/feedback/<myPhoto>/<myGuess>/<myDiff>')
-def get_feedback(myPhoto, myGuess, myDiff):
-    #Gathers values for latitude and longitude of the guess and the actual location and feeds them to an html page to place markers on a map.
-    Guess=myGuess.split(",")
-    guesslat=(Guess[0])
-    guesslong=(Guess[1])
-    myPhoto=int(myPhoto)	
-    Actual=photolist[myPhoto]
-    actuallat=Actual['latitude']
-    actuallong=Actual['longitude']
-    scoreReport = report(myDiff)
-    return directrender('feedback.html', actlat=actuallat, actlong=actuallong, glat=guesslat, glong=guesslong, scoreReport=scoreReport)
 
 @app.route('/next_photo', methods =['POST', 'GET'])
 def next_photo():
