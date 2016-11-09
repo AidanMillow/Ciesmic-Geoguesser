@@ -89,21 +89,27 @@ def login():
 			return render_template('base.html',user=CurrentUser)
 
 @app.route('/start', methods = ['POST'])
-def start_game():
-    print 'hello'
+def start_game():    
     return render_template("guess.html",PhotoNo = random_photo(photolist,selection_index),difference=-1)
 
-@app.route('/check/<string:PhotoNo>', methods =['POST'])
-def check_guess(PhotoNo):
-    #The page used to calculate the user's score
-    if request.method == 'POST':
+@app.route('/check', methods =['POST'])
+def check_guess():
+    #The page used to calculate the user's score    
+    if request.method == 'POST':        
         global totaldifference
+        PhotoNo = request.form['photo']
         for photo in photolist:
             #finds the photo the user was guessing, then removes it from the selection_index
             if PhotoNo == photo['PhotoNum']:
                 latitude = photo['latitude']
                 longitude = photo['longitude']
                 Photo=photolist.index(photo)
+        try:
+            formlat = float(request.form['latitude'])
+            formlong = float(request.form['longitude'])
+        except ValueError:
+			flash("Please select a location")
+			return redirect(url_for('guess_photo', PhotoNo = PhotoNo))        
         Guessdifference=math.sqrt(pow(110.574*(float(request.form['latitude'])-latitude),2)+pow(111.32*math.cos(math.radians(latitude))*(float(request.form['longitude'])-longitude),2))*1000
         totaldifference += Guessdifference
         Guessdifference=float("%.3f" % Guessdifference)
@@ -116,14 +122,7 @@ def check_guess(PhotoNo):
     else:
         return redirect(url_for('next_photo'))
 
-@app.route('/set_values', methods =['POST'])
-def confirm_values():
-    print request.form
-    latitude=request.form['latitude']
-    longitude=request.form['longitude']
-    photo = request.form['photo']
-    return render_template('confirm.html', photo=photo, lat=latitude, long=longitude)
-            
+    
 
 @app.route('/finish')
 def finished_round():
@@ -132,7 +131,7 @@ def finished_round():
 	totaldifference=float("%.3f" % totaldifference) #rounds the difference to 3 decimal places
 	showdifference = totaldifference #saves the difference to show so that it can safely be reset
 	#the score is then saved to the database
-	if CurrentUser != None:
+	if CurrentUser != None and selectionindex == []:
 		sessionscore = Score(CurrentUser.id, totaldifference)
 		db.session.add(sessionscore)
 		db.session.commit()
@@ -145,31 +144,35 @@ def finished_round():
 
 def report(diff):
 	#This function flashes a message for the user depending on how close they got
-	message = "Your last guess was "+str(diff)+" m away from the actual location"
-	flash(message)
+	message = "<h1>Your last guess was "+str(diff)+" m away from the actual location<br>"
+	try:
+		diff=float(diff)
+	except Exception:
+		return "There was an error reporting your score"
 	if diff >= 37000.1:
-		message = "Was that even in christchurch?"
+		message += "Was that even in christchurch?</h1>"
 	elif diff >= 2500.1:
-		message = "That's a long way off"
+		message += "That's a long way off</h1>"
 	elif diff >= 500.1:
-		message = "Getting there, try and get a bit closer"
+		message += "Getting there, try and get a bit closer</h1>"
 	elif diff >= 100.1:
-		message = "You're in the right area, but you can still do better"
+		message += "You're in the right area, but you can still do better</h1>"
 	else:
-		message = "That's really close, good job!"
-	flash(message)
+		message += "That's really close, good job!</h1>"
+	return message
 	
-@app.route('/feedback/<myPhoto>/<myGuess>')
-def get_feedback(myPhoto, myGuess):
-	#Gathers values for latitude and longitude of the guess and the actual location and feeds them to an html page to place markers on a map.
-	Guess=myGuess.split(",")
-	guesslat=(Guess[0])
-	guesslong=(Guess[1])
-	myPhoto=int(myPhoto)	
-	Actual=photolist[myPhoto]
-	actuallat=Actual['latitude']
-	actuallong=Actual['longitude']
-	return render_template('feedback.html', actlat=actuallat, actlong=actuallong, glat=guesslat, glong=guesslong)
+@app.route('/feedback/<myPhoto>/<myGuess>/<myDiff>')
+def get_feedback(myPhoto, myGuess, myDiff):
+    #Gathers values for latitude and longitude of the guess and the actual location and feeds them to an html page to place markers on a map.
+    Guess=myGuess.split(",")
+    guesslat=(Guess[0])
+    guesslong=(Guess[1])
+    myPhoto=int(myPhoto)	
+    Actual=photolist[myPhoto]
+    actuallat=Actual['latitude']
+    actuallong=Actual['longitude']
+    scoreReport = report(myDiff)
+    return directrender('feedback.html', actlat=actuallat, actlong=actuallong, glat=guesslat, glong=guesslong, scoreReport=scoreReport)
 
 @app.route('/next_photo', methods =['POST', 'GET'])
 def next_photo():
@@ -177,7 +180,7 @@ def next_photo():
 		#selection_index will be empty once the user has guessed all photos. The user will then be redirected
 		return redirect(url_for('finished_round'))
 	else:
-		return redirect(url_for('guess_photo',PhotoNo = random_photo(photolist,selection_index)))
+		return redirect(url_for('start',PhotoNo = random_photo(photolist,selection_index)))
 
 @app.route('/logout',methods =['POST'])
 def logout():
