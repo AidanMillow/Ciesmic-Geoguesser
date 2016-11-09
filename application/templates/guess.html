@@ -1,12 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-  {% with messages = get_flashed_messages() %}
-		{% if messages %}
-			{% for message in messages %}
-				<h1>{{ message }}</h1>
-			{% endfor %}
-		{% endif %}
-	{% endwith %}
 	<img src="https://quakestudies.canterbury.ac.nz/sites/default/files/styles/large/public/qsr-part_{{PhotoNo}}.jpeg?">
 	<h2>Where is this image?</h2>
 	<div id="map" style="width: 500px; height: 400px;"></div>

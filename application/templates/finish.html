@@ -2,6 +2,8 @@
 {% block content %}
 		<h1>You finished this set</h2><br>
 		<h2>You were a total of {{difference}} m off from the actual locations</h2>
-		<p><a href="/next_photo">Go again</a><br>
+		<form class="navbar-form navbar-right" action = "/start" method = 'POST'>
+			<button style="width:200px;height:50px;font-size:18px" value = "Start Game" class="btn btn-success">Start Again</button>                
+		</form> 
 		{{table}}
 {% endblock %}
