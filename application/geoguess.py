@@ -1,7 +1,7 @@
 import os, math
 from flask import Flask, redirect, session, url_for, escape, render_template, request, flash
 from scripts.config import DevelopmentConfig
-from scripts.database import db, User
+from scripts.database import db, User, Score, HighScores
 from scripts.photos.photos import create_photo_list, buildselect, random_photo
 
 app = Flask(__name__)
@@ -63,7 +63,6 @@ def login():
                 if exist != None:
                     CurrentUser = exist
                     buildselect(photolist)
-                    flash("Welcome "+ CurrentUser.username +", let us begin")
                 else:
                     flash("There was an error during registration")
             else:
@@ -81,14 +80,9 @@ def login():
 				flash("Your username or password was incorrect")
 	exist = None
 	#Once the CurrentUser has been set (or not), the page will be rendered depending on its validity
-	if CurrentUser != None:
-		#If the user is not set, the login page displays as normal
-		for row in User.query.filter_by(username=str(CurrentUser.username)):
-			exist = row
-		if exist != None:			
-			return render_template('base.html',user=CurrentUser)
+	return render_template('base.html',user=CurrentUser)
 
-@app.route('/start', methods = ['POST'])
+@app.route('/start', methods = ['POST','GET'])
 def start_game():    
     return render_template("guess.html",PhotoNo = random_photo(photolist,selection_index),difference=-1)
 
@@ -110,7 +104,7 @@ def check_guess():
             formlong = float(request.form['longitude'])
         except ValueError:
 			flash("Please select a location")
-			return redirect(url_for('guess_photo', PhotoNo = PhotoNo))        
+			return redirect(url_for('start_game', PhotoNo = PhotoNo))        
         Guessdifference=math.sqrt(pow(110.574*(float(request.form['latitude'])-latitude),2)+pow(111.32*math.cos(math.radians(latitude))*(float(request.form['longitude'])-longitude),2))*1000
         totaldifference += Guessdifference
         Guessdifference=float("%.3f" % Guessdifference)
@@ -135,10 +129,11 @@ def check_guess():
 def finished_round():
 	#The end screen for the app when a user has guessed through all photos
 	global totaldifference
+	global selection_index
 	totaldifference=float("%.3f" % totaldifference) #rounds the difference to 3 decimal places
 	showdifference = totaldifference #saves the difference to show so that it can safely be reset
 	#the score is then saved to the database
-	if CurrentUser != None and selectionindex == []:
+	if CurrentUser != None and selection_index == []:
 		sessionscore = Score(CurrentUser.id, totaldifference)
 		db.session.add(sessionscore)
 		db.session.commit()
@@ -146,8 +141,8 @@ def finished_round():
 	scoretable = []
 	for item in Score.query.order_by(Score.score.asc()):
 		scoretable.append({'user':item.user.username,'score':item.score})
-	buildselect(photolist)
-	return render_template('finish.html', difference=showdifference, table = HighScores(scoretable))
+	selection_index = buildselect(photolist)
+	return directrender('finish.html', difference=showdifference, table = HighScores(scoretable))
 
 def report(diff):
 	#This function flashes a message for the user depending on how close they got
@@ -174,7 +169,7 @@ def next_photo():
 		#selection_index will be empty once the user has guessed all photos. The user will then be redirected
 		return redirect(url_for('finished_round'))
 	else:
-		return redirect(url_for('start',PhotoNo = random_photo(photolist,selection_index)))
+		return redirect(url_for('start_game',PhotoNo = random_photo(photolist,selection_index)))
 
 @app.route('/logout',methods =['POST'])
 def logout():
