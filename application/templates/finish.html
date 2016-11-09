@@ -1,10 +1,7 @@
-<!doctype html>
-<html>
-   <body>
+{% extends "base.html" %}
+{% block content %}
 		<h1>You finished this set</h2><br>
 		<h2>You were a total of {{difference}} m off from the actual locations</h2>
 		<p><a href="/next_photo">Go again</a><br>
-		<a href="/logout">Log out</a></p>
 		{{table}}
-   </body>
-</html>
+{% endblock %}
