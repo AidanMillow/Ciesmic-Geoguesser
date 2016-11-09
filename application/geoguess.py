@@ -2,7 +2,7 @@ import os, math
 from flask import Flask, redirect, session, url_for, escape, render_template, request, flash
 from scripts.config import DevelopmentConfig
 from scripts.database import db, User, Score, HighScores
-from scripts.photos.photos import create_photo_list, buildselect, random_photo
+from scripts.photos.photos import create_photo_list, buildselect, random_photo, buildPhotoList
 
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
@@ -23,7 +23,11 @@ with app.app_context():
 app.app_context().push()
 
 photolist = create_photo_list()
-selection_index = buildselect(photolist)
+selection_data = buildPhotoList(photolist,10)
+photolist = selection_data[0]
+selection_index=selection_data[1]
+print photolist
+print selection_index
 CurrentUser = None
 totaldifference = 0
 
@@ -133,16 +137,22 @@ def finished_round():
 	totaldifference=float("%.3f" % totaldifference) #rounds the difference to 3 decimal places
 	showdifference = totaldifference #saves the difference to show so that it can safely be reset
 	#the score is then saved to the database
-	if CurrentUser != None and selection_index == []:
-		sessionscore = Score(CurrentUser.id, totaldifference)
-		db.session.add(sessionscore)
-		db.session.commit()
-	#Then we build and show the high score table and rebuild the selectindex
-	scoretable = []
-	for item in Score.query.order_by(Score.score.asc()):
-		scoretable.append({'user':item.user.username,'score':item.score})
-	selection_index = buildselect(photolist)
-	return directrender('finish.html', difference=showdifference, table = HighScores(scoretable))
+	if CurrentUser == None:
+		message = ""
+		message += "You total error was " + str(totaldifference)
+		message += "You must login to have your score recorded </h1>"
+		return render_template('noscore.html')
+	else: 
+		if CurrentUser != None and selection_index == []:
+			sessionscore = Score(CurrentUser.id, totaldifference)
+			db.session.add(sessionscore)
+			db.session.commit()
+		#Then we build and show the high score table and rebuild the selectindex
+		scoretable = []
+		for item in Score.query.order_by(Score.score.asc()):
+			scoretable.append({'user':item.user.username,'score':item.score})
+		selection_index = buildselect(photolist)
+		return render_template('finish.html', difference=showdifference, table = HighScores(scoretable))
 
 def report(diff):
 	#This function flashes a message for the user depending on how close they got
