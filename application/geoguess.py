@@ -140,9 +140,10 @@ def finished_round():
 	#the score is then saved to the database
 	if CurrentUser == None:
 		message = ""
-		message += "You total error was " + str(totaldifference)
+		message += "You total error was " + str(totaldifference) + ". "
 		message += "You must login to have your score recorded </h1>"
-		return render_template('noscore.html')
+		selection_index = buildselect(photolist)
+		return render_template('noscore.html', message=message)
 	else: 
 		if CurrentUser != None and selection_index == []:
 			sessionscore = Score(CurrentUser.id, totaldifference)
