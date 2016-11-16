@@ -2,7 +2,7 @@ import os, math
 from flask import Flask, redirect, session, url_for, escape, render_template, request, flash
 from scripts.config import DevelopmentConfig
 from scripts.database import db, User, Score, HighScores
-from scripts.photos.photos import create_photo_list, buildselect, random_photo
+from scripts.photos.photos import create_photo_list, buildselect, random_photo, buildPhotoList
 
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
@@ -24,7 +24,9 @@ with app.app_context():
 app.app_context().push()
 
 photolist = create_photo_list()
-selection_index = buildselect(photolist)
+selection_data = buildPhotoList(photolist,10)
+photolist = selection_data[0]
+selection_index=selection_data[1]
 CurrentUser = None
 totaldifference = 0
 
@@ -47,47 +49,56 @@ def login():
     #The login page for the application
 	global CurrentUser
 	if request.method == 'POST':
-		exist = None
-		if (request.form['username'] != "" and request.form['password'] != ""):
+		formname = request.form['username']
+		formpass = request.form['password']
+		if (formname != "" and formpass != "" and len(formname) <= 15):
 			if request.form['type'] == 'register':			
-				#This is what transpires if the user chooses to create a new account
-				for row in User.query.filter_by(username=str(request.form['username'])):
-					exist = row
-				if exist == None:
-					#A new user is only added when the username does not already exist
-					newuser = User(str(request.form['username']),str(request.form['password']))
-					db.session.add(newuser)
-					db.session.commit()
-					for row in User.query.filter_by(username=str(request.form['username'])):
-						#This query is just to catch potential database failures
-						exist = row
-					if exist != None:
-						CurrentUser = exist
-						buildselect(photolist)
-					else:
-						flash("There was an error during registration")
-				else:
-					flash("A user with that name already exists")
+				register(formname, formpass)
 			elif request.form['type'] == 'signin':
-				#This is what transpires when the user chooses to get back on an existing account
-				for row in User.query.filter_by(username=str(request.form['username']), password=str(request.form['password'])):
-					exist = row
-				if exist != None:
-					#The query checks for username and password, they must both be correct to gain access
-					CurrentUser = exist
-					buildselect(photolist)
-					flash("Welcome back "+ CurrentUser.username +", let us begin")
-				else:
-					flash("Your username or password was incorrect")
+				signin(formname, formpass)
 		else:
-			flash("Please enter a username and password")
+			flash("Please enter a valid username and password. Valid usernames are 1-15 characters long.")
 	exist = None
 	#Once the CurrentUser has been set (or not), the page will be rendered depending on its validity
 	return redirect(url_for('init'))
 
+def register(formname, formpass):
+	#This is what transpires if the user chooses to create a new account
+	exist = None
+	for row in User.query.filter_by(username=str(formname)):
+		exist = row
+	if exist == None:
+		#A new user is only added when the username does not already exist
+		newuser = User(str(formname),str(formpass))
+		db.session.add(newuser)
+		db.session.commit()
+		for row in User.query.filter_by(username=str(formname)):
+			#This query is just to catch potential database failures
+			exist = row
+		if exist != None:
+			CurrentUser = exist
+			buildselect(photolist)
+		else:
+			flash("There was an error during registration")
+	else:
+		flash("A user with that name already exists")
+
+def signin(formname, formpass):
+	#This is what transpires when the user chooses to get back on an existing account
+	exist = None
+	for row in User.query.filter_by(username=str(formname), password=str(formpass)):
+		exist = row
+	if exist != None:
+		#The query checks for username and password, they must both be correct to gain access
+		CurrentUser = exist
+		buildselect(photolist)
+		flash("Welcome back "+ CurrentUser.username +", let us begin")
+	else:
+		flash("Your username or password was incorrect")
+
 @app.route('/start', methods = ['POST','GET'])
 def start_game():    
-    return directrender("guess.html",PhotoNo = random_photo(photolist,selection_index),difference=-1)
+    return render_template("guess.html",PhotoNo = random_photo(photolist,selection_index),difference=-1)
 
 @app.route('/check', methods =['POST'])
 def check_guess():
@@ -101,6 +112,7 @@ def check_guess():
                 latitude = photo['latitude']
                 longitude = photo['longitude']
                 Photo=photolist.index(photo)
+                myPhoto=photo
         try:
             formlat = float(request.form['latitude'])
             formlong = float(request.form['longitude'])
@@ -114,8 +126,14 @@ def check_guess():
         try:
             selection_index.remove(Photo)
         except ValueError:
-            totaldifference -= Guessdifference
-        return redirect(url_for('get_feedback', myPhoto=Photo, myGuess=Guess, myDiff=Guessdifference))
+			totaldifference -= Guessdifference
+        Guess=Guess.split(',')
+        guesslat=(Guess[0])
+        guesslong=(Guess[1])
+        actuallat=myPhoto['latitude']
+        actuallong=myPhoto['longitude']
+        scoreReport = report(Guessdifference)
+        return render_template('feedback.html', actlat=actuallat, actlong=actuallong, glat=guesslat, glong=guesslong, scoreReport=scoreReport)		
     else:
         return redirect(url_for('next_photo'))
 
@@ -129,16 +147,22 @@ def finished_round():
 	totaldifference=float("%.3f" % totaldifference) #rounds the difference to 3 decimal places
 	showdifference = totaldifference #saves the difference to show so that it can safely be reset
 	#the score is then saved to the database
-	if CurrentUser != None and selection_index == []:
-		sessionscore = Score(CurrentUser.id, totaldifference)
-		db.session.add(sessionscore)
-		db.session.commit()
-	#Then we build and show the high score table and rebuild the selectindex
-	scoretable = []
-	for item in Score.query.order_by(Score.score.asc()):
-		scoretable.append({'user':item.user.username,'score':item.score})
-	selection_index = buildselect(photolist)
-	return directrender('finish.html', difference=showdifference, table = HighScores(scoretable))
+	if CurrentUser == None:
+		message = ""
+		message += "Your total error was " + str(totaldifference)
+		message += "You must login to have your score recorded </h1>"
+		return render_template('noscore.html')
+	else: 
+		if CurrentUser != None and selection_index == []:
+			sessionscore = Score(CurrentUser.id, totaldifference)
+			db.session.add(sessionscore)
+			db.session.commit()
+		#Then we build and show the high score table and rebuild the selectindex
+		scoretable = []
+		for item in Score.query.order_by(Score.score.asc()):
+			scoretable.append({'user':item.user.username,'score':item.score})
+		selection_index = buildselect(photolist)
+		return render_template('finish.html', difference=showdifference, table = HighScores(scoretable))
 
 def report(diff):
 	#This function flashes a message for the user depending on how close they got
@@ -158,19 +182,6 @@ def report(diff):
 	else:
 		message += "That's really close, good job!</h1>"
 	return message
-	
-@app.route('/feedback/<myPhoto>/<myGuess>/<myDiff>')
-def get_feedback(myPhoto, myGuess, myDiff):
-    #Gathers values for latitude and longitude of the guess and the actual location and feeds them to an html page to place markers on a map.
-    Guess=myGuess.split(",")
-    guesslat=(Guess[0])
-    guesslong=(Guess[1])
-    myPhoto=int(myPhoto)	
-    Actual=photolist[myPhoto]
-    actuallat=Actual['latitude']
-    actuallong=Actual['longitude']
-    scoreReport = report(myDiff)
-    return directrender('feedback.html', actlat=actuallat, actlong=actuallong, glat=guesslat, glong=guesslong, scoreReport=scoreReport)
 
 @app.route('/next_photo', methods =['POST', 'GET'])
 def next_photo():
