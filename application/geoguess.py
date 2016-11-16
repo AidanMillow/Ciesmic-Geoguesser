@@ -87,7 +87,7 @@ def login():
 
 @app.route('/start', methods = ['POST','GET'])
 def start_game():    
-    return render_template("guess.html",PhotoNo = random_photo(photolist,selection_index),difference=-1)
+    return directrender("guess.html",PhotoNo = random_photo(photolist,selection_index),difference=-1)
 
 @app.route('/check', methods =['POST'])
 def check_guess():
