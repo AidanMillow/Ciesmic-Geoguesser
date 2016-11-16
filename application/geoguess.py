@@ -155,24 +155,21 @@ def finished_round():
 	#The end screen for the app when a user has guessed through all photos
 	global totaldifference
 	global selection_index
+	message = False
 	totaldifference=float("%.3f" % totaldifference) #rounds the difference to 3 decimal places
 	showdifference = totaldifference #saves the difference to show so that it can safely be reset
 	#the score is then saved to the database
 	if CurrentUser == None:
-		message = "<h1>"
-		message += "You total error was " + str(totaldifference) + ". "
-		message += "You must login to have your score recorded </h1>"
-		return render_template('noscore.html', message=message)
-	else: 
-		if CurrentUser != None and selection_index == []:
-			sessionscore = Score(CurrentUser.id, totaldifference)
-			db.session.add(sessionscore)
-			db.session.commit()
-		#Then we build and show the high score table and rebuild the selectindex
-		scoretable = []
-		for item in Score.query.order_by(Score.score.asc()):
-			scoretable.append({'user':item.user.username,'score':item.score})
-		return render_template('finish.html', difference=showdifference, table = HighScores(scoretable))
+		message = "You must login to have your score recorded"
+	elif CurrentUser != None and selection_index == []:
+		sessionscore = Score(CurrentUser.id, totaldifference)
+		db.session.add(sessionscore)
+		db.session.commit()
+	#Then we build and show the high score table and rebuild the selectindex
+	scoretable = []
+	for item in Score.query.order_by(Score.score.asc()):
+		scoretable.append({'user':item.user.username,'score':item.score})
+	return render_template('finish.html', difference=showdifference, table = HighScores(scoretable), message = message)
 
 def report(diff):
 	#This function flashes a message for the user depending on how close they got

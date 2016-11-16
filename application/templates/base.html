@@ -25,11 +25,6 @@
 			  
 			</div>        
 			<div id="navbar" class="navbar-collapse collapse">
-				<div class="flashes">
-				{% for message in get_flashed_messages()%}
-					{{ message }}
-				{% endfor %}
-				</div>
 				{% if user == None %}          
 					<form class="navbar-form navbar-right" action = "/login" method = 'POST' enctype = "multipart/form-data">          
 						<div class="form-group">
@@ -49,8 +44,13 @@
 					{% else %}  
 					<button style="margin-right:10px" class="btn btn-success" name="type" value = "signin">Logout</button> 
 					{% endif %}                   
-				</form>            
-			{% endif %}            
+				</form>
+				{% endif %}
+				<div class="flashes">
+					{% for message in get_flashed_messages()%}
+						{{ message|safe }}
+					{% endfor %}
+				</div>
 			</div>        
 		</div>
     </nav>
