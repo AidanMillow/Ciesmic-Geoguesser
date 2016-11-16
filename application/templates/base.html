@@ -51,6 +51,11 @@
     </nav>
     <body>
     <div class="container">        
+			<div class="flashes">
+				{% for message in get_flashed_messages()%}
+					<h1>{{ message }}</h1>
+				{% endfor %}
+			</div>
             {% block content %}
             <div class="row">
                 <div class="col-sm-8">

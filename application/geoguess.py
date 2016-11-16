@@ -10,24 +10,23 @@ app._static_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), "s
 print (app._static_folder)
 
 db.init_app(app)
-with app.app_context():        
-    db.create_all()
-    User.query.delete()
-    brad = User('Brad', 'something')
-    aidan = User('Aidan', 'something')
-    testuser = User('Test', 'something')
-    db.session.add(brad)
-    db.session.add(aidan)
-    db.session.add(testuser)
-    db.session.commit()
+with app.app_context():
+	db.create_all()
+	User.query.delete()
+	Score.query.delete()
+	brad = User('Brad', 'something')
+	aidan = User('Aidan', 'something')
+	testuser = User('Test', 'something')
+	db.session.add(brad)
+	db.session.add(aidan)
+	db.session.add(testuser)
+	db.session.commit()
 app.app_context().push()
 
 photolist = create_photo_list()
 selection_data = buildPhotoList(photolist,10)
 photolist = selection_data[0]
 selection_index=selection_data[1]
-print photolist
-print selection_index
 CurrentUser = None
 totaldifference = 0
 
@@ -37,11 +36,10 @@ def directrender(url, **kwargs):
         for row in User.query.filter_by(username=str(CurrentUser.username)):
             exist = row
             if exist != None:
-                return render_template(url, **kwargs)
-            else:
-                flash("No user is currently signed in")
-                return redirect(url_for('/'))       
-                
+                return render_template(url, user=CurrentUser, **kwargs)
+    flash("No user is currently signed in")
+    return redirect(url_for('init'))
+
 @app.route('/')
 def init():
     return render_template('base.html',app=app,user=CurrentUser)
@@ -49,42 +47,45 @@ def init():
 @app.route('/login', methods = ['POST'])
 def login():    
     #The login page for the application
-    global CurrentUser
-    if request.method == 'POST':
-        exist = None       
-        if request.form['type'] == 'register':			
-            #This is what transpires if the user chooses to create a new account
-            for row in User.query.filter_by(username=str(request.form['username'])):
-                exist = row
-            if exist == None:
-                #A new user is only added when the username does not already exist
-                newuser = User(str(request.form['username']),str(request.form['password']))
-                db.session.add(newuser)
-                db.session.commit()
-                for row in User.query.filter_by(username=str(request.form['username'])):
-					#This query is just to catch potential database failures
-                    exist = row
-                if exist != None:
-                    CurrentUser = exist
-                    buildselect(photolist)
-                else:
-                    flash("There was an error during registration")
-            else:
-                flash("A user with that name already exists")
-        elif request.form['type'] == 'signin':
-			#This is what transpires when the user chooses to get back on an existing account
-			for row in User.query.filter_by(username=str(request.form['username']), password=str(request.form['password'])):
-				exist = row
-			if exist != None:
-				#The query checks for username and password, they must both be correct to gain access
-				CurrentUser = exist
-				buildselect(photolist)
-				flash("Welcome back "+ CurrentUser.username +", let us begin")
-			else:
-				flash("Your username or password was incorrect")
+	global CurrentUser
+	if request.method == 'POST':
+		exist = None
+		if (request.form['username'] != "" and request.form['password'] != ""):
+			if request.form['type'] == 'register':			
+				#This is what transpires if the user chooses to create a new account
+				for row in User.query.filter_by(username=str(request.form['username'])):
+					exist = row
+				if exist == None:
+					#A new user is only added when the username does not already exist
+					newuser = User(str(request.form['username']),str(request.form['password']))
+					db.session.add(newuser)
+					db.session.commit()
+					for row in User.query.filter_by(username=str(request.form['username'])):
+						#This query is just to catch potential database failures
+						exist = row
+					if exist != None:
+						CurrentUser = exist
+						buildselect(photolist)
+					else:
+						flash("There was an error during registration")
+				else:
+					flash("A user with that name already exists")
+			elif request.form['type'] == 'signin':
+				#This is what transpires when the user chooses to get back on an existing account
+				for row in User.query.filter_by(username=str(request.form['username']), password=str(request.form['password'])):
+					exist = row
+				if exist != None:
+					#The query checks for username and password, they must both be correct to gain access
+					CurrentUser = exist
+					buildselect(photolist)
+					flash("Welcome back "+ CurrentUser.username +", let us begin")
+				else:
+					flash("Your username or password was incorrect")
+		else:
+			flash("Please enter a username and password")
 	exist = None
 	#Once the CurrentUser has been set (or not), the page will be rendered depending on its validity
-	return render_template('base.html',user=CurrentUser)
+	return redirect(url_for('init'))
 
 @app.route('/start', methods = ['POST','GET'])
 def start_game():    
