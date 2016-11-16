@@ -129,7 +129,7 @@ def check_guess():
             formlong = float(request.form['longitude'])
         except ValueError:
 			flash("Please select a location")
-			return render_template('guess.html', PhotoNo=myPhoto)     
+			return redirect(url_for('new_guess'))
         Guessdifference=math.sqrt(pow(110.574*(float(request.form['latitude'])-latitude),2)+pow(111.32*math.cos(math.radians(latitude))*(float(request.form['longitude'])-longitude),2))*1000
         totaldifference += Guessdifference
         Guessdifference=float("%.3f" % Guessdifference)
