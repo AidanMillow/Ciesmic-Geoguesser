@@ -43,27 +43,27 @@ def directrender(url, **kwargs):
 @app.route('/')
 def init():
     return render_template('base.html',app=app,user=CurrentUser)
-            
+
 @app.route('/login', methods = ['POST'])
 def login():    
     #The login page for the application
-	global CurrentUser
 	if request.method == 'POST':
 		formname = request.form['username']
 		formpass = request.form['password']
-		if (formname != "" and formpass != "" and len(formname) <= 15):
+		invalids = (" ","\\","/",":",";","[","]","{","}","(",")","-","+","=","\"","'")
+		if (1 <= len(formname) <= 15 and len(formpass) >= 1 and not any(i in formname for i in invalids) and not any(i in formpass for i in invalids)):
 			if request.form['type'] == 'register':			
 				register(formname, formpass)
 			elif request.form['type'] == 'signin':
 				signin(formname, formpass)
 		else:
 			flash("Please enter a valid username and password. Valid usernames are 1-15 characters long.")
-	exist = None
 	#Once the CurrentUser has been set (or not), the page will be rendered depending on its validity
 	return redirect(url_for('init'))
 
 def register(formname, formpass):
 	#This is what transpires if the user chooses to create a new account
+	global CurrentUser
 	exist = None
 	for row in User.query.filter_by(username=str(formname)):
 		exist = row
@@ -85,6 +85,7 @@ def register(formname, formpass):
 
 def signin(formname, formpass):
 	#This is what transpires when the user chooses to get back on an existing account
+	global CurrentUser
 	exist = None
 	for row in User.query.filter_by(username=str(formname), password=str(formpass)):
 		exist = row
@@ -149,9 +150,10 @@ def finished_round():
 	#the score is then saved to the database
 	if CurrentUser == None:
 		message = ""
-		message += "Your total error was " + str(totaldifference)
+		message += "Your total error was " + str(totaldifference) + ". "
 		message += "You must login to have your score recorded </h1>"
-		return render_template('noscore.html')
+		selection_index = buildselect(photolist)
+		return render_template('noscore.html', message=message)
 	else: 
 		if CurrentUser != None and selection_index == []:
 			sessionscore = Score(CurrentUser.id, totaldifference)
