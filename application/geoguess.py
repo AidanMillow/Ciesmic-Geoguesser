@@ -26,6 +26,7 @@ app.app_context().push()
 fullphotolist = create_photo_list()
 photolist = []
 selection_index=[]
+gameSize = 0
 CurrentUser = None
 totaldifference = 0
 
@@ -100,12 +101,12 @@ def signin(formname, formpass):
 def start_game():
     global photolist
     global selection_index
-    selection_data = buildPhotoList(fullphotolist,10)
+    global gameSize
+    gameSize=int(request.form['length'])
+    selection_data = buildPhotoList(fullphotolist,gameSize)
     photolist = selection_data[0]
-    print photolist
     selection_index=selection_data[1]
-    print selection_index
-    return render_template("guess.html",PhotoNo = random_photo(photolist,selection_index),difference=-1)
+    return render_template("guess.html",PhotoNo = random_photo(photolist,selection_index))
 	
 @app.route('/guess', methods = ['POST','GET'])
 def new_guess():

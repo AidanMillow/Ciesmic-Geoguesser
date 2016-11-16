@@ -3,7 +3,7 @@ import random
 
 def create_photo_list():
     photolist = []
-    file = open("application/scripts/photos/central_city.csv","r")    
+    file = open("application/scripts/photos/positions.csv","r")    
     csv_reader = csv.reader(file)    
     for line in csv_reader:        
         photo = {}
