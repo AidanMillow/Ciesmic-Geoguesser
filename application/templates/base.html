@@ -46,16 +46,19 @@
 					{% endif %}                   
 				</form>
 				{% endif %}
-				<div class="flashes">
-					{% for message in get_flashed_messages()%}
-						{{ message|safe }}
-					{% endfor %}
-				</div>
 			</div>        
 		</div>
     </nav>
     <body>
     <div class="container">
+			<div class="flashes">
+				<!--{% for message in get_flashed_messages()%}
+					{{ message|safe }}
+				{% endfor %}-->
+				{% if flashed != None %}
+					{{ flashed }}
+				{% endif %}
+			</div>
             {% block content %}
             <div class="row">
                 <div class="col-sm-8">
@@ -66,6 +69,12 @@
                 <div class="col-sm-4">
                     <img style="width:250px" src="../static/images/copthorne.jpeg"/>   
                     <form class="navbar-form navbar-right" action = "/start" method = 'POST'>
+						<label for="5">5</label>
+						<input type="radio" name="length" value="5" id="5" checked>
+						<label for="10">10</label>
+						<input type="radio" name="length" value="10" id="10">
+						<label for="20">20</label>
+						<input type="radio" name="length" value="20" id="20">
                         <button style="width:200px;height:50px;font-size:18px" value = "Start Game" class="btn btn-success">Start Game</button>                
                     </form>                              
                 </div>

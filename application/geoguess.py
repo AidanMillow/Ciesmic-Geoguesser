@@ -9,6 +9,7 @@ app.config.from_object(DevelopmentConfig)
 app._static_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
 print (app._static_folder)
 
+#Sets up database info for the session
 db.init_app(app)
 with app.app_context():
 	db.create_all()
@@ -23,14 +24,17 @@ with app.app_context():
 	db.session.commit()
 app.app_context().push()
 
-fullphotolist = create_photo_list()
-photolist = []
-selection_index=[]
-CurrentUser = None
-totaldifference = 0
+#Global variables
+fullphotolist = create_photo_list() #The entire list of available photos
+photolist = [] #The list  of photos the game will use, which is filled when the game starts
+selection_index=[] #The indices that are used to access the photolist without affecting it directly
+gameSize = 0 #The amount of photos the user has chosen to guess in one session
+CurrentUser = None #The user that is currently logged in
+totaldifference = 0 #The user's total score for the current session
+flashmessage = None #A backup variable used in place of the flash method. Will be replaced when session data can be reduced
 
 def directrender(url, **kwargs):
-    #This method is meant to replace render_template methods to check if a user is signed in, but it doesn't work yet    
+    #This method is meant to replace render_template methods to check if a user is signed in, but is currently not in use  
     if CurrentUser != None:
         for row in User.query.filter_by(username=str(CurrentUser.username)):
             exist = row
@@ -41,27 +45,34 @@ def directrender(url, **kwargs):
 
 @app.route('/')
 def init():
-    return render_template('base.html',app=app,user=CurrentUser)
+	#The home page for the app, where the user is meant to begin
+	global flashmessage
+	flashing = flashmessage
+	flashmessage = None
+	return render_template('base.html',app=app,user=CurrentUser, flashed = flashing)
 
 @app.route('/login', methods = ['POST'])
 def login():    
     #The login page for the application
+	global flashmessage
 	if request.method == 'POST':
 		formname = request.form['username']
 		formpass = request.form['password']
+		#Currently a login will fail if the following characters are used in the input boxes
 		invalids = (" ","\\","/",":",";","[","]","{","}","(",")","-","+","=","\"","'")
-		if (1 <= len(formname) <= 15 and len(formpass) >= 1 and not any(i in formname for i in invalids) and not any(i in formpass for i in invalids)):
+		if (1 <= len(formname) <= 15 and len(formpass) >= 8 and not any(i in formname for i in invalids) and not any(i in formpass for i in invalids)):
 			if request.form['type'] == 'register':			
 				register(formname, formpass)
 			elif request.form['type'] == 'signin':
 				signin(formname, formpass)
 		else:
-			flash("Please enter a valid username and password. Valid usernames are 1-15 characters long.")
+			flashmessage = "Please enter a valid username and password. Valid usernames are 1-15 characters long, and valid passwords are at least 8 characters."
 	#Once the CurrentUser has been set (or not), the page will be rendered depending on its validity
 	return redirect(url_for('init'))
 
 def register(formname, formpass):
 	#This is what transpires if the user chooses to create a new account
+	global flashmessage
 	global CurrentUser
 	exist = None
 	for row in User.query.filter_by(username=str(formname)):
@@ -78,12 +89,13 @@ def register(formname, formpass):
 			CurrentUser = exist
 			buildselect(photolist)
 		else:
-			flash("There was an error during registration")
+			flashmessage = "There was an error during registration"
 	else:
-		flash("A user with that name already exists")
+		flashmessage = "A user with that name already exists"
 
 def signin(formname, formpass):
 	#This is what transpires when the user chooses to get back on an existing account
+	global flashmessage
 	global CurrentUser
 	exist = None
 	for row in User.query.filter_by(username=str(formname), password=str(formpass)):
@@ -92,28 +104,37 @@ def signin(formname, formpass):
 		#The query checks for username and password, they must both be correct to gain access
 		CurrentUser = exist
 		buildselect(photolist)
-		flash("Welcome back "+ CurrentUser.username +", let us begin")
+		flashmessage = "Welcome back "+ CurrentUser.username +", let us begin"
 	else:
-		flash("Your username or password was incorrect")
+		flashmessage = "Your username or password was incorrect"
 
 @app.route('/start', methods = ['POST','GET'])
 def start_game():
+	#The method that sets up a new play session for the game and displays the first photo
+    global flashmessage
     global photolist
     global selection_index
-    selection_data = buildPhotoList(fullphotolist,10)
+    global gameSize
+    gameSize=int(request.form['length'])
+    selection_data = buildPhotoList(fullphotolist,gameSize)
     photolist = selection_data[0]
-    print photolist
     selection_index=selection_data[1]
-    print selection_index
-    return render_template("guess.html",PhotoNo = random_photo(photolist,selection_index),difference=-1)
+    flashing = flashmessage
+    flashmessage = None
+    return render_template("guess.html",PhotoNo = random_photo(photolist,selection_index), flashed = flashing)
 	
-@app.route('/guess', methods = ['POST','GET'])
+@app.route('/guess', methods = ['POST', 'GET'])
 def new_guess():
-	return render_template("guess.html",PhotoNo = random_photo(photolist,selection_index))
+	#Every photo that displays after the first is displayed on this page one at a time
+	global flashmessage
+	flashing = flashmessage
+	flashmessage = None
+	return render_template("guess.html",PhotoNo = random_photo(photolist,selection_index), flashed = flashing)
 
 @app.route('/check', methods =['POST'])
 def check_guess():
-    #The page used to calculate the user's score    
+    #The page used to calculate the user's score for a guess on any given photo in the list
+    global flashmessage
     if request.method == 'POST':        
         global totaldifference
         PhotoNo = request.form['photo']
@@ -128,33 +149,36 @@ def check_guess():
             formlat = float(request.form['latitude'])
             formlong = float(request.form['longitude'])
         except ValueError:
-			flash("Please select a location")
+			flashmessage = "Please select a location"
 			return redirect(url_for('new_guess'))
+		#The following line calculates the distance in meters between the guessed location and the actual one
         Guessdifference=math.sqrt(pow(110.574*(float(request.form['latitude'])-latitude),2)+pow(111.32*math.cos(math.radians(latitude))*(float(request.form['longitude'])-longitude),2))*1000
         totaldifference += Guessdifference
         Guessdifference=float("%.3f" % Guessdifference)
-        Guess=str(request.form['latitude'])+','+str(request.form['longitude'])
         try:
             selection_index.remove(Photo)
         except ValueError:
 			totaldifference -= Guessdifference
-        Guess=Guess.split(',')
-        guesslat=(Guess[0])
-        guesslong=(Guess[1])
+        guesslat=(str(request.form['latitude']))
+        guesslong=(str(request.form['longitude']))
         actuallat=myPhoto['latitude']
         actuallong=myPhoto['longitude']
         scoreReport = report(Guessdifference)
-        return render_template('feedback.html', actlat=actuallat, actlong=actuallong, glat=guesslat, glong=guesslong, scoreReport=scoreReport)		
+        flashing = flashmessage
+        flashmessage = None
+        return render_template('feedback.html', actlat=actuallat, actlong=actuallong, glat=guesslat, glong=guesslong, scoreReport=scoreReport, flashed = flashing)		
     else:
         return redirect(url_for('next_photo'))
 
     
 
-@app.route('/finish')
+@app.route('/finish', methods = ['POST', 'GET'])
 def finished_round():
 	#The end screen for the app when a user has guessed through all photos
+	global flashmessage
 	global totaldifference
 	global selection_index
+	global gameSize
 	message = False
 	totaldifference=float("%.3f" % totaldifference) #rounds the difference to 3 decimal places
 	showdifference = totaldifference #saves the difference to show so that it can safely be reset
@@ -162,14 +186,17 @@ def finished_round():
 	if CurrentUser == None:
 		message = "You must login to have your score recorded"
 	elif CurrentUser != None and selection_index == []:
-		sessionscore = Score(CurrentUser.id, totaldifference)
+		sessionscore = Score(CurrentUser.id, totaldifference, gameSize)
 		db.session.add(sessionscore)
 		db.session.commit()
+		selection_index.append(0)
 	#Then we build and show the high score table and rebuild the selectindex
 	scoretable = []
-	for item in Score.query.order_by(Score.score.asc()):
+	for item in Score.query.filter(Score.category == gameSize).order_by(Score.score.asc()):
 		scoretable.append({'user':item.user.username,'score':item.score})
-	return render_template('finish.html', difference=showdifference, table = HighScores(scoretable), message = message)
+	flashing = flashmessage
+	flashmessage = None
+	return render_template('finish.html', difference=showdifference, table = HighScores(scoretable), gameSize=gameSize, message = message, flashed = flashing)
 
 def report(diff):
 	#This function flashes a message for the user depending on how close they got
@@ -190,7 +217,7 @@ def report(diff):
 		message += "That's really close, good job!</h1>"
 	return message
 
-@app.route('/next_photo', methods =['POST', 'GET'])
+@app.route('/next_photo', methods =['POST'])
 def next_photo():
 	if selection_index == []:
 		#selection_index will be empty once the user has guessed all photos. The user will then be redirected
@@ -201,6 +228,9 @@ def next_photo():
 @app.route('/logout',methods =['POST'])
 def logout():
     #redirect page that logs out the user and returns to the login screen	
+    global flashmessage
     global CurrentUser
     CurrentUser = None
-    return render_template('base.html',user=CurrentUser)
+    flashing = flashmessage
+    flashmessage = None
+    return render_template('base.html',user=CurrentUser, flashed = flashing)

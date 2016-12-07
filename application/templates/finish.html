@@ -10,6 +10,7 @@
 			</form>
 		{% else %}
 			<form class="navbar-form navbar-right" action = "/start" method = 'POST'>
+				<input type="hidden" name='length' value='{{gameSize}}'/>
 				<button style="width:200px;height:50px;font-size:18px" value = "Start Game" class="btn btn-success">Start Again</button>                
 			</form>
 		{% endif %}
