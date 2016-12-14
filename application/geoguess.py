@@ -160,29 +160,24 @@ def check_guess():
                 latitude = photo['latitude']
                 longitude = photo['longitude']
                 Photo=photolist.index(photo)
-                myPhoto=photo
-        try:
+        try: #These variables should only be unable to resolve if no location is selected
             formlat = float(request.form['latitude'])
             formlong = float(request.form['longitude'])
         except ValueError:
 			flashmessage = "Please select a location"
 			return redirect(url_for('new_guess'))
 		#The following line calculates the distance in meters between the guessed location and the actual one
-        Guessdifference=math.sqrt(pow(110.574*(float(request.form['latitude'])-latitude),2)+pow(111.32*math.cos(math.radians(latitude))*(float(request.form['longitude'])-longitude),2))*1000
+        Guessdifference=math.sqrt(pow(110.574*(formlat-latitude),2)+pow(111.32*math.cos(math.radians(latitude))*(formlong-longitude),2))*1000
         totaldifference += Guessdifference
         Guessdifference=float("%.3f" % Guessdifference)
-        try:
+        try: #Removes the photo from the selection index if able
             selection_index.remove(Photo)
-        except ValueError:
+        except ValueError: #If unable to remove due to already being removed, the previously added Guessdifference is removed
 			totaldifference -= Guessdifference
-        guesslat=(str(request.form['latitude']))
-        guesslong=(str(request.form['longitude']))
-        actuallat=myPhoto['latitude']
-        actuallong=myPhoto['longitude']
         scoreReport = report(Guessdifference)
         flashing = flashmessage
         flashmessage = None
-        return render_template('feedback.html', actlat=actuallat, actlong=actuallong, glat=guesslat, glong=guesslong, scoreReport=scoreReport, flashed = flashing)		
+        return render_template('feedback.html', actlat=latitude, actlong=longitude, glat=formlat, glong=formlong, scoreReport=scoreReport, flashed = flashing)		
     else:
         return redirect(url_for('next_photo'))
 
