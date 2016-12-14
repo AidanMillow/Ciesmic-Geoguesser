@@ -43,13 +43,26 @@ def directrender(url, **kwargs):
     flash("No user is currently signed in")
     return redirect(url_for('init'))
 
+def displayscores():
+	scoretable = []
+	catlist = []
+	for row in Score.query.distinct(Score.category):
+		if row.category not in catlist:
+			catlist.append(row.category)
+			table = []
+			for item in Score.query.filter(Score.category == row.category).order_by(Score.score.asc()):
+				table.append({'user':item.user.username,'score':item.score})
+			scoretable.append(HighScores(table))
+	return scoretable, catlist
+	
 @app.route('/')
 def init():
 	#The home page for the app, where the user is meant to begin
 	global flashmessage
+	scoretable, catlist = displayscores()
 	flashing = flashmessage
 	flashmessage = None
-	return render_template('base.html',app=app,user=CurrentUser, flashed = flashing)
+	return render_template('base.html',app=app,user=CurrentUser, flashed = flashing, tables = scoretable, titles = catlist)
 
 @app.route('/login', methods = ['POST'])
 def login():    
@@ -233,7 +246,8 @@ def logout():
     #redirect page that logs out the user and returns to the login screen	
     global flashmessage
     global CurrentUser
+    scoretable, catlist = displayscores()
     CurrentUser = None
     flashing = flashmessage
     flashmessage = None
-    return render_template('base.html',user=CurrentUser, flashed = flashing)
+    return render_template('base.html',user=CurrentUser, flashed = flashing, tables = scoretable, titles = catlist)
