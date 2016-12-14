@@ -115,10 +115,12 @@ def start_game():
     global photolist
     global selection_index
     global gameSize
+    global totaldifference
     gameSize=int(request.form['length'])
     selection_data = buildPhotoList(fullphotolist,gameSize)
     photolist = selection_data[0]
     selection_index=selection_data[1]
+    totaldifference = 0
     flashing = flashmessage
     flashmessage = None
     return render_template("guess.html",PhotoNo = random_photo(photolist,selection_index), flashed = flashing)
@@ -135,6 +137,7 @@ def new_guess():
 def check_guess():
     #The page used to calculate the user's score for a guess on any given photo in the list
     global flashmessage
+    print len(photolist)
     if request.method == 'POST':        
         global totaldifference
         PhotoNo = request.form['photo']
@@ -207,9 +210,9 @@ def report(diff):
 		return "There was an error reporting your score"
 	if diff >= 37000.1:
 		message += "Was that even in christchurch?</h1>"
-	elif diff >= 2500.1:
+	elif diff >= 750.1:
 		message += "That's a long way off</h1>"
-	elif diff >= 500.1:
+	elif diff >= 250.1:
 		message += "Getting there, try and get a bit closer</h1>"
 	elif diff >= 100.1:
 		message += "You're in the right area, but you can still do better</h1>"
