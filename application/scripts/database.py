@@ -37,5 +37,6 @@ class Score(db.Model):
 class HighScores(Table):
 	#This class represents the HTML table that will be built on the final page of the application    
     __tablename__ = "HighScores"
+    ranking = Col('Ranking')
     user = Col('User')
     score = Col('Score')

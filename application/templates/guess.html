@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
-	<img src="https://quakestudies.canterbury.ac.nz/store/download/part/{{PhotoNo}}" style="width: 500px;" />
+	<div class="row">
+	<div class="col-md-6">
+	<img src="https://quakestudies.canterbury.ac.nz/store/download/part/{{PhotoNo}}" style="width: 100%;" />
 	<h2>Where is this image?</h2>
+	</div>
+	<div class="col-md-6">
 	<div id="map" style="width: 500px; height: 400px;"></div>
     <script type="text/javascript">	
 	var map = new google.maps.Map(document.getElementById('map'), {zoom: 14, center: new google.maps.LatLng(-43.531,172.632), mapTypeId: google.maps.MapTypeId.ROADMAP});
@@ -24,4 +28,6 @@
 		 <input type="hidden" id="long" name="longitude"/>          
          <button class="btn btn-success" type="submit" name="photo" value="{{PhotoNo}}">Submit</button>
       </form>
+	</div>
+	</div>
 {% endblock %}

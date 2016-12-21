@@ -150,7 +150,6 @@ def new_guess():
 def check_guess():
     #The page used to calculate the user's score for a guess on any given photo in the list
     global flashmessage
-    print len(photolist)
     if request.method == 'POST':        
         global totaldifference
         PhotoNo = request.form['photo']
@@ -203,8 +202,10 @@ def finished_round():
 		selection_index.append(0)
 	#Then we build and show the high score table and rebuild the selectindex
 	scoretable = []
+	ranking=0
 	for item in Score.query.filter(Score.category == gameSize).order_by(Score.score.asc()):
-		scoretable.append({'user':item.user.username,'score':item.score})
+		ranking+=1
+		scoretable.append({'ranking':ranking, 'user':item.user.username,'score':item.score})
 	flashing = flashmessage
 	flashmessage = None
 	return render_template('finish.html', difference=showdifference, table = HighScores(scoretable), gameSize=gameSize, message = message, flashed = flashing)
