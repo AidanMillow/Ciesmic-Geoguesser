@@ -21,8 +21,9 @@
       </form>
         </div>
     </div>
+
     <script type="text/javascript">	
-	var map = new google.maps.Map(document.getElementById('map'), {zoom: 12, center: new google.maps.LatLng(-43.5321,172.6362), mapTypeId: google.maps.MapTypeId.ROADMAP});
+	var map = new google.maps.Map(document.getElementById('map'), {zoom: 14, center: new google.maps.LatLng(-43.531,172.632), mapTypeId: google.maps.MapTypeId.ROADMAP});
 	markers=[];
 	google.maps.event.addListener(map,'click', function(event){
 		for (var i=0; i < markers.length; i++){
@@ -36,5 +37,4 @@
 		document.getElementById('long').value=pos.lng();
 	});
 	</script>
-      
 {% endblock %}

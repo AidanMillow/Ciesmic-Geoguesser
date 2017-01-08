@@ -3,7 +3,7 @@ import random
 
 def create_photo_list():
     photolist = []
-    file = open("application/scripts/photos/central_city.csv","r")    
+    file = open("application/scripts/photos/central_city_photos.csv","r")    
     csv_reader = csv.reader(file)    
     for line in csv_reader:        
         photo = {}
@@ -25,3 +25,19 @@ def random_photo(photolist,selection_index):
 	#picks a random photo from the list, then removes it from the selectionindex
 	myChoice=random.choice(selection_index)
 	return photolist[myChoice]['PhotoNum']
+	
+def buildPhotoList(photolist, listlength):
+	fullindex = buildselect(photolist)
+	myList = []
+	i=0
+	while i<listlength:
+		myChoice=random.choice(fullindex)
+		photoChoice=photolist[myChoice]
+		photo = {}
+		photo['PhotoNum'] = photoChoice['PhotoNum']
+		photo['latitude'] = photoChoice['latitude']
+		photo['longitude'] = photoChoice['longitude']
+		myList.append(photo)
+		fullindex.remove(myChoice)
+		i+=1
+	return (myList,buildselect(myList))

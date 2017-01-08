@@ -9,7 +9,7 @@
         <link href="/static/css/bootstrap.min.css" rel="stylesheet">
         <link href="/static/css/app.css" rel="stylesheet">
     </head>
-   <nav class="navbar navbar-inverse navbar-fixed-top">
+	<nav class="navbar navbar-inverse navbar-fixed-top">
       
       <div class=" fluid">
         <div class="navbar-header">
@@ -41,22 +41,43 @@
          {% endif %}            
         </div>        
       </div>
+
     </nav>
     <body>
-    <div class="container">        
+    <div class="container">
+			<div class="flashes">
+				<!--{% for message in get_flashed_messages()%}
+					{{ message|safe }}
+				{% endfor %}-->
+				{% if flashed != None %}
+					{{ flashed }}
+				{% endif %}
+			</div>
             {% block content %}
             <div class="row">
                 <div class="col-sm-8">
                     <h3>Struggling to remember Christchurch?</h3>    
-                    <p>The CEISMIC geoguesser is a fun way to test and improve your memory of pre-quake Christchurch. Using images from the CEISMIC Canterbury Earthquake Digital Archive, the geoguesser asks you to locate the image on a map.</p>
-                    <p>Vestibulum nec ex eu sapien convallis aliquam. Mauris blandit eros quam, et aliquam mi aliquet sed. In vehicula pellentesque sodales. Donec in eros ac mi finibus auctor. Integer a est nisi. Ut pulvinar lacus et lacus eleifend, eu placerat lacus mattis. Phasellus sapien diam, suscipit in hendrerit ac, egestas eleifend metus. Ut luctus non tellus et vulputate. Vivamus eu odio faucibus augue lobortis ultrices quis eget tortor.</p>                    
+                    <p>The CEISMIC geoguesser is a fun way to test and improve your memory of pre-quake Christchurch. You will see a series of photos taken from the CEISMIC Canterbury Earthquake Digital Archive. For each photo, you will be asked to guess the position where it was taken, which will be within the bounds of "the four avenues" on a map. You will then be scored based on how close each guess was to the actual location.</p>
+                    <p>We maintain highscore tables for the best scores across 5, 10, or 20 photos. Challenge your friends to test their own knowledge and see how you meansure up.</p>                    
                 </div>
                 <div class="col-sm-4">
                     <img style="width:250px" src="../static/images/copthorne.jpeg"/>   
                     <form class="navbar-form navbar-right" action = "/start" method = 'POST'>
+						<label for="5">5</label>
+						<input type="radio" name="length" value="5" id="5" checked>
+						<label for="10">10</label>
+						<input type="radio" name="length" value="10" id="10">
+						<label for="20">20</label>
+						<input type="radio" name="length" value="20" id="20">
                         <button style="width:200px;height:50px;font-size:18px" value = "Start Game" class="btn btn-success">Start Game</button>                
                     </form>                              
                 </div>
+				{% set i = 0 %}
+				{% for table in tables %}
+					<h4>{{ titles[i] }} Photo Scores</h4>
+					{{table}}
+					{% set i = i+1 %}
+				{% endfor %}
             </div>
             {% endblock %}
     </div>

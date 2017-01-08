@@ -23,10 +23,12 @@ class Score(db.Model):
 	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 	user = db.relationship('User', backref=db.backref('scores', lazy='dynamic'))
 	score = db.Column(db.Float)
+	category = db.Column(db.Integer)
 	
-	def __init__(self, user_id, score):
+	def __init__(self, user_id, score, category):
 		self.user_id = user_id
 		self.score = score
+		self.category = category
 	
 	def __repr__(self):
 		return '<Score %r>' % self.score
@@ -35,5 +37,6 @@ class Score(db.Model):
 class HighScores(Table):
 	#This class represents the HTML table that will be built on the final page of the application    
     __tablename__ = "HighScores"
+    ranking = Col('Ranking')
     user = Col('User')
     score = Col('Score')

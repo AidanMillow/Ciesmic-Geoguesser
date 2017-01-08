@@ -1,22 +1,14 @@
-
 {% extends "base.html" %}
 {% block content %}
-	{% with messages = get_flashed_messages() %}
-		{% if messages %}
-			{% for message in messages %}
-				<h1>{{ message }}</h1>
-			{% endfor %}
-		{% endif %}
-	{% endwith %}
 	{{ scoreReport|safe }}
 	<div id="map" style="width: 500px; height: 400px;"></div>
 	<script type="text/javascript">	
-	var map = new google.maps.Map(document.getElementById('map'), {zoom: 12, center: new google.maps.LatLng(-43.5321,172.6362), mapTypeId: google.maps.MapTypeId.ROADMAP});
+	var map = new google.maps.Map(document.getElementById('map'), {zoom: 14, center: new google.maps.LatLng(-43.531,172.632), mapTypeId: google.maps.MapTypeId.ROADMAP});
 	var GuessMarker = new google.maps.Marker({position: new google.maps.LatLng(parseFloat({{glat}}), parseFloat({{glong}})), map: map, Label: '?'});
 	var LocationMarker = new google.maps.Marker({position: new google.maps.LatLng(parseFloat({{actlat}}), parseFloat({{actlong}})), map: map, Label: '!'});
 	</script>
 	<form action = "/next_photo" method = 'POST' 
     enctype = "multipart/form-data">
-		<input type = "submit" value="Next Photo"/>
+		<button value = "Start Game" type="submit" class="btn btn-success">Next Photo</button>
 	</form>
 {% endblock %}
