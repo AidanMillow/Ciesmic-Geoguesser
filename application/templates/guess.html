@@ -7,9 +7,20 @@
 			{% endfor %}
 		{% endif %}
 	{% endwith %}
-	<img src="https://quakestudies.canterbury.ac.nz/sites/default/files/styles/large/public/qsr-part_{{PhotoNo}}.jpeg?">
-	<h2>Where is this image?</h2>
-	<div id="map" style="width: 500px; height: 400px;"></div>
+	<div class="row">
+        <div class="col-sm-7">
+            <img class="photo" src="https://quakestudies.canterbury.ac.nz/store/download/part/{{PhotoNo}}">            
+        </div>
+        <div class="col-sm-5">
+            <div id="map" style="width: 300px; height: 300px;"></div>  
+            <form action = "/check" method = 'POST' 
+         enctype = "multipart/form-data">
+		 <input type="hidden" id="lat" name="latitude"/>
+		 <input type="hidden" id="long" name="longitude"/>          
+         <button class="btn btn-success" type="submit" name="photo" value="{{PhotoNo}}">Make Guess</button>
+      </form>
+        </div>
+    </div>
     <script type="text/javascript">	
 	var map = new google.maps.Map(document.getElementById('map'), {zoom: 12, center: new google.maps.LatLng(-43.5321,172.6362), mapTypeId: google.maps.MapTypeId.ROADMAP});
 	markers=[];
@@ -25,10 +36,5 @@
 		document.getElementById('long').value=pos.lng();
 	});
 	</script>
-      <form action = "/check" method = 'POST' 
-         enctype = "multipart/form-data">
-		 <input type="hidden" id="lat" name="latitude"/>
-		 <input type="hidden" id="long" name="longitude"/>          
-         <button class="btn btn-success" type="submit" name="photo" value="{{PhotoNo}}">Submit</button>
-      </form>
+      
 {% endblock %}
