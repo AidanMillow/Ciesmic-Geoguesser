@@ -18,25 +18,29 @@
           </a>          
         </div>        
         <div id="navbar" class="navbar-collapse collapse">          
-          {% if user == None %}          
-          <form class="navbar-form navbar-right" action = "/login" method = 'POST' enctype = "multipart/form-data">          
-            <div class="form-group">
-              <input type="text" placeholder="Email" name="username" class="form-control">
-            </div>
-            <div class="form-group">
-              <input type="password" placeholder="Password" name = "password" class="form-control">
-            </div>                        
-                <button class="btn btn-success" type="submit" name="type" value = "signin">Sign in</button>
-                <button class="btn btn-success" type="submit" name="type" value = "register">Register</button>                
-          </form>                 
+          {% if user == None %}
+		    {% if request.path == '/' or request.path =='/logout' %}
+              <form class="navbar-form navbar-right" action = "/login" method = 'POST' enctype = "multipart/form-data">          
+                <div class="form-group">
+                  <input type="text" placeholder="Email" name="username" class="form-control">
+                </div>
+                <div class="form-group">
+                  <input type="password" placeholder="Password" name = "password" class="form-control">
+                </div>                        
+                    <button class="btn btn-success" type="submit" name="type" value = "signin">Sign in</button>
+                    <button class="btn btn-success" type="submit" name="type" value = "register">Register</button>                
+              </form>
+            {% else %}	
+              <form class="navbar-form navbar-right" action = "/logout" method = 'POST' enctype = "multipart/form-data">   
+               	<button style="margin-right:10px" class="btn btn-success" name="type" value = "home">Return Home</button>
+              </form>
+            {% endif %}			  
          {% else %}
             <form class="navbar-form navbar-right" action = "/logout" method = 'POST' enctype = "multipart/form-data">                
                 {% if request.path == '/login' %} 
-                <p class="navbar-text">Welcome {{user.username}}</p>     
-                <button style="margin-right:10px" class="btn btn-success" name="type" value = "signin">Logout</button>                
-                {% else %}  
-                <button style="margin-right:10px" class="btn btn-success" name="type" value = "signin">Logout</button> 
-                {% endif %}                   
+                <p class="navbar-text">Welcome {{user.username}}</p>
+                {% endif %}   				
+                <button style="margin-right:10px" class="btn btn-success" name="type" value = "logout">Logout</button>                  
             </form>            
          {% endif %}            
         </div>        

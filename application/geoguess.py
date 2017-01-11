@@ -50,8 +50,10 @@ def displayscores():
 		if row.category not in catlist:
 			catlist.append(row.category)
 			table = []
+			ranking=0
 			for item in Score.query.filter(Score.category == row.category).order_by(Score.score.asc()):
-				table.append({'user':item.user.username,'score':item.score})
+				ranking+=1
+				table.append({'ranking':ranking, 'user':item.user.username,'score':item.score})
 			scoretable.append(HighScores(table))
 	return scoretable, catlist
 	
@@ -129,6 +131,7 @@ def start_game():
     global selection_index
     global gameSize
     global totaldifference
+    global CurrentUser
     gameSize=int(request.form['length'])
     selection_data = buildPhotoList(fullphotolist,gameSize)
     photolist = selection_data[0]
@@ -136,20 +139,22 @@ def start_game():
     totaldifference = 0
     flashing = flashmessage
     flashmessage = None
-    return render_template("guess.html",PhotoNo = random_photo(photolist,selection_index), flashed = flashing)
+    return render_template("guess.html",user = CurrentUser, PhotoNo = random_photo(photolist,selection_index), flashed = flashing)
 	
 @app.route('/guess', methods = ['POST', 'GET'])
 def new_guess():
 	#Every photo that displays after the first is displayed on this page one at a time
 	global flashmessage
+	global CurrentUser
 	flashing = flashmessage
 	flashmessage = None
-	return render_template("guess.html",PhotoNo = random_photo(photolist,selection_index), flashed = flashing)
+	return render_template("guess.html", user=CurrentUser, PhotoNo = random_photo(photolist,selection_index), flashed = flashing)
 
 @app.route('/check', methods =['POST'])
 def check_guess():
     #The page used to calculate the user's score for a guess on any given photo in the list
     global flashmessage
+    global CurrentUser
     if request.method == 'POST':        
         global totaldifference
         PhotoNo = request.form['photo']
@@ -176,7 +181,7 @@ def check_guess():
         scoreReport = report(Guessdifference)
         flashing = flashmessage
         flashmessage = None
-        return render_template('feedback.html', actlat=latitude, actlong=longitude, glat=formlat, glong=formlong, scoreReport=scoreReport, flashed = flashing)		
+        return render_template('feedback.html', user=CurrentUser, actlat=latitude, actlong=longitude, glat=formlat, glong=formlong, scoreReport=scoreReport, flashed = flashing)		
     else:
         return redirect(url_for('next_photo'))
 
@@ -208,7 +213,7 @@ def finished_round():
 		scoretable.append({'ranking':ranking, 'user':item.user.username,'score':item.score})
 	flashing = flashmessage
 	flashmessage = None
-	return render_template('finish.html', difference=showdifference, table = HighScores(scoretable), gameSize=gameSize, message = message, flashed = flashing)
+	return render_template('finish.html', user=CurrentUser, difference=showdifference, table = HighScores(scoretable), gameSize=gameSize, message = message, flashed = flashing)
 
 def report(diff):
 	#This function flashes a message for the user depending on how close they got
