@@ -52,8 +52,11 @@ def displayscores():
 			table = []
 			ranking = 0
 			for item in Score.query.filter(Score.category == row.category).order_by(Score.score.asc()):
-				ranking += 1
-				table.append({'ranking':ranking, 'user':item.user.username,'score':item.score})
+				if ranking < 10:
+					ranking+=1
+					table.append({'ranking':ranking, 'user':item.user.username,'score':item.score})
+				else:
+					break
 			scoretable.append(HighScores(table))
 	return scoretable, catlist
 	
@@ -212,9 +215,18 @@ def finished_round():
 	for item in Score.query.filter(Score.category == gameSize).order_by(Score.score.asc()):
 		ranking+=1
 		scoretable.append({'ranking':ranking, 'user':item.user.username, 'score':item.score})
+	displaytable = []
+	myranking = None
+	for item in scoretable:
+		if item['user']==CurrentUser.username and item['score']==totaldifference:
+			myranking=item['ranking']
+			break
+	for item in scoretable:
+		if item['ranking']>myranking-5 and item['ranking']<myranking+5:
+			displaytable.append({'ranking':item['ranking'], 'user':item['user'], 'score':item['score']})
 	flashing = flashmessage
 	flashmessage = None
-	return render_template('finish.html', user=CurrentUser, difference=showdifference, table = HighScores(scoretable), gameSize=gameSize, message = message, flashed = flashing)
+	return render_template('finish.html', user=CurrentUser, difference=showdifference, table = HighScores(displaytable), gameSize=gameSize, message = message, flashed = flashing)
 
 def report(diff):
 	#This function flashes a message for the user depending on how close they got
