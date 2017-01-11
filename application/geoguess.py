@@ -103,6 +103,7 @@ def register(formname, formpass):
 		if exist != None:
 			CurrentUser = exist
 			buildselect(photolist)
+			flashmessage = "You have successfully registered as "+ CurrentUser.username
 		else:
 			flashmessage = "There was an error during registration"
 	else:

@@ -3,6 +3,12 @@ body {
 
 }
 
+table, td, th {
+	padding-right: 10px;
+	padding-left: 10px;
+	border: 1px solid black;
+}
+
 .thumb {
 max-width: 200px;
 max-height: 200px;
@@ -64,4 +70,9 @@ padding: 4px 8px;
 
     margin: auto;
 
+}
+
+.flashes {
+	font-size: 20px;
+	padding-bottom: 10px;
 }
