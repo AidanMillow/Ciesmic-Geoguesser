@@ -50,8 +50,10 @@ def displayscores():
 		if row.category not in catlist:
 			catlist.append(row.category)
 			table = []
+			ranking = 0
 			for item in Score.query.filter(Score.category == row.category).order_by(Score.score.asc()):
-				table.append({'user':item.user.username,'score':item.score})
+				ranking += 1
+				table.append({'ranking':ranking, 'user':item.user.username,'score':item.score})
 			scoretable.append(HighScores(table))
 	return scoretable, catlist
 	
@@ -205,7 +207,7 @@ def finished_round():
 	ranking=0
 	for item in Score.query.filter(Score.category == gameSize).order_by(Score.score.asc()):
 		ranking+=1
-		scoretable.append({'ranking':ranking, 'user':item.user.username,'score':item.score})
+		scoretable.append({'ranking':ranking, 'user':item.user.username, 'score':item.score})
 	flashing = flashmessage
 	flashmessage = None
 	return render_template('finish.html', difference=showdifference, table = HighScores(scoretable), gameSize=gameSize, message = message, flashed = flashing)
