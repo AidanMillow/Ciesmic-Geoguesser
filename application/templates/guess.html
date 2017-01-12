@@ -8,21 +8,21 @@
      <div class="stats">
         <div class="round">    
             <div class="stats_head">ROUND</div>
-            <div class="stats_value">1/{{rounds}}</div>
+            <div class="stats_value">{{round}}/{{rounds}}</div>
         </div>
         <div class="score">    
             <div class="stats_head">SCORE</div>
-            <div class="stats_value">0</div>
+            <div class="stats_value">{{score}}</div>
         </div>
      </div>     
 {% endblock %}		
 
 {% block content %}  
 	<div class="row">
-        <div class="col-sm-9">
+        <div class="col-sm-8">
             <img class="photo" src="https://quakestudies.canterbury.ac.nz/store/download/part/{{PhotoNo}}"> 
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-4">
             <div id="map" style="width: 300px; height: 300px;"></div>  
             <form action = "/check" method = 'POST' 
          enctype = "multipart/form-data">

@@ -29,10 +29,11 @@
                         <button class="btn btn-success" type="submit" name="type" value="signin">Sign in</button>
                         <button class="btn btn-success" type="submit" name="type" value="register">Register</button>                
                   </form>               
-               {% else %}
+               {% else %}                    
                     <form class="navbar-form navbar-right" action = "/logout" method = 'POST' enctype = "multipart/form-data">   
                         <button style="margin-right:10px" class="btn btn-success" name="type" value = "home">Logout</button>
                     </form>
+                    <div class="welcome">Welcome {{user.username}}</div>
               {% endif %}
             {% endblock %}         
         </div>        
