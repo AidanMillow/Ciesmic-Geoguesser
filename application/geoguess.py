@@ -62,12 +62,13 @@ def displayscores():
 	
 @app.route('/')
 def init():
-	#The home page for the app, where the user is meant to begin
-	global flashmessage
-	scoretable, catlist = displayscores()
-	flashing = flashmessage
-	flashmessage = None
-	return render_template('base.html',app=app,user=CurrentUser, flashed = flashing, tables = scoretable, titles = catlist)
+    #The home page for the app, where the user is meant to begin
+    global flashmessage
+    global CurrentUser
+    scoretable, catlist = displayscores()
+    flashing = flashmessage
+    flashmessage = None    
+    return render_template('base.html',app=app,user=CurrentUser, flashed = flashing, tables = scoretable, titles = catlist)
 
 @app.route('/login', methods = ['POST'])
 def login():    
@@ -143,7 +144,7 @@ def start_game():
     totaldifference = 0
     flashing = flashmessage
     flashmessage = None
-    return render_template("guess.html",user = CurrentUser, PhotoNo = random_photo(photolist,selection_index), flashed = flashing)
+    return render_template("guess.html",user = CurrentUser, PhotoNo = random_photo(photolist,selection_index), rounds = len(photolist), flashed = flashing)
 	
 @app.route('/guess', methods = ['POST', 'GET'])
 def new_guess():
@@ -184,8 +185,8 @@ def check_guess():
 			totaldifference -= Guessdifference
         scoreReport = report(Guessdifference)
         flashing = flashmessage
-        flashmessage = None
-        return render_template('feedback.html', user=CurrentUser, actlat=latitude, actlong=longitude, glat=formlat, glong=formlong, scoreReport=scoreReport, flashed = flashing)		
+        flashmessage = None          
+        return render_template('feedback.html', user=CurrentUser, actlat=latitude, actlong=longitude, glat=formlat, glong=formlong, scoreReport=scoreReport, flashed = flashing, rounds = len(photolist))		
     else:
         return redirect(url_for('next_photo'))
 
@@ -230,21 +231,11 @@ def finished_round():
 
 def report(diff):
 	#This function flashes a message for the user depending on how close they got
-	message = "<h1>Your last guess was "+str(diff)+" m away from the actual location<br>"
+	message = "Your guess was <b>"+str(diff)+" m</b> away from the correct location<br>"
 	try:
 		diff=float(diff)
 	except Exception:
-		return "There was an error reporting your score"
-	if diff >= 37000.1:
-		message += "Was that even in christchurch?</h1>"
-	elif diff >= 750.1:
-		message += "That's a long way off</h1>"
-	elif diff >= 250.1:
-		message += "Getting there, try and get a bit closer</h1>"
-	elif diff >= 100.1:
-		message += "You're in the right area, but you can still do better</h1>"
-	else:
-		message += "That's really close, good job!</h1>"
+		return "There was an error reporting your score"	
 	return message
 
 @app.route('/next_photo', methods =['POST'])

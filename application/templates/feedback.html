@@ -1,14 +1,83 @@
 {% extends "base.html" %}
+
+{% block navbar %}    
+    <form class="navbar-form navbar-right" action = "/" method = 'GET'>   
+        <button style="margin-right:10px" class="btn btn-success">Return Home</button>
+    </form>     
+     <div class="stats">
+        <div class="round">    
+            <div class="stats_head">ROUND</div>
+            <div class="stats_value">1/{{rounds}}</div>
+        </div>
+        <div class="score">    
+            <div class="stats_head">SCORE</div>
+            <div class="stats_value">0</div>
+        </div>
+     </div>     
+{% endblock %}
+
+
 {% block content %}
-	{{ scoreReport|safe }}
-	<div id="map" style="width: 500px; height: 400px;"></div>
-	<script type="text/javascript">	
-	var map = new google.maps.Map(document.getElementById('map'), {zoom: 14, center: new google.maps.LatLng(-43.531,172.632), mapTypeId: google.maps.MapTypeId.ROADMAP});
-	var GuessMarker = new google.maps.Marker({position: new google.maps.LatLng(parseFloat({{glat}}), parseFloat({{glong}})), map: map, Label: '?'});
-	var LocationMarker = new google.maps.Marker({position: new google.maps.LatLng(parseFloat({{actlat}}), parseFloat({{actlong}})), map: map, Label: '!'});
-	</script>
-	<form action = "/next_photo" method = 'POST' 
+	
+	
+    <div id="map" style="width: 100vw; height:70vh"></div>    
+    <div class="report">
+        {{ scoreReport|safe }}        
+    </div>
+    <form class="next" action = "/next_photo" method = 'POST' 
     enctype = "multipart/form-data">
-		<button value = "Start Game" type="submit" class="btn btn-success">Next Photo</button>
+		<button value = "next round" type="submit" class="btn btn-success">Play Next Round</button>
 	</form>
+	<script type="text/javascript">	
+	var style = [{"featureType":"all","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#ffffff"}]},{"featureType":"all","elementType":"geometry.stroke","stylers":[{"visibility":"on"},{"color":"#84d9f4"}]},{"featureType":"all","elementType":"labels.text","stylers":[{"visibility":"simplified"},{"color":"#5f7997"}]},{"featureType":"administrative.country","elementType":"geometry.fill","stylers":[{"color":"#e13a3a"}]},{"featureType":"landscape.man_made","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#bfcce6"},{"saturation":"-76"}]},{"featureType":"landscape.man_made","elementType":"geometry.stroke","stylers":[{"visibility":"on"}]},{"featureType":"poi.business","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#7e94ba"}]}]
+    
+    var flag = {    url: "../static/images/flag.png",
+                    scaledSize: new google.maps.Size(30,30)       
+               }
+               
+    var cross = {
+                    url: "../static/images/cross.png",
+                    scaledSize: new google.maps.Size(30,30)                                     
+    
+                }          
+    
+    var glat = {{glat}};
+    var glong = {{glong}};
+    var actlat = {{actlat}};
+    var actlong = {{actlong}};   
+    
+    var bound = new google.maps.LatLngBounds();
+    bound.extend(new google.maps.LatLng(parseFloat(actlat), parseFloat(actlong)))
+    bound.extend(new google.maps.LatLng(parseFloat(glat), parseFloat(glong)))
+    var center = bound.getCenter()
+    
+    var map = new google.maps.Map(document.getElementById('map'), {zoom: 15, styles: style, center: center, mapTypeId: google.maps.MapTypeId.ROADMAP});    
+	var GuessMarker = new google.maps.Marker({position: new google.maps.LatLng(parseFloat(glat), parseFloat(glong)), map: map, icon:cross});
+	var LocationMarker = new google.maps.Marker({position: new google.maps.LatLng(parseFloat(actlat), parseFloat(actlong)), map: map, icon:flag});
+	   
+    var line_coordinates = [
+          {lat: actlat, lng: actlong},
+          {lat: glat, lng: glong}          
+        ];
+        
+    var lineSymbol = {
+          path: 'M 0,-1 0,1',
+          strokeOpacity: 1,
+          scale: 4
+        };
+    var path = new google.maps.Polyline({
+          path: line_coordinates,
+          geodesic: true,
+          strokeColor: '#000000',
+          strokeOpacity: 0,
+          icons: [{
+            icon: lineSymbol,
+            offset: '0',
+            repeat: '20px'
+          }]
+        });
+        
+    path.setMap(map);
+    
+    </script>	
 {% endblock %}

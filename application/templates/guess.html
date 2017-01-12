@@ -1,40 +1,53 @@
 {% extends "base.html" %}
-{% block content %}
-  {% with messages = get_flashed_messages() %}
-		{% if messages %}
-			{% for message in messages %}
-				<h1>{{ message }}</h1>
-			{% endfor %}
-		{% endif %}
-	{% endwith %}
-	<div class="row">
-        <div class="col-sm-7">
-            <img class="photo" src="https://quakestudies.canterbury.ac.nz/store/download/part/{{PhotoNo}}">            
+
+    
+{% block navbar %}    
+    <form class="navbar-form navbar-right" action = "/" method = 'GET'>   
+        <button style="margin-right:10px" class="btn btn-success">Return Home</button>
+    </form>     
+     <div class="stats">
+        <div class="round">    
+            <div class="stats_head">ROUND</div>
+            <div class="stats_value">1/{{rounds}}</div>
         </div>
-        <div class="col-sm-5">
+        <div class="score">    
+            <div class="stats_head">SCORE</div>
+            <div class="stats_value">0</div>
+        </div>
+     </div>     
+{% endblock %}		
+
+{% block content %}  
+	<div class="row">
+        <div class="col-sm-9">
+            <img class="photo" src="https://quakestudies.canterbury.ac.nz/store/download/part/{{PhotoNo}}"> 
+        </div>
+        <div class="col-sm-3">
             <div id="map" style="width: 300px; height: 300px;"></div>  
             <form action = "/check" method = 'POST' 
          enctype = "multipart/form-data">
 		 <input type="hidden" id="lat" name="latitude"/>
 		 <input type="hidden" id="long" name="longitude"/>          
-         <button class="btn btn-success" type="submit" name="photo" value="{{PhotoNo}}">Make Guess</button>
+         <button id="guess" class="btn btn-success" type="submit" name="photo" value="{{PhotoNo}}">Make Guess</button>
       </form>
-        </div>
+      </div>
     </div>
-
+    
     <script type="text/javascript">	
-	var map = new google.maps.Map(document.getElementById('map'), {zoom: 14, center: new google.maps.LatLng(-43.531,172.632), mapTypeId: google.maps.MapTypeId.ROADMAP});
-	markers=[];
-	google.maps.event.addListener(map,'click', function(event){
-		for (var i=0; i < markers.length; i++){
-			markers[i].setMap(null)
-		}
-		markers = [];
-		var pos = event.latLng;
-		var NewMarker = new google.maps.Marker({position: pos, map: map, Label: '!'});
-		markers.push(NewMarker);
-		document.getElementById('lat').value=pos.lat();
-		document.getElementById('long').value=pos.lng();
-	});
+        var style = [{"featureType":"all","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#ffffff"}]},{"featureType":"all","elementType":"geometry.stroke","stylers":[{"visibility":"on"},{"color":"#84d9f4"}]},{"featureType":"all","elementType":"labels.text","stylers":[{"visibility":"simplified"},{"color":"#5f7997"}]},{"featureType":"administrative.country","elementType":"geometry.fill","stylers":[{"color":"#e13a3a"}]},{"featureType":"landscape.man_made","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#bfcce6"},{"saturation":"-76"}]},{"featureType":"landscape.man_made","elementType":"geometry.stroke","stylers":[{"visibility":"on"}]},{"featureType":"poi.business","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#7e94ba"}]}]
+    
+        var map = new google.maps.Map(document.getElementById('map'), {zoom: 14, styles: style, center: new google.maps.LatLng(-43.531,172.632), mapTypeId: google.maps.MapTypeId.ROADMAP});
+        markers=[];
+        google.maps.event.addListener(map,'click', function(event){
+            for (var i=0; i < markers.length; i++){
+                markers[i].setMap(null)
+            }
+            markers = [];
+            var pos = event.latLng;
+            var NewMarker = new google.maps.Marker({position: pos, map: map, Label: '!'});
+            markers.push(NewMarker);
+            document.getElementById('lat').value=pos.lat();
+            document.getElementById('long').value=pos.lng();
+        });
 	</script>
 {% endblock %}

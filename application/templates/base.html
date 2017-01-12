@@ -9,62 +9,55 @@
         <link href="/static/css/bootstrap.min.css" rel="stylesheet">
         <link href="/static/css/app.css" rel="stylesheet">
     </head>
-	<nav class="navbar navbar-inverse navbar-fixed-top">
-      
+	<nav class="navbar navbar-inverse navbar-fixed-top">      
       <div class=" fluid">
-        <div class="navbar-header">
+        <div class="navbar-header">        
           <a class="navbar-brand" style="padding:0 0" href="/">
                 <img style="height:100%" alt="Brand" src="../static/images/CEISMIC_logo.png">
           </a>          
         </div>        
-        <div id="navbar" class="navbar-collapse collapse">          
-          {% if user == None %}
-			<p class="navbar-text">Please sign in</p>
-		    {% if request.path == '/' or request.path =='/logout' %}
-              <form class="navbar-form navbar-right" action = "/login" method = 'POST' enctype = "multipart/form-data">          
-                <div class="form-group">
-                  <input type="text" placeholder="Email" name="username" class="form-control">
-                </div>
-                <div class="form-group">
-                  <input type="password" placeholder="Password" name = "password" class="form-control">
-                </div>                        
-                    <button class="btn btn-success" type="submit" name="type" value = "signin">Sign in</button>
-                    <button class="btn btn-success" type="submit" name="type" value = "register">Register</button>                
-              </form>
-            {% else %}	
-              <form class="navbar-form navbar-right" action = "/logout" method = 'POST' enctype = "multipart/form-data">   
-               	<button style="margin-right:10px" class="btn btn-success" name="type" value = "home">Return Home</button>
-              </form>
-            {% endif %}			  
-         {% else %}
-			<p class="navbar-text">Currently signed in as {{user.username}}</p>
-            <form class="navbar-form navbar-right" action = "/logout" method = 'POST' enctype = "multipart/form-data">                			-->
-                <button style="margin-right:10px" class="btn btn-success" name="type" value = "logout">Logout</button>                  
-            </form>            
-         {% endif %}            
+        <div id="navbar" class="navbar-collapse collapse">
+            {% block navbar %}          
+                {% if user == None %}
+                  <form class="navbar-form navbar-right" action = "/login" method = 'POST' enctype = "multipart/form-data">          
+                    <div class="form-group">
+                      <input type="text" placeholder="Email" name="username" class="form-control">
+                    </div>
+                    <div class="form-group">
+                      <input type="password" placeholder="Password" name = "password" class="form-control">
+                    </div>                        
+                        <button class="btn btn-success" type="submit" name="type" value="signin">Sign in</button>
+                        <button class="btn btn-success" type="submit" name="type" value="register">Register</button>                
+                  </form>               
+               {% else %}
+                    <form class="navbar-form navbar-right" action = "/logout" method = 'POST' enctype = "multipart/form-data">   
+                        <button style="margin-right:10px" class="btn btn-success" name="type" value = "home">Logout</button>
+                    </form>
+              {% endif %}
+            {% endblock %}         
         </div>        
       </div>
 
     </nav>
     <body>
-    <div class="container">
-			<div class="flashes">
-				<!--{% for message in get_flashed_messages()%}
-					{{ message|safe }}
-				{% endfor %}-->
-				{% if flashed != None %}
-					{{ flashed }}
-				{% endif %}
-			</div>
+    <div class="container">			
             {% block content %}
-            <div class="row">
+            <div style="padding: 50px"  class="row">
                 <div class="col-sm-8">
-                    <h3>Struggling to remember Christchurch?</h3>    
-                    <p>The CEISMIC geoguesser is a fun way to test and improve your memory of pre-quake Christchurch. You will see a series of photos taken from the CEISMIC Canterbury Earthquake Digital Archive. For each photo, you will be asked to guess the position where it was taken, which will be within the bounds of "the four avenues" on a map. You will then be scored based on how close each guess was to the actual location.</p>
-                    <p>We maintain highscore tables for the best scores across 5, 10, or 20 photos. Challenge your friends to test their own knowledge and see how you meansure up.</p>                    
+                    <div class="intro">
+                        <h3>Struggling to remember Christchurch?</h3>    
+                        <p>The CEISMIC geoguesser is a fun way to test and improve your memory of pre-quake Christchurch. You will see a series of photos taken from the CEISMIC Canterbury Earthquake Digital Archive. For each photo, you will be asked to guess the position where it was taken, which will be within the bounds of "the four avenues" on a map. You will then be scored based on how close each guess was to the actual location.</p>
+                        <p>We maintain highscore tables for the best scores across 5, 10, or 20 photos. Challenge your friends to test their own knowledge and see how you meansure up.</p>{% set i = 0 %}
+                    </div>
+                    <div class="score-table">
+                        {% for table in tables %}                            
+                            {{table}}
+                            {% set i = i+1 %}
+                        {% endfor %}
+                    </div>
                 </div>
                 <div class="col-sm-4">
-                    <img style="width:250px" src="../static/images/copthorne.jpeg"/>   
+                    <img style="width:100%" src="../static/images/copthorne.jpeg"/>   
                     <form class="navbar-form navbar-right" action = "/start" method = 'POST'>
 						<label for="5">5</label>
 						<input type="radio" name="length" value="5" id="5" checked>
@@ -74,16 +67,16 @@
 						<input type="radio" name="length" value="20" id="20">
                         <button style="width:200px;height:50px;font-size:18px" value = "Start Game" class="btn btn-success">Start Game</button>                
                     </form>                              
-                </div>
-				{% set i = 0 %}
-				{% for table in tables %}
-					<h4>{{ titles[i] }} Photo Scores</h4>
-					{{table}}
-					{% set i = i+1 %}
-				{% endfor %}
+                </div>				
             </div>
             {% endblock %}
     </div>
+            <div class="footer">                
+                <div class="message">
+                    <p><b>Created by</b> Aidan Millow, Brad McNeur, and Lucy-Jane Walsh</p>
+                    <p><b>Powered by</b> <a href="http://flask.pocoo.org/">Flask</a> and <a href="http://getbootstrap.com/">Bootrap</a></p>
+                </div>
+            </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="/static/js/bootstrap.min.js"></script>
 
