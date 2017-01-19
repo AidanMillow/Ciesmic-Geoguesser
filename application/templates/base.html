@@ -10,38 +10,8 @@
         <script src="http://maps.google.com/maps/api/js?key=AIzaSyAKo-dw8hYVazrmnpBjzIKbQduh3OkgXSQ" type="text/javascript"></script>       
         <link href="/static/css/bootstrap.min.css" rel="stylesheet">
         <link href="/static/css/app.css" rel="stylesheet">
-    </head>
-	<nav class="navbar navbar-inverse navbar-fixed-top">      
-      <div class=" fluid">
-        <div class="navbar-header">        
-          <a class="navbar-brand" style="padding:0 0" href="/">
-                <img style="height:100%" alt="Brand" src="../static/images/CEISMIC_logo.png">
-          </a>          
-        </div>        
-        <div id="navbar" class="navbar-collapse collapse">
-            {% block navbar %}          
-                {% if user == None %}
-                  <form class="navbar-form navbar-right" action = "/login" method = 'POST' enctype = "multipart/form-data">          
-                    <div class="form-group">
-                      <input type="text" placeholder="Email" name="username" class="form-control">
-                    </div>
-                    <div class="form-group">
-                      <input type="password" placeholder="Password" name = "password" class="form-control">
-                    </div>                        
-                        <button class="btn btn-success" type="submit" name="type" value="signin">Sign in</button>
-                        <button class="btn btn-success" type="submit" name="type" value="register">Register</button>                
-                  </form>               
-               {% else %}                    
-                    <form class="navbar-form navbar-right" action = "/logout" method = 'POST' enctype = "multipart/form-data">   
-                        <button style="margin-right:10px" class="btn btn-success" name="type" value = "home">Logout</button>
-                    </form>
-                    <div class="welcome">Welcome {{user.username}}</div>
-              {% endif %}
-            {% endblock %}         
-        </div>        
-      </div>
-
-    </nav>
+    </head>	
+      {% include 'header.html' %}    
     <body>
     <div class="container">			
             {% block content %}
@@ -74,12 +44,9 @@
             </div>
             {% endblock %}
     </div>
-            <div class="footer">                
-                <div class="message">
-                    <p><b>Created by</b> Aidan Millow, Brad McNeur, and Lucy-Jane Walsh</p>
-                    <p><b>Powered by</b> <a href="http://flask.pocoo.org/">Flask</a> and <a href="http://getbootstrap.com/">Bootrap</a></p>
-                </div>
-            </div>
+                      
+                {% include 'footer.html' %}
+           
 
 
 </body>

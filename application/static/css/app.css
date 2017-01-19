@@ -8,6 +8,37 @@ body {
     margin-bottom: 20px;    
     }
 
+.header {
+    color: #ffffff;
+}
+
+.navbar, .fluid, .navbar-header, .navbar-brand{
+    height: 80px;
+}
+
+.archive {
+    float: left;
+    margin: 0px 10px;
+}
+
+.archive a {
+    color: #ffffff
+}
+
+.about, .contribute, .explore {
+    float: left;
+    padding: 25px 10px;
+    font-family: 'Avenir Next LT W01 Bold', Arial, Tahoma, sans-serif;
+    font-size: 16px;
+}
+
+.message {
+    height: 20px;
+    width: 370px;
+    position: absolute;
+    right: 10px;
+    top: 50px;
+}
 
 .container {
     padding: 0 0;
@@ -27,10 +58,17 @@ body {
     position: absolute;
     max-height: 340px;
     font-size: 8px;     
-    border-top: 9px solid #b9bb00;
+    border-top: 7px solid #b9bb00;
     padding: 10px;
     
 }
+
+.creation {    
+    float: right;
+    width: 250px;
+}
+
+
 
 .intro {
     padding-bottom: 40px;
@@ -81,7 +119,7 @@ max-height: 200px;
 
 .navbar-inverse {
     border-color: #b9bb00;
-    border-width: 0 0 9px;
+    border-width: 0 0 5px;
     background-color: #000000
 }   
 
@@ -158,10 +196,6 @@ padding: 4px 8px;
     padding-top: 10px;
 }
 
-.message {    
-    float: right;
-    clear: both;
-}
 
 p {
     margin: 0 0 0 5px;
