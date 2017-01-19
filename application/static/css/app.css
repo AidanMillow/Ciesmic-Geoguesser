@@ -81,14 +81,13 @@ body {
 .stats {    
     float: right;
     text-align: center;    
-    margin: 8px 5px 8px 0px;    
-    font-size: 12px;
+    margin: 15px 5px 15px 0px;    
+    font-size: 15px;
 }
 
 .stats_head {
-    color: grey;
-    font-weight: bold;
-    font-size: 10px;
+    color: grey;    
+    font-size: 15px;
 }
 
 .score, .round {
@@ -136,6 +135,7 @@ padding-top: 5px;
 margin-right: 1px;
 }
 
+
 .navbar-form  .form-control{
 font-size: 8px;
 }
@@ -147,6 +147,11 @@ height: 50%;
 .navbar-right  button {
 font-size: 10px;
 padding: 4px 8px;
+}
+
+#header-home {
+    font-size: 15px;
+    padding: 10px 15px;
 }
 
 .photo {    
@@ -172,9 +177,6 @@ padding: 4px 8px;
     top: 70vh;
     text-align: center;
 }
-#guess {
-    
-}
 
 .next {
     position: absolute;
@@ -184,7 +186,7 @@ padding: 4px 8px;
 
 .next button {
     display: block;
-    margin: auto;
+    margin: auto;    
 }
 
 .report {

@@ -1,22 +1,5 @@
 {% extends "base.html" %}
 
-    
-{% block navbar %}    
-    <form class="navbar-form navbar-right" action = "/" method = 'GET'>   
-        <button style="margin-right:10px" class="btn btn-success">Return Home</button>
-    </form>     
-     <div class="stats">
-        <div class="round">    
-            <div class="stats_head">ROUND</div>
-            <div class="stats_value">{{round}}/{{rounds}}</div>
-        </div>
-        <div class="score">    
-            <div class="stats_head">SCORE</div>
-            <div class="stats_value">{{score}}</div>
-        </div>
-     </div>     
-{% endblock %}		
-
 {% block content %}  
 	<div class="row">
         <div class="col-sm-6">
@@ -28,7 +11,7 @@
          enctype = "multipart/form-data">
 		 <input type="hidden" id="lat" name="latitude"/>
 		 <input type="hidden" id="long" name="longitude"/>          
-         <button id="guess" class="btn btn-success" type="submit" name="photo" value="{{PhotoNo}}">Make Guess</button>
+         <button id="guess" style="width:200px;height:50px;font-size:15px" class="btn btn-success" type="submit" name="photo" value="{{PhotoNo}}">Make Guess</button>
       </form>
       </div>
     </div>

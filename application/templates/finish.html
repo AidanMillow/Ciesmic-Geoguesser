@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+
 {% block content %}
  <div class="row">
         <div class="col-sm-12">
@@ -11,7 +12,7 @@
                 <p class="score-message">{{ message }}</h4>
             {% endif %}
         <div class="buttons">
-			<form id="home" action = "/home" method = 'POST' 
+			<form id="home" action = "/" method = 'GET' 
 			enctype = "multipart/form-data">
 				<button style="width:200px;height:50px;font-size:18px" class="btn btn-success">Return Home</button>  
 			</form>

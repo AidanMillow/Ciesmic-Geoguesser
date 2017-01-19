@@ -1,22 +1,5 @@
 {% extends "base.html" %}
 
-{% block navbar %}    
-    <form class="navbar-form navbar-right" action = "/" method = 'GET'>   
-        <button style="margin-right:10px" class="btn btn-success">Return Home</button>
-    </form>     
-     <div class="stats">
-        <div class="round">    
-            <div class="stats_head">ROUND</div>
-            <div class="stats_value">{{round - 1}}/{{rounds}}</div>
-        </div>
-        <div class="score">    
-            <div class="stats_head">SCORE</div>
-            <div class="stats_value">{{score}}</div>
-        </div>
-     </div>     
-{% endblock %}
-
-
 {% block content %}
 	
 	<div class="row">
