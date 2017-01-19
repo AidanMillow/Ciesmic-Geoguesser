@@ -134,29 +134,29 @@ def start_game():
     global gameSize
     global totaldifference
     global CurrentUser
-    global Score
+    global current_score
     global Round
     gameSize=int(request.form['length'])
     selection_data = buildPhotoList(fullphotolist,gameSize)
     photolist = selection_data[0]
     selection_index=selection_data[1]
     totaldifference = 0
-    Score = 0
+    current_score = 0
     Round = 1
     flashing = flashmessage
     flashmessage = None
-    return render_template("guess.html",user = CurrentUser, PhotoNo = random_photo(photolist,selection_index), rounds = len(photolist), score = Score, flashed = flashing, round = Round)
+    return render_template("guess.html",user = CurrentUser, PhotoNo = random_photo(photolist,selection_index), rounds = len(photolist), score = current_score, flashed = flashing, round = Round)
     
 @app.route('/guess', methods = ['POST', 'GET'])
 def new_guess():
     #Every photo that displays after the first is displayed on this page one at a time
     global flashmessage
     global CurrentUser
-    global Score
+    global current_score
     global Round
     flashing = flashmessage
     flashmessage = None    
-    return render_template("guess.html", user=CurrentUser, PhotoNo = random_photo(photolist,selection_index), flashed = flashing, score = Score, rounds = len(photolist), round = Round)
+    return render_template("guess.html", user=CurrentUser, PhotoNo = random_photo(photolist,selection_index), flashed = flashing, score = current_score, rounds = len(photolist), round = Round)
 
 @app.route('/check', methods =['POST'])
 def check_guess():
@@ -165,7 +165,7 @@ def check_guess():
     global CurrentUser    
     if request.method == 'POST':        
         global totaldifference
-        global Score
+        global current_score
         global Round
         PhotoNo = request.form['photo']        
         for photo in photolist:
@@ -192,18 +192,18 @@ def check_guess():
         flashing = flashmessage
         flashmessage = None        
         Round += 1
-        global Score
+        global current_score
         if totaldifference >= 37000.1:
-            Score += 1
+            current_score += 1
         elif totaldifference >= 750.1:
-            Score += 2
+            current_score += 2
         elif totaldifference >= 250.1:
-            Score += 3
+            current_score += 3
         elif totaldifference >= 100.1:
-            Score += 4
+            current_score += 4
         else:
-            Score += 5
-        return render_template('feedback.html', user=CurrentUser, actlat=latitude, actlong=longitude, glat=formlat, glong=formlong, scoreReport=scoreReport, flashed = flashing, score = Score, rounds = len(photolist), round = Round)        
+            current_score += 5
+        return render_template('feedback.html', user=CurrentUser, actlat=latitude, actlong=longitude, glat=formlat, glong=formlong, scoreReport=scoreReport, flashed = flashing, score = current_score, rounds = len(photolist), round = Round)        
     else:
         return redirect(url_for('next_photo'))
 
