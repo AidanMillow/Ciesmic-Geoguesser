@@ -23,9 +23,12 @@
                         <p>We maintain highscore tables for the best scores across 5, 10, or 20 photos. Challenge your friends to test their own knowledge and see how you meansure up.</p>{% set i = 0 %}
                     </div>
                     <div class="score-table">
-                        {% for table in tables %}                            
-                            {{table}}
-                            {% set i = i+1 %}
+                        {% for table in tables %}
+							<div class="col-xs-4">
+								<h3>{{titles[i]}} Photos</h3>
+								{{table}}							
+								{% set i = i+1 %}
+							</div>
                         {% endfor %}
                     </div>
                 </div>

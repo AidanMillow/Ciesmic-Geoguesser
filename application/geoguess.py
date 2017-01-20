@@ -154,6 +154,7 @@ def new_guess():
     global CurrentUser
     global current_score
     global Round
+    Round += 1
     flashing = flashmessage
     flashmessage = None    
     return render_template("guess.html", user=CurrentUser, PhotoNo = random_photo(photolist,selection_index), flashed = flashing, score = current_score, rounds = len(photolist), round = Round)
@@ -190,16 +191,15 @@ def check_guess():
             totaldifference -= Guessdifference
         scoreReport = report(Guessdifference)
         flashing = flashmessage
-        flashmessage = None        
-        Round += 1
+        flashmessage = None  
         global current_score
-        if totaldifference >= 37000.1:
+        if Guessdifference >= 37000.1:
             current_score += 1
-        elif totaldifference >= 750.1:
+        elif Guessdifference >= 750.1:
             current_score += 2
-        elif totaldifference >= 250.1:
+        elif Guessdifference >= 250.1:
             current_score += 3
-        elif totaldifference >= 100.1:
+        elif Guessdifference >= 100.1:
             current_score += 4
         else:
             current_score += 5
