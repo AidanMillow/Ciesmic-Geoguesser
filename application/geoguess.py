@@ -216,6 +216,8 @@ def finished_round():
     global totaldifference
     global selection_index
     global gameSize
+    global current_score
+    global Round
     message = False
     totaldifference=float("%.3f" % totaldifference) #rounds the difference to 3 decimal places
     showdifference = totaldifference #saves the difference to show so that it can safely be reset
@@ -244,7 +246,7 @@ def finished_round():
             displaytable.append({'ranking':item['ranking'], 'user':item['user'], 'score':item['score']})
     flashing = flashmessage
     flashmessage = None
-    return render_template('finish.html', user=CurrentUser, difference=showdifference, table = HighScores(displaytable), gameSize=gameSize, message = message, flashed = flashing)
+    return render_template('finish.html', user=CurrentUser, difference=showdifference, table = HighScores(displaytable), gameSize=gameSize, message = message, flashed = flashing, score=current_score, round=Round, rounds=len(photolist))
 
 def report(diff):
     #This function flashes a message for the user depending on how close they got

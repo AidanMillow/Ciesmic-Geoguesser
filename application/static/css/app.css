@@ -110,6 +110,11 @@ table, td, th {
 	border: 1px solid black;    
 }
 
+.final-score table {
+	margin: 0 auto 0 auto;
+}
+
+
 .thumb {
 max-width: 200px;
 max-height: 200px;
@@ -236,7 +241,7 @@ p {
     float:right;
 }
 
-.table, .table p{
+.final-score, .final-score p{
     height: 100px;
     width: 100%;
     text-align: center;
