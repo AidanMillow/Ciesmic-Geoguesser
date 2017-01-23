@@ -2,16 +2,16 @@
 
 {% block content %}  
 	<div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-6" style="position:relative">            
             <img class="photo" src="https://quakestudies.canterbury.ac.nz/store/download/part/{{PhotoNo}}"> 
         </div>
         <div class="col-sm-6">
             <div id="map" style="width: 100%; height: 80vh;"></div>  
-            <form class="guess" action = "/check" method = 'POST' 
+            <form class="guess" name="form" action = "/check" method = 'POST' 
          enctype = "multipart/form-data">
 		 <input type="hidden" id="lat" name="latitude"/>
 		 <input type="hidden" id="long" name="longitude"/>          
-         <button id="guess" style="width:200px;height:50px;font-size:15px" class="btn btn-success" type="submit" name="photo" value="{{PhotoNo}}">Make Guess</button>
+         <button disabled=disabled id="guess" style="width:200px;height:50px;font-size:15px" class="btn btn-success" type="submit" name="photo" value="{{PhotoNo}}">Make Guess</button>
       </form>
       </div>
     </div>
@@ -30,8 +30,12 @@
             var NewMarker = new google.maps.Marker({position: pos, map: map, Label: '!'});
             markers.push(NewMarker);
             document.getElementById('lat').value=pos.lat();
-            document.getElementById('long').value=pos.lng();
-        });        
+            document.getElementById('long').value=pos.lng();            
+            $("#guess").removeAttr("disabled");     
+          
+
+       });       
                
-	</script>
+	</script> 
+    
 {% endblock %}

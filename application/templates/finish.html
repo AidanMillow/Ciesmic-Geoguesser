@@ -5,22 +5,20 @@
         <div class="col-sm-12">
 		<p class="finished">Game finished, well done!<p>
 		 <div class="final-score">
-                {{table}}           
-        </div>
+            <meter value="{{score}}" min="0" max="{{rounds * 5}}">{{score}} out of {{rounds * 5}}</meter>      
+        </div>       
         <p class="distance">You were a total of {{difference}} m off from the actual locations</p>	
          {% if message %}
                 <p class="score-message">{{ message }}</h4>
             {% endif %}
         <div class="buttons">
-			<form id="home" action = "/" method = 'GET' 
-			enctype = "multipart/form-data">
-				<button style="width:200px;height:50px;font-size:18px" class="btn btn-success">Return Home</button>  
-			</form>
+			<div id="facebook" class="fb-share-button" data-href="http://127.0.0.1:5000/" data-layout="button" data-size="large" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A5000%2F&amp;src=sdkpreparse">Share</a></div>
 			<form id="play" action = "/start" method = 'POST'>
 				<input type="hidden" name='length' value='{{gameSize}}'/>
 				<button style="width:200px;height:50px;font-size:18px" value = "Start Game" class="btn btn-success">Play Again</button>                
 			</form>
             </div>           
         </div>
+        
         </div>
 {% endblock %}

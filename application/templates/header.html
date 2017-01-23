@@ -3,7 +3,7 @@
         <div class=" fluid">
             <div class="navbar-header">        
                 <a class="navbar-brand" style="padding:0 0" href="http://www.ceismic.org.nz">
-                    <img style="height:100%" alt="Brand" src="../static/images/CEISMIC.png">
+                    <img style="height:100%" alt="Brand" src="../static/images/CEISMIC_logo.png">
                 </a>          
             </div> 
             <div class="archive">
@@ -22,16 +22,18 @@
                     {% if user == None %}
                         <form class="navbar-form navbar-right" action = "/login" method = 'POST' enctype = "multipart/form-data">          
                             <div class="form-group">
-                              <input type="text" placeholder="Email" name="username" class="form-control">
+                              <input type="text" placeholder="Username" name="username" class="form-control">
                             </div>
                             <div class="form-group">
-                              <input type="password" placeholder="Password" name = "password" class="form-control">
+                              <input type="password" placeholder="Password" name="password" class="form-control">
                             </div>                        
                             <button class="btn btn-success" type="submit" name="type" value="signin">Sign in</button>
                             <button class="btn btn-success" type="submit" name="type" value="register">Register</button>                
                         </form> 
                         <div class="message">
-                            {{ flashmessage }}
+                            {% if error != None %}
+                                {{ error }}
+                            {% endif %}
                         </div>
                     {% else %}                    
                         <form class="navbar-form navbar-right" action = "/logout" method = 'POST' enctype = "multipart/form-data">   

@@ -1,42 +1,23 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_table import Table, Col
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 
-db = SQLAlchemy()
+
+
+engine = create_engine('sqlite:///P://Projects/geoguesser/application/scripts/database/geoguesser.db', convert_unicode=True)
+db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
+Base = declarative_base()
+Base.query = db_session.query_property()
+
+def init_db():
+    # import all modules here that might define models so that
+    # they will be registered properly on the metadata.  Otherwise
+    # you will have to import them first before calling init_db()
+    import model
+    Base.metadata.create_all(bind=engine)
     
-class User(db.Model):
-    #Represents the list of users in the database. Users have an ID, username, and password
-    id = db.Column(db.Integer, primary_key = True)
-    username = db.Column(db.String(80), unique = True)
-    password = db.Column(db.String(20))
-	
-    #IDs are generated automatically. When a user is declared, only the username and password needs to be set
-    def __init__(self, username, password):
-        self.username = username
-        self.password = password
-		
-    def __repr__(self):
-        return '<User %r>' % self.username
-		
-class Score(db.Model):
-	#Represents the high scores list in the database. Scores have a many to one relationship with Users
-	id = db.Column(db.Integer, primary_key = True)
-	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-	user = db.relationship('User', backref=db.backref('scores', lazy='dynamic'))
-	score = db.Column(db.Float)
-	category = db.Column(db.Integer)
-	
-	def __init__(self, user_id, score, category):
-		self.user_id = user_id
-		self.score = score
-		self.category = category
-	
-	def __repr__(self):
-		return '<Score %r>' % self.score
-
-		
-class HighScores(Table):
-	#This class represents the HTML table that will be built on the final page of the application    
-    __tablename__ = "HighScores"
-    ranking = Col('Ranking')
-    user = Col('User')
-    score = Col('Score')
+                                         
+                                         
+                                         
