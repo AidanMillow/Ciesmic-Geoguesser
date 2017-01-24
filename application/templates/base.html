@@ -35,7 +35,19 @@
                         {% for table in tables %}
 							<div class="col-xs-4">
 								<h3>{{titles[i]}} Photos</h3>
-								{{table}}							
+								<table>
+								    <tr>
+									    <th>Rank</th>
+										<th>User</th>
+										<th>Score</th>
+								    {% for item in table %}
+									    <tr>                                        
+                                            <td>{{item['ranking']}}</td>    
+                                            <td>{{item['user']}}</td>  
+                                            <td>{{item['score']}}</td>  											
+										</tr>
+									{% endfor %}
+                                </table>									
 								{% set i = i+1 %}
 							</div>
                         {% endfor %}

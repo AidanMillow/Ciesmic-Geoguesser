@@ -38,5 +38,3 @@ class Score(Base):
 	def __repr__(self):
 		return '<Score %r>' % self.score
 
-    
-

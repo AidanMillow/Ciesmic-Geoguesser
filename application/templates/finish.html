@@ -10,15 +10,29 @@
         <p class="distance">You were a total of {{difference}} m off from the actual locations</p>	
          {% if message %}
                 <p class="score-message">{{ message }}</h4>
-            {% endif %}
+         {% endif %}
         <div class="buttons">
 			<div id="facebook" class="fb-share-button" data-href="http://127.0.0.1:5000/" data-layout="button" data-size="large" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F127.0.0.1%3A5000%2F&amp;src=sdkpreparse">Share</a></div>
 			<form id="play" action = "/start" method = 'POST'>
 				<input type="hidden" name='length' value='{{gameSize}}'/>
 				<button style="width:200px;height:50px;font-size:18px" value = "Start Game" class="btn btn-success">Play Again</button>                
 			</form>
-            </div>           
+        </div>     
         </div>
-        
+		<div class="final-score">
+        	<table>
+                <tr>
+				    <th>Rank</th>
+					<th>User</th>
+					<th>Score</th>
+				</tr>
+				{% for item in table %}
+				    <tr>
+					    <td>{{item['ranking']}}</td>
+						<td>{{item['user']}}</td>
+						<td>{{item['score']}}</td>
+					</tr>
+				{% endfor %}
+			</table>
         </div>
 {% endblock %}

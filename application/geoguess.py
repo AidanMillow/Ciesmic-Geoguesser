@@ -37,19 +37,21 @@ def displayscores():
             catlist.append(row.category)
             table = []
             ranking = 0
-            for item in Score.query.filter(Score.category == row.category).order_by(Score.score.asc()):
+            for item in Score.query.filter(Score.category == row.category).order_by(Score.score.desc()):
                 if ranking < 10:
-                    ranking+=1                    
+                    ranking+=1
+                    Username=str(item.user.username)
+                    table.append({'ranking':ranking, 'user':Username,'score':item.score})                 
                 else:
                     break       
-    
+            scoretable.append(table)
     return scoretable, catlist
     
 @app.route('/')
 def init():
     #The home page for the app, where the user is meant to begin    
     global CurrentUser    
-    scoretable, catlist = displayscores()    
+    scoretable, catlist = displayscores()
     return render_template('base.html',app=app,user=CurrentUser, tables = scoretable, titles = catlist, error=error)
 
 @app.route('/login', methods = ['POST'])
@@ -180,16 +182,10 @@ def check_guess():
             totaldifference -= Guessdifference
         scoreReport = report(Guessdifference)        
         global current_score
-        if Guessdifference >= 37000.1:
-            current_score += 1
-        elif Guessdifference >= 750.1:
-            current_score += 2
-        elif Guessdifference >= 250.1:
-            current_score += 3
-        elif Guessdifference >= 100.1:
-            current_score += 4
-        else:
-            current_score += 5
+        scoredifference = Guessdifference // 10
+        roundscore = 100 - scoredifference
+        if roundscore > 0:
+            current_score += int(roundscore)
         return render_template('feedback.html', user=CurrentUser, actlat=latitude, actlong=longitude, glat=formlat, glong=formlong, scoreReport=scoreReport, score = current_score, rounds = len(photolist), round = Round)        
     else:
         return redirect(url_for('next_photo'))
@@ -212,11 +208,28 @@ def finished_round():
     if CurrentUser == None:
         error = "You must login to have your score recorded"
     elif CurrentUser != None and selection_index == []:
-        sessionscore = Score(CurrentUser.id, totaldifference, gameSize)
+        sessionscore = Score(CurrentUser.username, current_score, gameSize)
         db_session.add(sessionscore)
         db_session.commit()
-        selection_index.append(0)         
-    return render_template('finish.html', user=CurrentUser, difference=showdifference, gameSize=gameSize, error = error, score=current_score, round=Round, rounds=len(photolist))
+        displaytable=display_final_scores()		
+    return render_template('finish.html', user=CurrentUser, difference=showdifference, gameSize=gameSize, error = error, score=current_score, round=Round, rounds=len(photolist), table=displaytable)
+	
+def display_final_scores():
+    displaytable = []
+    scoretable = []
+    ranking=0
+    for item in Score.query.filter(Score.category == gameSize).order_by(Score.score.desc()):
+        ranking+=1
+        scoretable.append({'ranking':ranking, 'user':item.user.username, 'score':item.score})        
+    myranking = None
+    for item in scoretable:
+        if item['user']==CurrentUser.username and item['score']==current_score:
+            myranking=item['ranking']
+            break
+    for item in scoretable:
+        if item['ranking']>myranking-5 and item['ranking']<myranking+5:
+            displaytable.append({'ranking':item['ranking'], 'user':item['user'], 'score':item['score']})
+    return displaytable	
 
 def report(diff):
     #This function flashes a error for the user depending on how close they got
