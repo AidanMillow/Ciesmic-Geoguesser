@@ -137,8 +137,6 @@ def start_game():
     current_score = 0
     Round = 1
     PhotoNo = random_photo(photolist,selection_index)
-    if guess_made == True:
-		error = "You have already made a guess for this image, additional guesses will not be scored"
     for photo in photolist:        
         if PhotoNo == photo['PhotoNum']:            
             creator = photo['creator']
@@ -157,8 +155,6 @@ def new_guess():
     global guess_made
     Round += 1
     PhotoNo = random_photo(photolist,selection_index)
-    if guess_made == True:
-		error = "You have already made a guess for this image, additional guesses will not be scored"
     for photo in photolist:
         if PhotoNo == photo['PhotoNum']:
             creator = photo['creator']
@@ -196,13 +192,17 @@ def check_guess():
             totaldifference -= Guessdifference
         scoreReport = report(Guessdifference)        
         global current_score
+        if guess_made == True:
+		    error = "You have already made a guess for this image, additional guesses will not be scored"
         if guess_made==False:
             guess_made=True	
             scoredifference = Guessdifference // 10
             roundscore = 100 - scoredifference
             if roundscore > 0:
                 current_score += int(roundscore)
-        return render_template('feedback.html', user=CurrentUser, actlat=latitude, actlong=longitude, glat=formlat, glong=formlong, scoreReport=scoreReport, score = current_score, rounds = len(photolist), round = Round)        
+        flash = error
+        error = None
+        return render_template('feedback.html', user=CurrentUser, actlat=latitude, actlong=longitude, glat=formlat, glong=formlong, scoreReport=scoreReport, score = current_score, rounds = len(photolist), round = Round, error=flash)        
     else:
         return redirect(url_for('next_photo'))
 
@@ -223,7 +223,6 @@ def finished_round():
     #the score is then saved to the database
     if CurrentUser == None:
         message = "You must login to have your score recorded"
-        displaytable = [{'ranking':0,'user':'Guest','score':current_score}]
     elif CurrentUser != None and selection_index == []:
         sessionscore = Score(CurrentUser.username, current_score, gameSize)
         db_session.add(sessionscore)

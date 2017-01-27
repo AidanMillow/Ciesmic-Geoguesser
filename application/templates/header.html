@@ -51,10 +51,16 @@
                     </div>
                  </div> 
                 {% endif %}                 
-				<div class="message">
+				<div class="message">				    
                     {% if error != None %}
                         {{ error }}
-                    {% endif %}
+					{% else %}
+					{% if request.path == '/start' or request.path == '/start' %}
+						{% if guess_made == True %}
+						    <p>Test</p>
+						{% endif %}
+					{% endif %}
+					{% endif %}
                 </div>
             </div>       
         </div>

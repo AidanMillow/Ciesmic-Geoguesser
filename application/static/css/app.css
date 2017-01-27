@@ -33,8 +33,8 @@ body {
 }
 
 .message {
-    height: 20px;
-    width: 370px;
+    height: 120px;
+    width: 600px;
     position: absolute;
     right: 10px;
     top: 50px;
