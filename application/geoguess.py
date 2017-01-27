@@ -25,20 +25,21 @@ gameSize = 0 #The amount of photos the user has chosen to guess in one session
 CurrentUser = None #The user that is currently logged in
 totaldifference = 0 #The user's total score for the current session
 error = None #A backup variable used in place of the flash method. Will be replaced when session data can be reduced
-current_score = 0
-round = 0
-rounds = 0
+current_score = 0 #stores the score for the current session until completion
+Round = 0 #The round that the user is currently on. A round refers to the guessing of an individual photo
+rounds = 0 #The number of rounds the user has chosen to go through in total for the current session
 
 def displayscores():
-    scoretable = []
-    catlist = []    
+    #This is the method used for displaying high score tables on any given page
+    scoretable = [] #The array that stores the information in the high scores table
+    catlist = []    #The list of different categories that have been guessed
     for row in Score.query.distinct(Score.category):
         if row.category not in catlist:
-            catlist.append(row.category)
-            table = []
-            ranking = 0
+            catlist.append(row.category) #The method creates a seperate high score table for each category in the catlist
+            table = [] #And assigns each to an array
+            ranking = 0 #A score's rank is not recorded in the table, so it is calculated during the loop
             for item in Score.query.filter(Score.category == row.category).order_by(Score.score.desc()):
-                if ranking < 10:
+                if ranking < 10: #Each table only displays the top ten scores
                     ranking+=1
                     Username=str(item.user.username)
                     table.append({'ranking':ranking, 'user':Username,'score':item.score})                 
@@ -91,7 +92,6 @@ def register(formname, formpass):
         if exist != None:
             CurrentUser = exist
             buildselect(photolist)
-            error = "You have successfully registered as "+ CurrentUser.username
         else:
             error = "There was an error during registration"
     else:
@@ -109,7 +109,6 @@ def signin(formname, formpass):
         #The query checks for username and password, they must both be correct to gain access
         CurrentUser = exist
         buildselect(photolist)
-        error = "Welcome back "+ CurrentUser.username +", let us begin"
     else:
         error = "Your username or password was incorrect"
     
@@ -195,18 +194,18 @@ def check_guess():
 @app.route('/finish', methods = ['POST', 'GET'])
 def finished_round():
     #The end screen for the app when a user has guessed through all photos
-    global error
     global totaldifference
     global selection_index
     global gameSize
     global current_score
     global Round
-    error = False
+    error = None
     totaldifference=float("%.3f" % totaldifference) #rounds the difference to 3 decimal places
     showdifference = totaldifference #saves the difference to show so that it can safely be reset
     #the score is then saved to the database
     if CurrentUser == None:
         error = "You must login to have your score recorded"
+        displaytable = [{'ranking':0,'user':'Guest','score':current_score}]
     elif CurrentUser != None and selection_index == []:
         sessionscore = Score(CurrentUser.username, current_score, gameSize)
         db_session.add(sessionscore)
@@ -255,4 +254,4 @@ def logout():
     global CurrentUser
     scoretable, catlist = displayscores()
     CurrentUser = None   
-    return render_template('base.html',user=CurrentUser, error=None, tables = scoretable, titles = catlist)
+    return render_template('base.html',user=CurrentUser, error=error, tables = scoretable, titles = catlist)
