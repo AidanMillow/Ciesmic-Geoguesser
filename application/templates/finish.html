@@ -19,6 +19,7 @@
 			</form>
         </div>     
         </div>
+		{% if table != "none" %}
 		<div class="final-score">
         	<table>
                 <tr>
@@ -35,4 +36,5 @@
 				{% endfor %}
 			</table>
         </div>
+		{% endif %}
 {% endblock %}
