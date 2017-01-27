@@ -190,7 +190,7 @@ def check_guess():
             selection_index.remove(Photo)
         except ValueError: #If unable to remove due to already being removed, the previously added Guessdifference is removed
             totaldifference -= Guessdifference
-        scoreReport = report(Guessdifference)        
+        scoreReport = report(Guessdifference) + "</br>The image you just saw is available <a href=\"https://quakestudies.canterbury.ac.nz/store/part/" + PhotoNo + "\" rel=\"noopener noreferrer\" target=\"_blank\">here</a>"
         global current_score
         if guess_made == True:
 		    error = "You have already made a guess for this image, additional guesses will not be scored"
