@@ -28,6 +28,7 @@ error = None #A backup variable used in place of the flash method. Will be repla
 current_score = 0
 round = 0
 rounds = 0
+guess_made = False
 
 def displayscores():
     scoretable = []
@@ -125,6 +126,7 @@ def start_game():
     global CurrentUser
     global current_score
     global Round
+    global guess_made
     gameSize=int(request.form['length'])
     selection_data = buildPhotoList(fullphotolist,gameSize)
     photolist = selection_data[0]
@@ -133,11 +135,13 @@ def start_game():
     current_score = 0
     Round = 1
     PhotoNo = random_photo(photolist,selection_index)
+    if guess_made == True:
+		error = "You have already made a guess for this image, additional guesses will not be scored"
     for photo in photolist:        
         if PhotoNo == photo['PhotoNum']:            
             creator = photo['creator']
             license = photo['license']
-    return render_template("guess.html",user = CurrentUser, PhotoNo = random_photo(photolist,selection_index), rounds = len(photolist), score = current_score, round = Round, creator = creator, license = license)
+    return render_template("guess.html",user = CurrentUser, PhotoNo = random_photo(photolist,selection_index), rounds = len(photolist), score = current_score, round = Round, creator = creator, license = license, locked=guess_made, error=error)
     
 @app.route('/guess', methods = ['POST', 'GET'])
 def new_guess():
@@ -146,20 +150,24 @@ def new_guess():
     global CurrentUser
     global current_score
     global Round
+    global guess_made
     Round += 1
     PhotoNo = random_photo(photolist,selection_index)
+    if guess_made == True:
+		error = "You have already made a guess for this image, additional guesses will not be scored"
     for photo in photolist:
         if PhotoNo == photo['PhotoNum']:
             creator = photo['creator']
             license = photo['license']
-    return render_template("guess.html", user=CurrentUser, PhotoNo = random_photo(photolist,selection_index), error = error, score = current_score, rounds = len(photolist), round = Round, creator = creator, license = license)
+    return render_template("guess.html", user=CurrentUser, PhotoNo = random_photo(photolist,selection_index), error = error, score = current_score, rounds = len(photolist), round = Round, creator = creator, license = license, locked = guess_made)
 
 @app.route('/check', methods =['POST'])
 def check_guess():
     #The page used to calculate the user's score for a guess on any given photo in the list
     global error
-    global CurrentUser    
-    if request.method == 'POST':        
+    global CurrentUser
+    global guess_made
+    if request.method == 'POST':  
         global totaldifference
         global current_score
         global Round
@@ -182,10 +190,12 @@ def check_guess():
             totaldifference -= Guessdifference
         scoreReport = report(Guessdifference)        
         global current_score
-        scoredifference = Guessdifference // 10
-        roundscore = 100 - scoredifference
-        if roundscore > 0:
-            current_score += int(roundscore)
+        if guess_made==False:
+            guess_made=True	
+            scoredifference = Guessdifference // 10
+            roundscore = 100 - scoredifference
+            if roundscore > 0:
+                current_score += int(roundscore)
         return render_template('feedback.html', user=CurrentUser, actlat=latitude, actlong=longitude, glat=formlat, glong=formlong, scoreReport=scoreReport, score = current_score, rounds = len(photolist), round = Round)        
     else:
         return redirect(url_for('next_photo'))
@@ -202,6 +212,7 @@ def finished_round():
     global current_score
     global Round
     error = False
+    displaytable = "none"
     totaldifference=float("%.3f" % totaldifference) #rounds the difference to 3 decimal places
     showdifference = totaldifference #saves the difference to show so that it can safely be reset
     #the score is then saved to the database
@@ -240,8 +251,10 @@ def report(diff):
         return "There was an error reporting your score"    
     return error
 
-@app.route('/next_photo', methods =['POST'])
+@app.route('/next_photo', methods =['POST', 'GET'])
 def next_photo():
+    global guess_made
+    guess_made = False
     if selection_index == []:
         #selection_index will be empty once the user has guessed all photos. The user will then be redirected
         return redirect(url_for('finished_round'))
