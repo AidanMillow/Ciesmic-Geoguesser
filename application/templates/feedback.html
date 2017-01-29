@@ -8,9 +8,13 @@
             <div class="report">
                 {{ scoreReport|safe }}        
             </div>
-            <form class="next" action = "/next_photo" method = 'POST' 
+            <form class="view-image" action = "/view_image" method = 'POST' 
             enctype = "multipart/form-data">
-                <button value = "next round" type="submit" class="btn btn-success">Play Next Round</button>
+                <button name="image" value="{{image}}" type="submit" class="btn btn-success">View Image in Archive</button>
+            </form>
+            <form class="next" action ="/next_photo" method = 'POST' 
+            enctype = "multipart/form-data">
+                <button value= "next round" type="submit" class="btn btn-success">Play Next Round</button>
             </form>
         </div>
     </div>

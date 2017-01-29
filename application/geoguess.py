@@ -190,7 +190,7 @@ def check_guess():
             selection_index.remove(Photo)
         except ValueError: #If unable to remove due to already being removed, the previously added Guessdifference is removed
             totaldifference -= Guessdifference
-        scoreReport = report(Guessdifference) + "</br>The image you just saw is available <a href=\"https://quakestudies.canterbury.ac.nz/store/part/" + PhotoNo + "\" rel=\"noopener noreferrer\" target=\"_blank\">here</a>"
+        scoreReport = report(Guessdifference)        
         global current_score
         if guess_made == True:
 		    error = "You have already made a guess for this image, additional guesses will not be scored"
@@ -202,7 +202,7 @@ def check_guess():
                 current_score += int(roundscore)
         flash = error
         error = None
-        return render_template('feedback.html', user=CurrentUser, actlat=latitude, actlong=longitude, glat=formlat, glong=formlong, scoreReport=scoreReport, score = current_score, rounds = len(photolist), round = Round, error=flash)        
+        return render_template('feedback.html', user=CurrentUser, actlat=latitude, actlong=longitude, glat=formlat, glong=formlong, scoreReport=scoreReport, score = current_score, rounds = len(photolist), round = Round, error=flash, image=PhotoNo)        
     else:
         return redirect(url_for('next_photo'))
 
@@ -249,7 +249,7 @@ def display_final_scores():
 
 def report(diff):
     #This function flashes a error for the user depending on how close they got
-    error = "Your guess was <b>"+str(diff)+" m</b> away from the correct location<br>"    
+    error = "Your guess was <b>"+str(diff)+" m</b> away from the correct location"    
     try:
         diff=float(diff)
     except Exception:
@@ -265,6 +265,13 @@ def next_photo():
         return redirect(url_for('finished_round'))
     else:
         return redirect(url_for('new_guess'))
+        
+@app.route('/view_image', methods =['POST', 'GET'])
+def view_image():
+    if request.method == 'POST':
+        image_pid = request.form['image']
+        return redirect("http://quakestudies.canterbury.ac.nz/store/part/" + image_pid)
+    
 
 @app.route('/logout',methods =['POST'])
 def logout():

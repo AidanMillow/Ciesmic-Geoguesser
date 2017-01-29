@@ -194,15 +194,25 @@ padding: 4px 8px;
     text-align: center;
 }
 
-.next {
+.next {    
     position: absolute;
+    left: 50%;
     top: 70vh;
-    width: 100%;    
+    width: 50%;
+    
 }
 
-.next button {
+.view-image {
+    position: absolute;
+    left: 0;
+    top: 70vh;
+    width: 50%;
+}
+
+.next button, .view-image button {
     display: block;
-    margin: auto;    
+    margin: auto;
+    width: 30%;    
 }
 
 .report {
