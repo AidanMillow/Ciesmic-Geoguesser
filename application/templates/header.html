@@ -51,9 +51,9 @@
                     </div>
                  </div> 
                 {% endif %}                 
-				<div class="message">				    
-                    {% if error != None %}
-                        {{ error }}
+				<div class="user-error">				    
+                    {% if user_error != None %}
+                        {{ user_error }}
 					{% else %}
 					{% if request.path == '/start' or request.path == '/start' %}
 						{% if guess_made == True %}

@@ -24,11 +24,12 @@ selection_index=[] #The indices that are used to access the photolist without af
 gameSize = 0 #The amount of photos the user has chosen to guess in one session
 CurrentUser = None #The user that is currently logged in
 totaldifference = 0 #The user's total score for the current session
-error = None #A backup variable used in place of the flash method. Will be replaced when session data can be reduced
+user_error = None
 current_score = 0 #stores the score for the current session until completion
 Round = 0 #The round that the user is currently on. A round refers to the guessing of an individual photo
 rounds = 0 #The number of rounds the user has chosen to go through in total for the current session
 guess_made = False
+game_error = None
 
 def displayscores():
     #This is the method used for displaying high score tables on any given page
@@ -49,15 +50,15 @@ def displayscores():
             scoretable.append(table)
     return scoretable, catlist
     
+    
 @app.route('/')
 def init():
     #The home page for the app, where the user is meant to begin    
     global CurrentUser    
-    global error
-    scoretable, catlist = displayscores()
-    flash = error
-    error = None
-    return render_template('base.html',app=app,user=CurrentUser, tables = scoretable, titles = catlist, error=flash)
+    global user_error
+    scoretable, catlist = displayscores()   
+    return render_template('base.html',app=app,user=CurrentUser, tables = scoretable, titles = catlist, user_error=user_error)
+    
 
 @app.route('/login', methods = ['POST'])
 def login():    
@@ -80,7 +81,7 @@ def login():
 
 def register(formname, formpass):
     #This is what transpires if the user chooses to create a new account
-    global error  
+    global user_error  
     global CurrentUser
     exist = None    
     for row in User.query.filter_by(username=str(formname)):
@@ -97,9 +98,9 @@ def register(formname, formpass):
             CurrentUser = exist
             buildselect(photolist)
         else:
-            error = "There was an error during registration"
+            user_error = "There was an error during registration"
     else:
-        error = "A user with that name already exists"
+        user_error = "A user with that name already exists"
     
 
 def signin(formname, formpass):
@@ -120,7 +121,7 @@ def signin(formname, formpass):
 @app.route('/start', methods = ['POST','GET'])
 def start_game():
     #The method that sets up a new play session for the game and displays the first photo
-    global error
+    global user_error
     global photolist
     global selection_index
     global gameSize
@@ -141,14 +142,14 @@ def start_game():
         if PhotoNo == photo['PhotoNum']:            
             creator = photo['creator']
             license = photo['license']
-    flash = error
-    error = None
+    error = user_error
+    user_error = None
     return render_template("guess.html",user = CurrentUser, PhotoNo = random_photo(photolist,selection_index), rounds = len(photolist), score = current_score, round = Round, creator = creator, license = license, locked=guess_made, error=flash)
     
 @app.route('/guess', methods = ['POST', 'GET'])
 def new_guess():
     #Every photo that displays after the first is displayed on this page one at a time
-    global error
+    global user_error
     global CurrentUser
     global current_score
     global Round
@@ -159,16 +160,17 @@ def new_guess():
         if PhotoNo == photo['PhotoNum']:
             creator = photo['creator']
             license = photo['license']
-    flash = error
-    error = None
+    error = user_error
+    user_error = None
     return render_template("guess.html", user=CurrentUser, PhotoNo = random_photo(photolist,selection_index), error = flash, score = current_score, rounds = len(photolist), round = Round, creator = creator, license = license, locked = guess_made)
 
 @app.route('/check', methods =['POST'])
 def check_guess():
     #The page used to calculate the user's score for a guess on any given photo in the list
-    global error
+    global user_error
     global CurrentUser
     global guess_made
+    global game_error
     if request.method == 'POST':  
         global totaldifference
         global current_score
@@ -191,18 +193,14 @@ def check_guess():
         except ValueError: #If unable to remove due to already being removed, the previously added Guessdifference is removed
             totaldifference -= Guessdifference
         scoreReport = report(Guessdifference)        
-        global current_score
-        if guess_made == True:
-		    error = "You have already made a guess for this image, additional guesses will not be scored"
+        global current_score        
         if guess_made==False:
             guess_made=True	
             scoredifference = Guessdifference // 10
             roundscore = 100 - scoredifference
             if roundscore > 0:
-                current_score += int(roundscore)
-        flash = error
-        error = None
-        return render_template('feedback.html', user=CurrentUser, actlat=latitude, actlong=longitude, glat=formlat, glong=formlong, scoreReport=scoreReport, score = current_score, rounds = len(photolist), round = Round, error=flash, image=PhotoNo)        
+                current_score += int(roundscore)       
+        return render_template('feedback.html', user=CurrentUser, actlat=latitude, actlong=longitude, glat=formlat, glong=formlong, scoreReport=scoreReport, score = current_score, rounds = len(photolist), round = Round, image=PhotoNo)        
     else:
         return redirect(url_for('next_photo'))
 
@@ -276,10 +274,9 @@ def view_image():
 @app.route('/logout',methods =['POST'])
 def logout():
     #redirect page that logs out the user and returns to the login screen    
-    global error
+    global user_error
     global CurrentUser
     scoretable, catlist = displayscores()
-    CurrentUser = None   
-    flash = error
+    CurrentUser = None    
+    return render_template('base.html',user=CurrentUser, user_error=user_error, tables = scoretable, titles = catlist)
     error = None
-    return render_template('base.html',user=CurrentUser, error=flash, tables = scoretable, titles = catlist)
