@@ -49,6 +49,7 @@ body {
 
 .row {    
     height: 80vh;
+    padding: 50px;
 }
 
 
@@ -69,10 +70,16 @@ body {
     width: 250px;
 }
 
-
-
 .intro {
     padding-bottom: 40px;
+}
+
+.mobile-login {
+    display: none;
+}
+
+h3 {
+    font-size: 3rem;
 }
 
 .score-table {
@@ -162,6 +169,23 @@ padding: 4px 8px;
 
 .col-sm-6 {
     text-align:center;
+}
+
+.game-size {
+    margin: 3rem 0 0 0;
+    font-size: 1.5rem;
+}
+
+#start {
+    width: 100%;
+    
+}
+
+#start-button {
+    width:200px;
+    height:50px;
+    font-size:18px;
+    margin: 1rem 0;
 }
 
 .photo {    
@@ -289,3 +313,72 @@ meter {
     
 }
 
+@media (max-width: 767px) {
+    #copthorne {
+        display: none;
+    }
+    
+    .header, .fluid, .navbar-header, .navbar-brand, .navbar, .mobile-login {
+        height: 5rem;
+    }
+    
+    .header {
+        position: absolute;
+        top: 50px;
+    }
+    
+    .navbar-header {
+        float: left;
+        
+    }
+    
+    .navbar-inverse {    
+        border-width: 0 0 3.2px;
+    }
+    
+    .archive {
+        margin: 0 0;
+    }
+    .about, .contribute, .explore {
+        padding: 1.5rem 0.5rem;
+        font-size: 1rem;
+    }
+    
+    .mobile-login {
+        display: block;   
+        width: 15rem;
+        float:right;        
+    }
+    
+    .mobile-login button, #home {
+        width: 10rem;
+        font-size: 1rem;
+        padding: 0.5rem;
+        margin: 1rem 0 1rem 1rem;
+    } 
+    
+    .welcome {
+        float: none;
+        font-size: 1rem;
+        padding: 0.5rem 0 0 0; 
+        margin: 0 1rem;
+    }     
+    
+    #logout {
+        margin: 0 1rem;
+    }
+    
+    
+    
+    .row {
+        padding: 2rem 5rem;
+    }
+    
+    .intro {
+        padding-bottom: 0px;
+    }
+    
+    
+    
+    
+}

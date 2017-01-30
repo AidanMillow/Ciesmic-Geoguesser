@@ -12,21 +12,13 @@
         <link href="/static/css/app.css" rel="stylesheet">
     </head>	
       {% include 'header.html' %}    
-    <body>
-    <div id="fb-root"></div>
-    <script>(function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
-      js = d.createElement(s); js.id = id;
-      js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.8&appId=690029084458136";
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-    </script>
+    <body>  
+    
     <div class="container">			
             {% block content %}
-            <div style="padding: 50px"  class="row">
+            <div class="row">
                 <div class="col-sm-8">
-                    <div class="intro">
+                    <div class="intro">                        
                         <h3>Struggling to remember Christchurch?</h3>    
                         <p>The CEISMIC geoguesser is a fun way to test and improve your memory of pre-quake Christchurch. You will see a series of photos taken from the CEISMIC Canterbury Earthquake Digital Archive. For each photo, you will be asked to guess the position where it was taken, which will be within the bounds of "the four avenues" on a map. You will then be scored based on how close each guess was to the actual location.</p>
                         <p>We maintain highscore tables for the best scores across 5, 10, or 20 photos. Challenge your friends to test their own knowledge and see how you meansure up.</p>{% set i = 0 %}
@@ -54,15 +46,17 @@
                     </div>
                 </div>
                 <div class="col-sm-4">
-                    <img style="width:100%" src="../static/images/copthorne.jpeg"/>   
-                    <form class="navbar-form navbar-right" action = "/start" method = 'POST'>
+                    <img id="copthorne" style="width:100%" src="../static/images/copthorne.jpeg"/>   
+                    <p class="game-size">Number of photographs</p>
+                    <form id="start" action = "/start" method = 'POST'>
 						<label for="5">5</label>
 						<input type="radio" name="length" value="5" id="5" checked>
 						<label for="10">10</label>
 						<input type="radio" name="length" value="10" id="10">
 						<label for="20">20</label>
 						<input type="radio" name="length" value="20" id="20">
-                        <button style="width:200px;height:50px;font-size:18px" value = "Start Game" class="btn btn-success">Start Game</button>                
+                        <br/>
+                        <button id="start-button" value = "Start Game" class="btn btn-success">Start Game</button>                
                     </form>                              
                 </div>				
             </div>

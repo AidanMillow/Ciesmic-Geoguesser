@@ -63,24 +63,41 @@ def init():
 @app.route('/login', methods = ['POST'])
 def login():    
     #The login page for the application
-    global error
+    global user_error    
     if request.method == 'POST':
         formname = request.form['username']
         formpass = request.form['password']
+        version = request.form['version']        
         #Currently a login will fail if the following characters are used in the input boxes
         invalids = (" ","\\","/",":",";","[","]","{","}","(",")","-","+","=","\"","'")
         if (1 <= len(formname) <= 15 and len(formpass) >= 8 and not any(i in formname for i in invalids) and not any(i in formpass for i in invalids)):
             if request.form['type'] == 'register':            
-                register(formname, formpass)
+                register(version,formname, formpass)               
             elif request.form['type'] == 'signin':
-                signin(formname, formpass)
+                signin(version,formname, formpass)
         else:
-            error = "Please enter a valid username and password"
-    #Once the CurrentUser has been set (or not), the page will be rendered depending on its validity    
-    return redirect(url_for('init'))
+            if version != 'mobile':
+                user_error = "Please enter a valid username and password"    
+                return redirect(url_for('init'))    
+            else:
+                return render_template('mobile-login.html', user_error="Please enter a valid username and password")
+        if version != 'mobile':
+            return redirect(url_for('init'))  
+        else:
+            if user_error == None:
+                return redirect(url_for('init'))
+            else:
+                error = user_error
+                user_error = None
+                return render_template('mobile-login.html',user_error=error)
+    
+    
+@app.route('/login-mobile', methods = ['POST'])
+def login_mobile():    
+    return render_template('mobile-login.html')
 
-def register(formname, formpass):
-    #This is what transpires if the user chooses to create a new account
+def register(version, formname, formpass):
+    #This is what transpires if the user chooses to create a new account    
     global user_error  
     global CurrentUser
     exist = None    
@@ -98,14 +115,15 @@ def register(formname, formpass):
             CurrentUser = exist
             buildselect(photolist)
         else:
-            user_error = "There was an error during registration"
+            user_error = "There was an error during registration"            
     else:
-        user_error = "A user with that name already exists"
+        user_error = "A user with that name already exists"            
+        
     
 
-def signin(formname, formpass):
+def signin(version, formname, formpass):
     #This is what transpires when the user chooses to get back on an existing account
-    global error
+    global user_error
     global CurrentUser
     exist = None
     for row in User.query.filter_by(username=str(formname), password=str(formpass)):
@@ -115,7 +133,8 @@ def signin(formname, formpass):
         CurrentUser = exist
         buildselect(photolist)
     else:
-        error = "Your username or password was incorrect"
+        user_error = "Your username or password was incorrect"
+        
     
     
 @app.route('/start', methods = ['POST','GET'])
