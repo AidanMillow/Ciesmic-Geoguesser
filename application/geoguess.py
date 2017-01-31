@@ -28,7 +28,7 @@ user_error = None
 current_score = 0 #stores the score for the current session until completion
 Round = 0 #The round that the user is currently on. A round refers to the guessing of an individual photo
 rounds = 0 #The number of rounds the user has chosen to go through in total for the current session
-guess_made = False
+guess_made = 0
 game_error = None
 
 def displayscores():
@@ -214,13 +214,16 @@ def check_guess():
             totaldifference -= Guessdifference
         scoreReport = report(Guessdifference)        
         global current_score        
-        if guess_made==False:
-            guess_made=True	
+        if guess_made==0:
+            game_error=0
+            guess_made=1
             scoredifference = Guessdifference // 10
             roundscore = 100 - scoredifference
             if roundscore > 0:
-                current_score += int(roundscore)       
-        return render_template('feedback.html', user=CurrentUser, actlat=latitude, actlong=longitude, glat=formlat, glong=formlong, scoreReport=scoreReport, score = current_score, rounds = len(photolist), round = Round, image=PhotoNo)        
+                current_score += int(roundscore)
+        else:
+            game_error=1		
+        return render_template('feedback.html', user=CurrentUser, actlat=latitude, actlong=longitude, glat=formlat, glong=formlong, scoreReport=scoreReport, score = current_score, rounds = len(photolist), round = Round, image=PhotoNo, locked=game_error)        
     else:
         return redirect(url_for('next_photo'))
 
@@ -277,7 +280,7 @@ def report(diff):
 @app.route('/next_photo', methods =['POST', 'GET'])
 def next_photo():
     global guess_made
-    guess_made = False
+    guess_made = 0
     if selection_index == []:
         #selection_index will be empty once the user has guessed all photos. The user will then be redirected
         return redirect(url_for('finished_round'))
