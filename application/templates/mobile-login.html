@@ -15,7 +15,9 @@
                 <button class="btn btn-success" type="submit" name="type" value="signin">Sign in</button>
                 <button class="btn btn-success" type="submit" name="type" value="register">Register</button>                
         </form>  
-        <div class="error">{{user_error}}</div>
+        {% if user_error != None %}
+            <div class="error">{{user_error}}</div>
+        {% endif %}
     </div>
 
 {% endblock %}

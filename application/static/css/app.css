@@ -325,7 +325,8 @@ meter {
     .header {
         position: absolute;
         top: 50px;
-    }
+    }   
+    
     
     .navbar-header {
         float: left;
@@ -378,6 +379,9 @@ meter {
         padding-bottom: 0px;
     }
     
+    .score-table {
+        display: none;
+    }
     
     
     

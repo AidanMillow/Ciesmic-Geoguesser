@@ -72,31 +72,32 @@ def login():
         invalids = (" ","\\","/",":",";","[","]","{","}","(",")","-","+","=","\"","'")
         if (1 <= len(formname) <= 15 and len(formpass) >= 8 and not any(i in formname for i in invalids) and not any(i in formpass for i in invalids)):
             if request.form['type'] == 'register':            
-                register(version,formname, formpass)               
+                register(formname, formpass)               
             elif request.form['type'] == 'signin':
-                signin(version,formname, formpass)
+                signin(formname, formpass)
         else:
             if version != 'mobile':
                 user_error = "Please enter a valid username and password"    
                 return redirect(url_for('init'))    
-            else:
-                return render_template('mobile-login.html', user_error="Please enter a valid username and password")
+            else:                
+                return redirect(url_for('login_mobile'))
         if version != 'mobile':
             return redirect(url_for('init'))  
         else:
             if user_error == None:
                 return redirect(url_for('init'))
-            else:
-                error = user_error
-                user_error = None
-                return render_template('mobile-login.html',user_error=error)
+            else:                               
+                return redirect(url_for('login_mobile'))
     
     
-@app.route('/login-mobile', methods = ['POST'])
+@app.route('/login-mobile', methods = ['GET','POST'])
 def login_mobile():    
-    return render_template('mobile-login.html')
+    global user_error
+    error = user_error
+    user_error = None
+    return render_template('mobile-login.html',user_error=error)
 
-def register(version, formname, formpass):
+def register(formname, formpass):
     #This is what transpires if the user chooses to create a new account    
     global user_error  
     global CurrentUser
@@ -121,7 +122,7 @@ def register(version, formname, formpass):
         
     
 
-def signin(version, formname, formpass):
+def signin(formname, formpass):
     #This is what transpires when the user chooses to get back on an existing account
     global user_error
     global CurrentUser
