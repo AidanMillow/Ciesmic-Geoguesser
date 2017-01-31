@@ -7,7 +7,7 @@
 		 <div class="final-score">
             <meter value="{{score}}" min="0" max="{{rounds * 5}}">{{score}} out of {{rounds * 5}}</meter>      
         </div>       
-        <p class="distance">You were a total of {{difference}} m off from the actual locations</p>	
+        <p class="distance">You were a total of {{difference}} m off from the actual locations for a score of {{score}}</p>	
          {% if message %}
                 <p class="score-message">{{ message }}</h4>
          {% endif %}
@@ -30,7 +30,11 @@
 				{% for item in table %}
 				    <tr>
 					    <td>{{item['ranking']}}</td>
-						<td>{{item['user']}}</td>
+						{% if item['user']==user.username %}
+						    <td>{{item['user']}} (That's you!)</td>
+						{% else %}
+						    <td>{{item['user']}}</td>
+						{% endif %}
 						<td>{{item['score']}}</td>
 					</tr>
 				{% endfor %}
