@@ -44,7 +44,9 @@ def displayscores():
                 if ranking < 10: #Each table only displays the top ten scores
                     ranking+=1
                     Username=str(item.user.username)
-                    table.append({'ranking':ranking, 'user':Username,'score':item.score})                 
+                    displayscore=str(item.score)
+                    displayscore=displayscore[:-2]
+                    table.append({'ranking':ranking, 'user':Username,'score':displayscore})                 
                 else:
                     break       
             scoretable.append(table)
@@ -211,18 +213,18 @@ def check_guess():
         try: #Removes the photo from the selection index if able
             selection_index.remove(Photo)
         except ValueError: #If unable to remove due to already being removed, the previously added Guessdifference is removed
-            totaldifference -= Guessdifference
-        scoreReport = report(Guessdifference)        
+            totaldifference -= Guessdifference               
         global current_score        
         if guess_made==0:
             game_error=0
             guess_made=1
             scoredifference = Guessdifference // 10
             roundscore = 100 - scoredifference
-            if roundscore > 0:
-                current_score += int(roundscore)
+            roundscore = max(0.0, roundscore)
+            current_score += int(roundscore)
         else:
-            game_error=1		
+            game_error=1
+        scoreReport = report(Guessdifference, roundscore) 			
         return render_template('feedback.html', user=CurrentUser, actlat=latitude, actlong=longitude, glat=formlat, glong=formlong, scoreReport=scoreReport, score = current_score, rounds = len(photolist), round = Round, image=PhotoNo, locked=game_error)        
     else:
         return redirect(url_for('next_photo'))
@@ -265,12 +267,15 @@ def display_final_scores():
             break
     for item in scoretable:
         if item['ranking']>myranking-5 and item['ranking']<myranking+5:
-            displaytable.append({'ranking':item['ranking'], 'user':item['user'], 'score':item['score']})
+            displayscore=str(item['score'])
+            displayscore=displayscore[:-2]
+            displaytable.append({'ranking':item['ranking'], 'user':item['user'], 'score':displayscore})
     return displaytable	
 
-def report(diff):
+def report(diff, score):
     #This function flashes a error for the user depending on how close they got
-    error = "Your guess was <b>"+str(diff)+" m</b> away from the correct location"    
+	
+    error = "Your guess was <b>"+str(diff)+" m</b> away from the correct location for a score of "+str(score)[:-2]+"."    
     try:
         diff=float(diff)
     except Exception:
