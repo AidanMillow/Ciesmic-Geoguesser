@@ -74,10 +74,6 @@ body {
     padding-bottom: 40px;
 }
 
-.mobile-login {
-    display: none;
-}
-
 h3 {
     font-size: 3rem;
 }
@@ -311,6 +307,12 @@ meter {
     width: 40%;
     margin-top: 40px;
     
+}
+
+@media (min-width: 768px){
+.mobile-login {
+    display: none;
+}
 }
 
 @media (max-width: 767px) {
