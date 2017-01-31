@@ -391,11 +391,7 @@ meter {
     
     .next button, .view-image button {    
         width: auto;
-    }
-    
-    
-    
-    
+    }    
 }
 
 @media (max-width: 480px)
