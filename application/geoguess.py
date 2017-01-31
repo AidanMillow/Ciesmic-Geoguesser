@@ -221,10 +221,10 @@ def check_guess():
             scoredifference = Guessdifference // 10
             roundscore = 100 - scoredifference
             roundscore = max(0.0, roundscore)
-            current_score += int(roundscore)
+            current_score += int(roundscore)            
         else:
-            game_error=1
-        scoreReport = report(Guessdifference, roundscore) 			
+            game_error=1            
+        scoreReport = report(Guessdifference) 			
         return render_template('feedback.html', user=CurrentUser, actlat=latitude, actlong=longitude, glat=formlat, glong=formlong, scoreReport=scoreReport, score = current_score, rounds = len(photolist), round = Round, image=PhotoNo, locked=game_error)        
     else:
         return redirect(url_for('next_photo'))
@@ -272,10 +272,10 @@ def display_final_scores():
             displaytable.append({'ranking':item['ranking'], 'user':item['user'], 'score':displayscore})
     return displaytable	
 
-def report(diff, score):
+def report(diff):
     #This function flashes a error for the user depending on how close they got
 	
-    error = "Your guess was <b>"+str(diff)+" m</b> away from the correct location for a score of "+str(score)[:-2]+"."    
+    error = "Your guess was <b>"+str(diff)+" m</b> away from the correct location."    
     try:
         diff=float(diff)
     except Exception:
