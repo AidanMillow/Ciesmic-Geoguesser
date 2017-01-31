@@ -339,8 +339,7 @@ meter {
     #copthorne {
         display: none;
     }
-    
-   
+      
     
     .navbar-header {
         float: left;        
@@ -371,11 +370,7 @@ meter {
         margin: 0 1rem;
     }
        
-    .row {
-        padding: 2rem 5rem;
-    }
-    
-        
+            
     .score-table {
         display: none;
     }
@@ -386,16 +381,25 @@ meter {
     }
     
     .intro {
-        padding: 0;
+        padding: 2rem 5rem;
         font-size: 1rem;
     }
+    
+    .game-size, #start {
+        padding-left: 5rem;
+    }
+    
+    .next button, .view-image button {    
+        width: auto;
+    }
+    
+    
     
     
 }
 
 @media (max-width: 480px)
- {
-    
+ {    
     .archive {
         display: none;
     }
