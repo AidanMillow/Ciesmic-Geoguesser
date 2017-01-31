@@ -10,15 +10,18 @@ body {
 
 .header {
     color: #ffffff;
+    position: fixed;
+    height: 10vh;
 }
 
-.navbar, .fluid, .navbar-header, .navbar-brand{
-    height: 80px;
+.navbar, .fluid, .navbar-header, .navbar-brand{    
+    height: 10vh;    
 }
 
 .archive {
     float: left;
     margin: 0px 10px;
+    width: 35vw;
 }
 
 .archive a {
@@ -26,10 +29,10 @@ body {
 }
 
 .about, .contribute, .explore {
-    float: left;
-    padding: 25px 10px;
+    float: left;    
+    padding: 3.3vh 1vw;
     font-family: 'Avenir Next LT W01 Bold', Arial, Tahoma, sans-serif;
-    font-size: 16px;
+    font-size: 1.5rem;
 }
 
 .user-error {
@@ -45,6 +48,9 @@ body {
     padding: 0 0;
     margin: 0 0;    
     width: 100vw;
+    height: 80vh;
+    position: absolute;
+    top: 10vh;
 }
 
 .row {    
@@ -57,11 +63,12 @@ body {
     background-color: #000000;
     color: #ffffff;
     width: 100%;
-    position: absolute;
-    max-height: 340px;
+    position: fixed;
+    max-height: 10vh;
     font-size: 8px;     
-    border-top: 7px solid #b9bb00;
+    border-top: 1vh solid #b9bb00;
     padding: 10px;
+    top: 90vh;
     
 }
 
@@ -71,19 +78,24 @@ body {
 }
 
 .intro {
-    padding-bottom: 40px;
+    padding: 50px 50px 40px 50px;
+    font-size: 1.5rem;
 }
 
-.mobile-login {
-    display: none;
-}
 
 h3 {
-    font-size: 3rem;
+    font-size: 3rem;   
+    margin-top: 0px;
+    padding-top: 0px;
+    margin-bottom: 30px;
 }
 
 .score-table {
     padding-left: 8px;
+}
+
+#copthorne {
+    padding: 50px 50px 50px 0;
 }
 
 .stats {    
@@ -131,16 +143,12 @@ max-height: 200px;
 
 .navbar-inverse {
     border-color: #b9bb00;
-    border-width: 0 0 5px;
+    border-width: 0 0 1vh;
     background-color: #000000
 }   
 
 .navbar-inverse .navbar-text {
 color: #ffffff;
-}
-
-.navbar-brand  img{
-    clip: rect(0px, 0px, 10px, 0px);
 }
 
 .navbar-right {
@@ -158,8 +166,8 @@ height: 50%;
 }
 
 .navbar-right  button {
-font-size: 10px;
-padding: 4px 8px;
+    font-size: 10px;
+    padding: 4px 8px;
 }
 
 #header-home {
@@ -313,37 +321,29 @@ meter {
     
 }
 
+@media (min-width: 768px){
+    .mobile-login {
+        display: none;
+    }
+
+}
+
+@media (max-width: 933px){
+    .archive {
+        display:none;
+    }
+}
+
+
 @media (max-width: 767px) {
     #copthorne {
         display: none;
     }
-    
-    .header, .fluid, .navbar-header, .navbar-brand, .navbar, .mobile-login {
-        height: 5rem;
-    }
-    
-    .header {
-        position: absolute;
-        top: 50px;
-    }   
-    
+      
     
     .navbar-header {
-        float: left;
-        
-    }
-    
-    .navbar-inverse {    
-        border-width: 0 0 3.2px;
-    }
-    
-    .archive {
-        margin: 0 0;
-    }
-    .about, .contribute, .explore {
-        padding: 1.5rem 0.5rem;
-        font-size: 1rem;
-    }
+        float: left;        
+    }    
     
     .mobile-login {
         display: block;   
@@ -365,24 +365,43 @@ meter {
         margin: 0 1rem;
     }     
     
+   
     #logout {
         margin: 0 1rem;
     }
-    
-    
-    
-    .row {
-        padding: 2rem 5rem;
-    }
-    
-    .intro {
-        padding-bottom: 0px;
-    }
-    
+       
+            
     .score-table {
         display: none;
     }
     
+    h3 {
+        font-size: 2rem;
+        padding: 0;
+    }
+    
+    .intro {
+        padding: 2rem 5rem;
+        font-size: 1rem;
+    }
+    
+    .game-size, #start {
+        padding-left: 5rem;
+    }
+    
+    .next button, .view-image button {    
+        width: auto;
+    }
     
     
+    
+    
+}
+
+@media (max-width: 480px)
+ {    
+    .archive {
+        display: none;
+    }
+  
 }
