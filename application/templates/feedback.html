@@ -9,7 +9,7 @@
             <div class="report">
                 {{ scoreReport|safe }}        
             </div>
-            <form class="view-image" action = "/view_image" method = 'POST' 
+            <form class="view-image" action = "/view_image" method = 'POST' target = "blank"
             enctype = "multipart/form-data">
                 <button name="image" value="{{image}}" type="submit" class="btn btn-success">View Image in Archive</button>
             </form>
