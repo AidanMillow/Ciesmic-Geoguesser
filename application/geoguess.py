@@ -161,7 +161,18 @@ def finished_round():
     totaldifference=float("%.3f" % totaldifference) #rounds the difference to 3 decimal places
     showdifference = totaldifference #saves the difference to show so that it can safely be reset
     #the score is then saved to the database
-    return render_template('finish.html', difference=showdifference, gameSize=gameSize, message = message, score=current_score, round=Round, rounds=len(photolist), table=displaytable)
+    highscore = high_score(current_score)
+    return render_template('finish.html', difference=showdifference, gameSize=gameSize, message = message, score=current_score, round=Round, rounds=len(photolist), highscore = highscore)
+	
+def high_score(score):
+	ranking = 0
+	for item in Score.query.filter(Score.category == gameSize).order_by(Score.score.desc()):
+		if score > item.score:
+			return None #The HTML will check for None and display a form if it finds it
+		ranking += 1
+		if ranking >= 10:
+			return "Score to beat: " + str(item.score)
+	return None
 	
 def display_final_scores():
     displaytable = []
@@ -192,6 +203,26 @@ def report(diff):
         return "There was an error reporting your score"    
     return error
 
+@app.route('/submit', methods = ['POST'])
+def submitScore():
+	global gameSize
+	global current_score
+	player = str(request.form["player"]).lower()
+	bad = {"anus":"ants", "arse":"donkey", "arsehole":"anthill", "ass":"donkey", "asshole":"anthill", "bastard":"mustard", "bitch":"dog", "boner":"loner", "boob":"fruit", 
+	"butt":"tub", "chode":"choir", "cock":"bird", "cooter":"kitten", " cum":" can", "cunt":"cat", "damn":"darn", "dick":"richard", "dildo":"dodo", "douche":"soap", 
+	"fag":"bag", "fuck":"fudge", "gay":"happy", "gringo":"orange", "hell":"well", "jizz":"jazz", "kunt":"cat", "lesbian":"lasagna", "lesbo":"limbo", "nigg":"bigg", 
+	"penis":"pants", "piss":"pine", "pussy":"kitten", "semen":"sailor", "shit":"soot", "vagina":"kitten" }
+	indb = False
+	for badword, goodword in bad.items():
+		player = player.replace(badword,goodword)
+	for item in User.query.filter(User.username == player):
+		indb = True
+	if not indb:
+		db_session.add(User(player, "something"))
+	db_session.add(Score(player, current_score, gameSize))
+	db_session.commit()
+	return redirect(url_for('init'))
+		
 @app.route('/next_photo', methods =['POST', 'GET'])
 def next_photo():
     global guess_made
