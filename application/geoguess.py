@@ -22,7 +22,6 @@ fullphotolist = create_photo_list() #The entire list of available photos
 photolist = [] #The list  of photos the game will use, which is filled when the game starts
 selection_index=[] #The indices that are used to access the photolist without affecting it directly
 gameSize = 0 #The amount of photos the user has chosen to guess in one session
-CurrentUser = None #The user that is currently logged in
 totaldifference = 0 #The user's total score for the current session
 user_error = None
 current_score = 0 #stores the score for the current session until completion
@@ -55,90 +54,11 @@ def displayscores():
     
 @app.route('/')
 def init():
-    #The home page for the app, where the user is meant to begin    
-    global CurrentUser    
+    #The home page for the app, where the user is meant to begin     
     global user_error
     scoretable, catlist = displayscores()   
-    return render_template('base.html',app=app,user=CurrentUser, tables = scoretable, titles = catlist, user_error=user_error)
-    
+    return render_template('base.html',app=app, tables = scoretable, titles = catlist, user_error=user_error)     
 
-@app.route('/login', methods = ['POST'])
-def login():    
-    #The login page for the application
-    global user_error    
-    if request.method == 'POST':
-        formname = request.form['username']
-        formpass = request.form['password']
-        version = request.form['version']        
-        #Currently a login will fail if the following characters are used in the input boxes
-        invalids = (" ","\\","/",":",";","[","]","{","}","(",")","-","+","=","\"","'")
-        if (1 <= len(formname) <= 15 and len(formpass) >= 8 and not any(i in formname for i in invalids) and not any(i in formpass for i in invalids)):
-            if request.form['type'] == 'register':            
-                register(formname, formpass)               
-            elif request.form['type'] == 'signin':
-                signin(formname, formpass)
-        else:
-            if version != 'mobile':
-                user_error = "Please enter a valid username and password"    
-                return redirect(url_for('init'))    
-            else:                
-                return redirect(url_for('login_mobile'))
-        if version != 'mobile':
-            return redirect(url_for('init'))  
-        else:
-            if user_error == None:
-                return redirect(url_for('init'))
-            else:                               
-                return redirect(url_for('login_mobile'))
-    
-    
-@app.route('/login-mobile', methods = ['GET','POST'])
-def login_mobile():    
-    global user_error
-    error = user_error
-    user_error = None
-    return render_template('mobile-login.html',user_error=error)
-
-def register(formname, formpass):
-    #This is what transpires if the user chooses to create a new account    
-    global user_error  
-    global CurrentUser
-    exist = None    
-    for row in User.query.filter_by(username=str(formname)):
-        exist = row
-    if exist == None:
-        #A new user is only added when the username does not already exist
-        newuser = User(str(formname),str(formpass))
-        db_session.add(newuser)
-        db_session.commit()
-        for row in User.query.filter_by(username=str(formname)):
-            #This query is just to catch potential database failures
-            exist = row
-        if exist != None:
-            CurrentUser = exist
-            buildselect(photolist)
-        else:
-            user_error = "There was an error during registration"            
-    else:
-        user_error = "A user with that name already exists"            
-        
-    
-
-def signin(formname, formpass):
-    #This is what transpires when the user chooses to get back on an existing account
-    global user_error
-    global CurrentUser
-    exist = None
-    for row in User.query.filter_by(username=str(formname), password=str(formpass)):
-        exist = row
-    if exist != None:
-        #The query checks for username and password, they must both be correct to gain access
-        CurrentUser = exist
-        buildselect(photolist)
-    else:
-        user_error = "Your username or password was incorrect"
-        
-    
     
 @app.route('/start', methods = ['POST','GET'])
 def start_game():
@@ -148,7 +68,6 @@ def start_game():
     global selection_index
     global gameSize
     global totaldifference
-    global CurrentUser
     global current_score
     global Round
     global guess_made
@@ -166,13 +85,12 @@ def start_game():
             license = photo['license']
     error = user_error
     user_error = None
-    return render_template("guess.html",user = CurrentUser, PhotoNo = random_photo(photolist,selection_index), rounds = len(photolist), score = current_score, round = Round, creator = creator, license = license, locked=guess_made, error=flash)
+    return render_template("guess.html", PhotoNo = random_photo(photolist,selection_index), rounds = len(photolist), score = current_score, round = Round, creator = creator, license = license, locked=guess_made, error=flash)
     
 @app.route('/guess', methods = ['POST', 'GET'])
 def new_guess():
     #Every photo that displays after the first is displayed on this page one at a time
     global user_error
-    global CurrentUser
     global current_score
     global Round
     global guess_made
@@ -184,13 +102,12 @@ def new_guess():
             license = photo['license']
     error = user_error
     user_error = None
-    return render_template("guess.html", user=CurrentUser, PhotoNo = random_photo(photolist,selection_index), error = flash, score = current_score, rounds = len(photolist), round = Round, creator = creator, license = license, locked = guess_made)
+    return render_template("guess.html", PhotoNo = random_photo(photolist,selection_index), error = flash, score = current_score, rounds = len(photolist), round = Round, creator = creator, license = license, locked = guess_made)
 
 @app.route('/check', methods =['POST'])
 def check_guess():
     #The page used to calculate the user's score for a guess on any given photo in the list
     global user_error
-    global CurrentUser
     global guess_made
     global game_error
     if request.method == 'POST':  
@@ -225,7 +142,7 @@ def check_guess():
         else:
             game_error=1            
         scoreReport = report(Guessdifference) 			
-        return render_template('feedback.html', user=CurrentUser, actlat=latitude, actlong=longitude, glat=formlat, glong=formlong, scoreReport=scoreReport, score = current_score, rounds = len(photolist), round = Round, image=PhotoNo, locked=game_error)        
+        return render_template('feedback.html', actlat=latitude, actlong=longitude, glat=formlat, glong=formlong, scoreReport=scoreReport, score = current_score, rounds = len(photolist), round = Round, image=PhotoNo, locked=game_error)        
     else:
         return redirect(url_for('next_photo'))
 
@@ -244,14 +161,7 @@ def finished_round():
     totaldifference=float("%.3f" % totaldifference) #rounds the difference to 3 decimal places
     showdifference = totaldifference #saves the difference to show so that it can safely be reset
     #the score is then saved to the database
-    if CurrentUser == None:
-        message = "You must login to have your score recorded"
-    elif CurrentUser != None and selection_index == []:
-        sessionscore = Score(CurrentUser.username, current_score, gameSize)
-        db_session.add(sessionscore)
-        db_session.commit()
-        displaytable=display_final_scores()		
-    return render_template('finish.html', user=CurrentUser, difference=showdifference, gameSize=gameSize, message = message, score=current_score, round=Round, rounds=len(photolist), table=displaytable)
+    return render_template('finish.html', difference=showdifference, gameSize=gameSize, message = message, score=current_score, round=Round, rounds=len(photolist), table=displaytable)
 	
 def display_final_scores():
     displaytable = []
@@ -303,8 +213,6 @@ def view_image():
 def logout():
     #redirect page that logs out the user and returns to the login screen    
     global user_error
-    global CurrentUser
-    scoretable, catlist = displayscores()
-    CurrentUser = None    
-    return render_template('base.html',user=CurrentUser, user_error=user_error, tables = scoretable, titles = catlist)
+    scoretable, catlist = displayscores()   
+    return render_template('base.html', user_error=user_error, tables = scoretable, titles = catlist)
     error = None

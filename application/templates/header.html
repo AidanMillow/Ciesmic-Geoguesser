@@ -16,61 +16,21 @@
                 <div class="explore">
                     <a href="http://www.ceismic.org.nz/search?q=" rel="noopener noreferrer" target="_blank">EXPLORE</a>
                 </div>
-            </div> 
-            {% if request.path == '/' or request.path == '/logout'%}                 
-                {% if user == None %}                         
-                    <form class="mobile-login" action = "/login-mobile" method = 'POST' enctype = "multipart/form-data">                                              
-                        <button id="sign-in" class="btn btn-success" >Sign in / Register</button>                                                 
-                    </form>    
-                    <div id="navbar" class="navbar-collapse collapse">                                       
-                        <form class="navbar-form navbar-right" action = "/login" method = 'POST' enctype = "multipart/form-data">          
-                            <div class="form-group">
-                              <input type="text" placeholder="Username" name="username" class="form-control">
-                            </div>
-                            <div class="form-group">
-                              <input type="password" placeholder="Password" name="password" class="form-control">
-                            </div>                        
-                            <input type="hidden" name="version" value="normal"/> 
-                            <button class="btn btn-success" type="submit" name="type" value="signin">Sign in</button>
-                            <button class="btn btn-success" type="submit" name="type" value="register">Register</button>                
-                        </form>                     
-                {% else %}
-                    <div class="mobile-login">
-                        <div class="welcome">Welcome {{user.username}}</div> 
-                         <form action = "/logout" method = 'POST' enctype = "multipart/form-data"> 
-                        <button id="logout" class="btn btn-success" name="type" value ="home">Logout</button>
-                         </form>
-                    </div>
-                    <div id="navbar" class="navbar-collapse collapse">
-                        <form class="navbar-form navbar-right" action = "/logout" method = 'POST' enctype = "multipart/form-data">   
-                            <button style="margin-right:10px" class="btn btn-success" name="type" value = "home">Logout</button>
-                        </form>
-                        <div class="welcome">Welcome {{user.username}}</div>                    
-                {% endif %}                
-            {% else %}                 
-                {% if request.path == '/login-mobile' %}                    
-                    <div class="mobile-login">
-                        <form action = "/" method = 'GET'>   
-                            <button id="home" class="btn btn-success">Return Home</button>
-                        </form>
+            </div>               
+            <div id="navbar" class="navbar-collapse collapse">
+                    <form class="navbar-form navbar-right" action = "/" method = 'GET'>   
+                        <button id="header-home" style="margin-right:10px" class="btn btn-success">Return Home</button>
+                    </form>     
+                    <div class="stats">
+                        <div class="round">    
+                            <div class="stats_head">ROUND</div>
+                            <div class="stats_value">{{round}}/{{rounds}}</div>
+                        </div>
+                        <div class="score">    
+                            <div class="stats_head">SCORE</div>
+                            <div class="stats_value">{{score}}</div>
+                        </div>
                     </div>                    
-                {% else %}            
-                    <div id="navbar" class="navbar-collapse collapse">
-                        <form class="navbar-form navbar-right" action = "/" method = 'GET'>   
-                            <button id="header-home" style="margin-right:10px" class="btn btn-success">Return Home</button>
-                        </form>     
-                        <div class="stats">
-                            <div class="round">    
-                                <div class="stats_head">ROUND</div>
-                                <div class="stats_value">{{round}}/{{rounds}}</div>
-                            </div>
-                            <div class="score">    
-                                <div class="stats_head">SCORE</div>
-                                <div class="stats_value">{{score}}</div>
-                            </div>
-                        </div>                    
-                {% endif %} 
-            {% endif %} 
 				<div class="user-error">				    
                     {% if user_error != None %}
                         {{ user_error }}
