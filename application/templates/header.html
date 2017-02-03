@@ -18,9 +18,12 @@
                 </div>
             </div>               
             <div id="navbar" class="navbar-collapse collapse">
+			    {% if request.path == '/' or request.path =='/logout' %}
+				{% else %}
                     <form class="navbar-form navbar-right" action = "/" method = 'GET'>   
                         <button id="header-home" style="margin-right:10px" class="btn btn-success">Return Home</button>
-                    </form>     
+                    </form>
+                    {% if request.path != '/finish' %}					
                     <div class="stats">
                         <div class="round">    
                             <div class="stats_head">ROUND</div>
@@ -30,12 +33,14 @@
                             <div class="stats_head">SCORE</div>
                             <div class="stats_value">{{score}}</div>
                         </div>
-                    </div>                    
+                    </div>
+					{% endif %}
+                {% endif %}                    
 				<div class="user-error">				    
                     {% if user_error != None %}
                         {{ user_error }}
 					{% else %}
-					{% if request.path == '/start' or request.path == '/start' %}
+					{% if request.path == '/start'%}
 						{% if guess_made == True %}
 						    <p>Test</p>
 						{% endif %}
