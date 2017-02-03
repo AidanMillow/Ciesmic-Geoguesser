@@ -1,5 +1,5 @@
-import os, math
-from flask import Flask, redirect, url_for, escape, render_template, request, flash
+import os, math, ast
+from flask import Flask, redirect, url_for, escape, render_template, request, flash, make_response
 from scripts.config import DevelopmentConfig
 from scripts.model import User, Score
 from scripts.photos.photos import create_photo_list, buildselect, random_photo, buildPhotoList
@@ -19,15 +19,7 @@ def shutdown_session(exception=None):
 
 #Global variables
 fullphotolist = create_photo_list() #The entire list of available photos
-photolist = [] #The list  of photos the game will use, which is filled when the game starts
-selection_index=[] #The indices that are used to access the photolist without affecting it directly
-gameSize = 0 #The amount of photos the user has chosen to guess in one session
-totaldifference = 0 #The user's total score for the current session
 user_error = None
-current_score = 0 #stores the score for the current session until completion
-Round = 0 #The round that the user is currently on. A round refers to the guessing of an individual photo
-rounds = 0 #The number of rounds the user has chosen to go through in total for the current session
-guess_made = 0
 game_error = None
 
 def displayscores():
@@ -57,27 +49,21 @@ def init():
     #The home page for the app, where the user is meant to begin     
     global user_error
     scoretable, catlist = displayscores()   
-    return render_template('base.html',app=app, tables = scoretable, titles = catlist, user_error=user_error)     
+    resp = make_response(render_template('base.html',app = app, tables = scoretable, titles = catlist, user_error = user_error))
+    return resp	
 
     
 @app.route('/start', methods = ['POST','GET'])
 def start_game():
     #The method that sets up a new play session for the game and displays the first photo
     global user_error
-    global photolist
-    global selection_index
-    global gameSize
-    global totaldifference
-    global current_score
-    global Round
-    global guess_made
+    Round = 1
     gameSize=int(request.form['length'])
     selection_data = buildPhotoList(fullphotolist,gameSize)
     photolist = selection_data[0]
     selection_index=selection_data[1]
     totaldifference = 0
     current_score = 0
-    Round = 1
     PhotoNo = random_photo(photolist,selection_index)
     for photo in photolist:        
         if PhotoNo == photo['PhotoNum']:            
@@ -85,16 +71,23 @@ def start_game():
             license = photo['license']
     error = user_error
     user_error = None
-    return render_template("guess.html", PhotoNo = random_photo(photolist,selection_index), rounds = len(photolist), score = current_score, round = Round, creator = creator, license = license, locked=guess_made, error=flash)
+    resp = make_response(render_template("guess.html", PhotoNo = random_photo(photolist,selection_index), rounds = len(photolist), score = current_score, round = Round, creator = creator, license = license, locked='false', error=flash))
+    resp.set_cookie('imagenumber', str(Round))
+    resp.set_cookie('rounds', str(gameSize))
+    resp.set_cookie('photolist', str(photolist))
+    resp.set_cookie('selection_index', str(selection_index))
+    resp.set_cookie('totaldifference', str(totaldifference))
+    resp.set_cookie('current_score', str(current_score))
+    return resp
     
 @app.route('/guess', methods = ['POST', 'GET'])
 def new_guess():
     #Every photo that displays after the first is displayed on this page one at a time
     global user_error
-    global current_score
-    global Round
-    global guess_made
-    Round += 1
+    photolist = ast.literal_eval(request.cookies.get('photolist'))
+    selection_index = ast.literal_eval(request.cookies.get('selection_index'))
+    current_score = int(request.cookies.get('current_score'))
+    Round = int(request.cookies.get('imagenumber'))
     PhotoNo = random_photo(photolist,selection_index)
     for photo in photolist:
         if PhotoNo == photo['PhotoNum']:
@@ -102,19 +95,21 @@ def new_guess():
             license = photo['license']
     error = user_error
     user_error = None
-    return render_template("guess.html", PhotoNo = random_photo(photolist,selection_index), error = flash, score = current_score, rounds = len(photolist), round = Round, creator = creator, license = license, locked = guess_made)
+    resp = make_response(render_template("guess.html", PhotoNo = random_photo(photolist,selection_index), error = flash, score = current_score, rounds = len(photolist), round = Round, creator = creator, license = license, locked = 'false'))
+    return resp
 
 @app.route('/check', methods =['POST'])
 def check_guess():
     #The page used to calculate the user's score for a guess on any given photo in the list
     global user_error
-    global guess_made
-    global game_error
-    if request.method == 'POST':  
-        global totaldifference
-        global current_score
-        global Round
-        PhotoNo = request.form['photo']        
+    locked = 'false'
+    if request.method == 'POST':
+        photolist = ast.literal_eval(request.cookies.get('photolist'))
+        selection_index = ast.literal_eval(request.cookies.get('selection_index'))
+        totaldifference = float(request.cookies.get('totaldifference'))
+        current_score = int(request.cookies.get('current_score'))		
+        Round = int(request.cookies.get('imagenumber'))
+        PhotoNo = request.form['photo']     
         for photo in photolist:
             #finds the photo the user was guessing, then removes it from the selection_index
             if PhotoNo == photo['PhotoNum']:
@@ -131,18 +126,22 @@ def check_guess():
             selection_index.remove(Photo)
         except ValueError: #If unable to remove due to already being removed, the previously added Guessdifference is removed
             totaldifference -= Guessdifference               
-        global current_score        
-        if guess_made==0:
-            game_error=0
-            guess_made=1
+        if Round==int(request.form['imagenumber']):
             scoredifference = Guessdifference // 10
             roundscore = 100 - scoredifference
             roundscore = max(0.0, roundscore)
-            current_score += int(roundscore)            
+            current_score += int(roundscore)
         else:
-            game_error=1            
+            locked='true'		
         scoreReport = report(Guessdifference) 			
-        return render_template('feedback.html', actlat=latitude, actlong=longitude, glat=formlat, glong=formlong, scoreReport=scoreReport, score = current_score, rounds = len(photolist), round = Round, image=PhotoNo, locked=game_error)        
+        resp = make_response(render_template('feedback.html', actlat=latitude, actlong=longitude, glat=formlat, glong=formlong, scoreReport=scoreReport, score = current_score, rounds = len(photolist), round = Round, image=PhotoNo, locked=locked))
+        if Round==int(request.form['imagenumber']):
+            Round+=1
+        resp.set_cookie('imagenumber',str(Round))
+        resp.set_cookie('selection_index',str(selection_index))
+        resp.set_cookie('totaldifference', str(totaldifference))
+        resp.set_cookie('current_score', str(current_score))
+        return resp        
     else:
         return redirect(url_for('next_photo'))
 
@@ -151,17 +150,19 @@ def check_guess():
 @app.route('/finish', methods = ['POST', 'GET'])
 def finished_round():
     #The end screen for the app when a user has guessed through all photos
-    global totaldifference
-    global selection_index
-    global gameSize
-    global current_score
-    global Round
+    photolist = ast.literal_eval(request.cookies.get('photolist'))
+    selection_index = ast.literal_eval(request.cookies.get('selection_index'))
+    current_score = int(request.cookies.get('current_score'))
+    totaldifference = float(request.cookies.get('totaldifference'))
+    Round = int(request.cookies.get('imagenumber'))
+    gameSize = request.cookies.get('rounds')
     message = None
     displaytable = "none"
     totaldifference=float("%.3f" % totaldifference) #rounds the difference to 3 decimal places
     showdifference = totaldifference #saves the difference to show so that it can safely be reset
     #the score is then saved to the database
-    return render_template('finish.html', difference=showdifference, gameSize=gameSize, message = message, score=current_score, round=Round, rounds=len(photolist), table=displaytable)
+    resp = make_response(render_template('finish.html', difference=showdifference, gameSize=gameSize, message = message, score=current_score, round=Round, rounds=len(photolist), table=displaytable))
+    return resp
 	
 def display_final_scores():
     displaytable = []
@@ -194,8 +195,7 @@ def report(diff):
 
 @app.route('/next_photo', methods =['POST', 'GET'])
 def next_photo():
-    global guess_made
-    guess_made = 0
+    selection_index = ast.literal_eval(request.cookies.get('selection_index'))
     if selection_index == []:
         #selection_index will be empty once the user has guessed all photos. The user will then be redirected
         return redirect(url_for('finished_round'))
@@ -214,5 +214,6 @@ def logout():
     #redirect page that logs out the user and returns to the login screen    
     global user_error
     scoretable, catlist = displayscores()   
-    return render_template('base.html', user_error=user_error, tables = scoretable, titles = catlist)
+    resp = make_response(render_template('base.html', user_error=user_error, tables = scoretable, titles = catlist))
     error = None
+    return resp

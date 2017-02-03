@@ -11,7 +11,8 @@
             <form class="guess" name="form" action = "/check" method = 'POST' 
          enctype = "multipart/form-data">
 		 <input type="hidden" id="lat" name="latitude"/>
-		 <input type="hidden" id="long" name="longitude"/>          
+		 <input type="hidden" id="long" name="longitude"/>
+         <input type="hidden" name="imagenumber" value="{{round}}"/>			 
          <button disabled=disabled id="guess" class="btn btn-success" type="submit" name="photo" value="{{PhotoNo}}">Make Guess</button>
       </form>
       </div>
@@ -22,7 +23,8 @@
             <div id="mobile-map"></div>
             <form class="guess" name="form" action = "/check" method = 'POST' enctype = "multipart/form-data">
                 <input type="hidden" id="mobile-lat" name="latitude"/>
-                <input type="hidden" id="mobile-long" name="longitude"/>          
+                <input type="hidden" id="mobile-long" name="longitude"/>
+                <input type="hidden" id="mobile-image" name="imagenumber" value="{{round}}"/>		
                 <button disabled=disabled id="mobile-guess" class="btn btn-success" type="submit" name="photo" value="{{PhotoNo}}">Make Guess</button>
             </form>
             <span onclick="closeNav()"><button id="show-image" class="btn btn-success"><span class='button-text'>View Image</span></button></span>
@@ -32,7 +34,11 @@
         </div>
         <span onclick="openNav()"><button id="show-map" class="btn btn-success"><span class='button-text'>Make Guess</span></button></span>
     </div>
-	
+	{% if locked=='true' %}
+	<div class="game-error">
+		You can only submit a score once for each photo
+	</div>
+	{% endif %}
     
     <script type="text/javascript">	
         var style = [{"featureType":"all","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#ffffff"}]},{"featureType":"all","elementType":"geometry.stroke","stylers":[{"visibility":"on"},{"color":"#84d9f4"}]},{"featureType":"all","elementType":"labels.text","stylers":[{"visibility":"simplified"},{"color":"#5f7997"}]},{"featureType":"administrative.country","elementType":"geometry.fill","stylers":[{"color":"#e13a3a"}]},{"featureType":"landscape.man_made","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#bfcce6"},{"saturation":"-76"}]},{"featureType":"landscape.man_made","elementType":"geometry.stroke","stylers":[{"visibility":"on"}]},{"featureType":"poi.business","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#7e94ba"}]}]        
