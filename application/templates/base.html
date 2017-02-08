@@ -9,7 +9,8 @@
         <script src="/static/js/bootstrap.min.js"></script>
         <script src="http://maps.google.com/maps/api/js?key=AIzaSyAKo-dw8hYVazrmnpBjzIKbQduh3OkgXSQ" type="text/javascript"></script>	
         <link href="/static/css/bootstrap.min.css" rel="stylesheet">
-        <link href="/static/css/app.css" rel="stylesheet">
+        <link href="/static/css/app.css" rel="stylesheet"> 
+       
     </head>	
       {% include 'header.html' %}    
     <body>  
@@ -17,17 +18,16 @@
     <div class="container">			
             {% block content %}
             <div class="row">
-                <div class="col-sm-8">
+                <div class="col-sm-7">
                     <div class="intro">                        
                         <h3>Struggling to remember Christchurch?</h3>    
                         <p>The CEISMIC geoguesser is a fun way to test and improve your memory of pre-quake Christchurch. You will see a series of photos taken from the CEISMIC Canterbury Earthquake Digital Archive. For each photo, you will be asked to guess the position where it was taken, which will be within the bounds of "the four avenues" on a map. You will then be scored based on how close each guess was to the actual location.</p>
                         <p>We maintain highscore tables for the best scores across 5, 10, or 20 photos. Challenge your friends to test their own knowledge and see how you meansure up.</p>{% set i = 0 %}
                     </div>
-                    <div class="score-table">
+                    <div class="score-tables">
                         {% for table in tables %}
-							<div style="padding-left: 50px" class="col-xs-4">
-								<h3>{{titles[i]}} Photos</h3>
-								<table>
+							
+								<table>                                   
 								    <tr>
 									    <th>Rank</th>
 										<th>User</th>
@@ -40,24 +40,80 @@
 										</tr>
 									{% endfor %}
                                 </table>									
-								{% set i = i+1 %}
-							</div>
+								{% set i = i+1 %}							
                         {% endfor %}
                     </div>
                 </div>
-                <div class="col-sm-4">
-                    <img id="copthorne" style="width:100%" src="../static/images/copthorne.jpeg"/>   
-                    <p class="game-size">Number of photographs</p>
-                    <form id="start" action = "/start" method = 'POST'>
-						<label for="5">5</label>
-						<input type="radio" name="length" value="5" id="5" checked>
-						<label for="10">10</label>
-						<input type="radio" name="length" value="10" id="10">
-						<label for="20">20</label>
-						<input type="radio" name="length" value="20" id="20">
-                        <br/>
-                        <button id="start-button" value = "Start Game" class="btn btn-success">Start Game</button>                
-                    </form>                              
+                <div class="col-sm-5">
+                    <div class="slideshow">
+                        <div class="carousel-item">
+                            <img class="mySlides"  src="/static/images/carousel/copthorne.jpg"/>
+                            <div class="carousel-caption">
+                                BeckerFraserPhotos CC BY-NC-ND 3.0
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <img class="mySlides" src="/static/images/carousel/bricks.jpg"/>
+                            <div class="carousel-caption">BeckerFraserPhotoos CC BY-NC 3.0</div>
+                        </div>
+                        <div class="carousel-item">
+                            <img class="mySlides" src="/static/images/carousel/Colombo.jpg"/>  
+                            <div class="carousel-caption">Gregor Ronald's CC BY-SA 2.0</div>  
+                        </div>
+                        <div class="carousel-item">
+                            <img class="mySlides" src="/static/images/carousel/hotelgrandchancellor.jpg"/>
+                            <div class="carousel-caption">BeckerFraserPhotoos CC BY-NC 3.0</div>
+                        </div>
+                        <div class="carousel-item">
+                            <img class="mySlides" src="/static/images/carousel/hutchinson.jpg"/>
+                            <div class="carousel-caption">Wellington Emergency Management Office CC BY-NC-SA 3.0 NZ</div>
+                        </div>
+                        <div class="carousel-item">
+                            <img class="mySlides" src="/static/images/carousel/mckenzie.jpg"/>                        
+                            <div class="carousel-caption">BeckerFraserPhotos CC BY-NC 3.0</div>
+                        </div>
+                        <div class="carousel-item">
+                            <img class="mySlides" src="/static/images/carousel/RandR.jpg"/>
+                            <div class="carousel-caption">Umut Akguzel CC BY-NC-ND 3.0</div>
+                        </div>
+                        <div class="carousel-item">
+                            <img class="mySlides" src="/static/images/carousel/remembrance.jpg"/>
+                            <div class="carousel-caption">
+                                BeckerFraserPhotoos CC BY-NC-ND 3.0
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <img class="mySlides" src="/static/images/carousel/restart.jpg"/>
+                            <div class="carousel-caption">FESTA CC BY-NC 3.0</div>
+                        </div>
+                        <div class="carousel-item">
+                            <img class="mySlides" src="/static/images/carousel/Rodd & Gunn.jpg"/>
+                            <div class="carousel-caption">
+                                BeckerFraserPhotoos CC BY-NC 3.0
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <img class="mySlides" src="/static/images/carousel/Strip.jpg"/>
+                            <div class="carousel-caption">Umut Akguzel CC BY-NC-ND 3.0</div>
+                        </div>
+                        <div class="carousel-item">
+                            <img class="mySlides" src="/static/images/carousel/Tuam.jpg"/>
+                            <div class="carousel-caption">Jaren Cantlon CC BY-NC 3.0</div>
+                        </div>
+                    </div>                    
+                    <div class="start-game">
+                        <p class="game-size">Number of photographs</p>
+                        <form id="start" action = "/start" method = 'POST'>
+                            <label for="5">5</label>
+                            <input type="radio" name="length" value="5" id="5" checked>
+                            <label for="10">10</label>
+                            <input type="radio" name="length" value="10" id="10">
+                            <label for="20">20</label>
+                            <input type="radio" name="length" value="20" id="20">
+                            <br/>
+                            <button id="start-button" value = "Start Game" class="btn btn-success">Start Game</button>                
+                        </form> 
+                    </div>        
                 </div>				
             </div>
             {% endblock %}
@@ -66,7 +122,25 @@
                 {% include 'footer.html' %}
            
 
+    <script>
+       var slideIndex = 0;
+carousel();
 
+function carousel() {
+    var i;
+    var x = document.getElementsByClassName("mySlides");
+    var captions = document.getElementsByClassName("carousel-caption");
+    for (i = 0; i < x.length; i++) {
+      x[i].style.display = "none"; 
+      captions[i].style.display = "none";
+    }
+    slideIndex++;
+    if (slideIndex > x.length) {slideIndex = 1} 
+    x[slideIndex-1].style.display = "block"; 
+    captions[slideIndex-1].style.display = "block";
+    setTimeout(carousel, 2000); // Change image every 2 seconds
+}
+    </script>
 </body>
 </html>
 

@@ -49,7 +49,7 @@ def init():
     #The home page for the app, where the user is meant to begin     
     global user_error
     scoretable, catlist = displayscores()   
-    resp = make_response(render_template('base.html',app = app, tables = scoretable, titles = catlist, user_error = user_error))
+    resp = make_response(render_template('base.html',app = app, tables = scoretable, titles = catlist, user_error = user_error, photolist = fullphotolist))
     return resp	
 
     
