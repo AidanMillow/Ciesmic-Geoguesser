@@ -2,6 +2,7 @@ import csv
 import random
 
 def create_photo_list():
+	#Creates an array of photos for the application to use from a file
     photolist = []
     file = open("application/scripts/photos/central_city_photos.csv","r")    
     csv_reader = csv.reader(file)    
@@ -16,6 +17,7 @@ def create_photo_list():
     return photolist
     
 def buildselect(photolist):    
+	#Creates an array of ascending numbers to represent a random index number from the photolist
     selection_index = []
     i=0
     for photo in photolist:
@@ -24,11 +26,12 @@ def buildselect(photolist):
     return selection_index                
 
 def random_photo(photolist,selection_index):
-    #picks a random photo from the list, then removes it from the selectionindex
+    #Picks a random photo from the list, then removes it from the selectionindex
     myChoice=random.choice(selection_index)
     return photolist[myChoice]['PhotoNum']
     
 def buildPhotoList(photolist, listlength):
+	#Uses the previously defined setup functions to build a list of photos with corresponding indexes
     fullindex = buildselect(photolist)
     myList = []
     i=0
