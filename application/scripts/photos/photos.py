@@ -1,9 +1,11 @@
-import csv
+import csv, os
 import random
+
+working_dir = os.getcwd()
 
 def create_photo_list():
     photolist = []
-    file = open("application/scripts/photos/central_city_photos.csv","r")    
+    file = open(working_dir + "/scripts/photos/central_city_photos.csv","r")    
     csv_reader = csv.reader(file)    
     for line in csv_reader:        
         photo = {}
