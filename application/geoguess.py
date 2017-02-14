@@ -8,13 +8,7 @@ from scripts.database import db_session, init_db
 
 
 app = Flask(__name__)
-app.config.from_object(DevelopmentConfig)
 init_db()
-
-
-@app.teardown_appcontext
-def shutdown_session(exception=None):
-    db_session.remove()
 
 #Global variables
 fullphotolist = create_photo_list() #The entire list of available photos
@@ -247,3 +241,7 @@ def logout():
     resp = make_response(render_template('base.html', user_error=user_error, tables = scoretable, titles = catlist))
     error = None
     return resp
+    
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
