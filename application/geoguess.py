@@ -9,7 +9,6 @@ from scripts.database import db_session, init_db
 
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
-app._static_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
 init_db()
 
 

@@ -7,7 +7,9 @@ from sqlalchemy.ext.declarative import declarative_base
 
 
 working_dir = os.getcwd()
-engine = create_engine('sqlite:///' + working_dir + '/application/scripts/database/geoguesser.db', convert_unicode=True)
+print working_dir
+engine = create_engine('sqlite:///' + working_dir + '/application/scripts/database/geoguesser.db', 
+convert_unicode=True)
 db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
 Base = declarative_base()
 Base.query = db_session.query_property()
