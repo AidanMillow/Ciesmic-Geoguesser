@@ -74,7 +74,7 @@ body {
 
 .creation {    
     float: right;
-    width: 250px;
+    width: 300px;
 }
 
 .intro {
@@ -131,18 +131,20 @@ h3 {
 .start-game {
    height: 20vh;
    text-align: center;
+   margin: 5rem 0 0 5rem;
+   float: left;
 }
 
 .game-size {
     margin: 1rem 5rem 0 0;
     font-size: 1.5rem;
     width: 66vh;
-    float: right;
+    float: left;
 }
 
 #start {
     width: 66vh;
-    float: right;
+    float: left;
     margin-right: 5rem;
 }
 
@@ -174,7 +176,7 @@ h3 {
 .stats {    
     float: right;
     text-align: center;    
-    margin: 15px 5px 15px 0px;    
+    margin: 1rem;    
     font-size: 15px;
 }
 
@@ -244,8 +246,9 @@ height: 50%;
 }
 
 #header-home {
-    font-size: 15px;
-    padding: 10px 15px;
+    font-size: 1.5rem;
+    padding: 0 1rem;
+    height: 6vh;
 }
 
 
