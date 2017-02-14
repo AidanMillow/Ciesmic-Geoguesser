@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}  
+	
+    <div id="guess-desktop" class="row">
+        <div class="col-sm-6" style="position:relative">            
+            <img class="photo" src="https://quakestudies.canterbury.ac.nz/store/download/part/{{PhotoNo}}"> 
+        </div>
+        <div class="col-sm-6">
+            <div id="map"></div>  
+            <form class="guess" name="form" action = "/check" method = 'POST' 
+         enctype = "multipart/form-data">
+		 <input type="hidden" id="lat" name="latitude"/>
+		 <input type="hidden" id="long" name="longitude"/>
+         <input type="hidden" name="imagenumber" value="{{round}}"/>			 
+         <button disabled=disabled id="guess" class="btn btn-success" type="submit" name="photo" value="{{PhotoNo}}">Make Guess</button>
+      </form>
+      </div>
+    </div>
+    <div id="guess-mobile">     
+        
+        <div id="mySidenav" class="sidenav">
+            <div id="mobile-map"></div>
+            <form class="guess" name="form" action = "/check" method = 'POST' enctype = "multipart/form-data">
+                <input type="hidden" id="mobile-lat" name="latitude"/>
+                <input type="hidden" id="mobile-long" name="longitude"/>
+                <input type="hidden" id="mobile-image" name="imagenumber" value="{{round}}"/>		
+                <button disabled=disabled id="mobile-guess" class="btn btn-success" type="submit" name="photo" value="{{PhotoNo}}">Make Guess</button>
+            </form>
+            <span onclick="closeNav()"><button id="show-image" class="btn btn-success"><span class='button-text'>View Image</span></button></span>
+        </div>
+        <div id="main">
+            <img class="photo" src="https://quakestudies.canterbury.ac.nz/store/download/part/{{PhotoNo}}">
+        </div>
+        <span onclick="openNav()"><button id="show-map" class="btn btn-success"><span class='button-text'>Make Guess</span></button></span>
+    </div>
+	{% if locked=='true' %}
+	<div class="game-error">
+		You can only submit a score once for each photo
+	</div>
+	{% endif %}
+    
+    <script type="text/javascript">	
+        var style = [{"featureType":"all","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#ffffff"}]},{"featureType":"all","elementType":"geometry.stroke","stylers":[{"visibility":"on"},{"color":"#84d9f4"}]},{"featureType":"all","elementType":"labels.text","stylers":[{"visibility":"simplified"},{"color":"#5f7997"}]},{"featureType":"administrative.country","elementType":"geometry.fill","stylers":[{"color":"#e13a3a"}]},{"featureType":"landscape.man_made","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#bfcce6"},{"saturation":"-76"}]},{"featureType":"landscape.man_made","elementType":"geometry.stroke","stylers":[{"visibility":"on"}]},{"featureType":"poi.business","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#7e94ba"}]}]        
+
+        var desktop_display = $("#guess-desktop").css("display");       
+        if (desktop_display == "block"){            
+            var map_div = document.getElementById("map");
+            displayMap(map_div,"desktop");
+        }
+        
+        
+        /* Open the sidenav */
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "100%";               
+            var map_div = document.getElementById("mobile-map");
+            displayMap(map_div,"mobile");
+        }
+
+        /* Close/hide the sidenav */
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+        }
+        
+        function displayMap(map_div,type) {            
+            var map = new google.maps.Map(map_div, {zoom: 14, styles: style, center: new google.maps.LatLng(-43.531,172.632), mapTypeId: google.maps.MapTypeId.ROADMAP});            
+            markers=[];
+            google.maps.event.addListener(map,'click', function(event){
+                for (var i=0; i < markers.length; i++){
+                    markers[i].setMap(null)
+                }
+                markers = [];
+                var pos = event.latLng;
+                var NewMarker = new google.maps.Marker({position: pos, map: map, Label: '!'});                
+                markers.push(NewMarker);
+                if (type == 'mobile') {
+                    document.getElementById('mobile-lat').value=pos.lat();
+                    document.getElementById('mobile-long').value=pos.lng();
+                    $("#mobile-guess").removeAttr("disabled"); 
+                }
+                else {                
+                    document.getElementById('lat').value=pos.lat();
+                    document.getElementById('long').value=pos.lng();
+                    $("#guess").removeAttr("disabled");
+                
+                }
+
+           });
+           
+        }
+        
+		
+	</script> 
+    
+{% endblock %}

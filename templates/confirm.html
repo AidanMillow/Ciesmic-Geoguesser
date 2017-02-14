@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+		<h2>{{lat}}, {{long}} is in this location</h2>		
+		<iframe width="300" height="300" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyB6RMRQRaSaFs3eKtk3JxRn7vNtQX5MQ38&q={{lat}},{{long}}&center=-43.5321,172.6362&zoom=12"></iframe> 	    
+		<form action ="/check/{{photo}}" method = 'POST' 
+         enctype = "multipart/form-data">
+			<input type="hidden" name="latitude" value={{lat}}>
+			<input type="hidden" name="longitude" value={{long}}>
+			<input type = "submit" value = "Confirm Answer"/>
+		</form>
+		<h2>Use this form if you want to change your guess</h2>
+		<form action = "/set_values/{{photo}}" method = 'POST' 
+        enctype = "multipart/form-data">
+			<label for="latitude">lat</label>
+			<input type = "text" name = "latitude" />
+			<label for="longitude">long</label>
+			<input type = "text" name = "longitude" />
+			<input type = "submit"/>
+      </form>
+{% endblock %}
