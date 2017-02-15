@@ -152,6 +152,7 @@ h3 {
     height: 50vh;
     width: 100%;    
     margin: 1rem 1rem;
+	display: block;
 }
 
 .mySlides, .carousel-item {    
@@ -402,9 +403,10 @@ meter {
 }
 
 @media (min-width: 768px){
-    .mobile-login {
-        display: none;
-    }
+    .intro {
+		
+		height: 40vh;
+	}
 
 }
 
@@ -416,7 +418,7 @@ meter {
 
 
 @media (max-width: 767px) {
-    #copthorne {
+    .slideshow {
         display: none;
     }
       
@@ -425,19 +427,7 @@ meter {
         float: left;        
     }    
     
-    .mobile-login {
-        display: block;   
-        width: 15rem;
-        float:right;        
-    }
-    
-    .mobile-login button, #home {
-        width: 10rem;
-        font-size: 1rem;
-        padding: 0.5rem;
-        margin: 1rem 0 1rem 1rem;
-    } 
-    
+        
     .welcome {
         float: none;
         font-size: 1rem;
@@ -464,6 +454,7 @@ meter {
         padding: 2rem 5rem;
         font-size: 1rem;
         text-align: left;
+		height: 40vh;
     }
     
     #guess-mobile {
