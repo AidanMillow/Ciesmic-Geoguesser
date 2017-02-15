@@ -265,6 +265,8 @@ height: 50%;
     height:7vh;
     font-size:1.5rem;
     margin: 1rem 0;
+    position: absolute;
+    left: 7rem;
 }
 
 .photo {    
