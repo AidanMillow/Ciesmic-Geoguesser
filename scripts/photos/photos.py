@@ -1,11 +1,9 @@
 import csv, os
 import random
 
-working_dir = os.getcwd()
-
 def create_photo_list():
     photolist = []
-    file = open(working_dir + "/scripts/photos/central_city_photos.csv","r")    
+    file = open("/var/www/geoguesser/scripts/photos/central_city_photos.csv","r")    
     csv_reader = csv.reader(file)    
     for line in csv_reader:        
         photo = {}
