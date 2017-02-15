@@ -19,30 +19,22 @@ body {
 }
 
 .archive {
-    float: left;
+    float: right;
     margin: 0px 10px;
-    width: 30vw;
+    width: 22vw;
 }
 
 .archive a {
     color: #ffffff
 }
 
-.about, .contribute, .explore {
+.about, .contribute {
     float: left;    
     padding: 3.3vh 1vw;
     font-family: 'Avenir Next LT W01 Bold', Arial, Tahoma, sans-serif;
     font-size: 1.5rem;
 }
 
-.user-error {
-    height: 20px;
-    width: 370px;
-    position: absolute;
-    right: 10px;
-    top: 50px;
-    text-align: center;
-}
 
 .container {
     padding: 0 0;
@@ -87,10 +79,12 @@ body {
 
 
 h3 {
-    font-size: 2rem;   
+    font-size: 3rem;   
     margin-top: 0px;
     padding-top: 0px;
-    margin-bottom: 1rem;
+    margin-bottom: 4rem;
+    font-weight: bold;
+
 }
 
 .score-tables {
@@ -142,6 +136,13 @@ h3 {
     float: left;
 }
 
+.gamesize-label, .gamesize-input {
+    float:left;
+}
+
+.gamesize-label {
+    margin-left: 1rem;
+}
 #start {
     width: 66vh;
     float: left;
@@ -152,6 +153,7 @@ h3 {
     height: 50vh;
     width: 100%;    
     margin: 1rem 1rem;
+    display: block;
 }
 
 .mySlides, .carousel-item {    
@@ -190,13 +192,6 @@ h3 {
     border-right: 1px solid grey;
     padding: 0 8px;
     color: #ffffff;
-}
-
-.welcome {
-    float: right;
-    color: #ffffff;
-    font-size: 12px;
-    padding: 15px;
 }
 
 table, td, th {
@@ -249,6 +244,11 @@ height: 50%;
     font-size: 1.5rem;
     padding: 0 1rem;
     height: 6vh;
+}
+
+.btn-success, .btn-success:hover {
+    background-color: #b9bb00;
+    border-color: #b9bb00;
 }
 
 
@@ -351,11 +351,6 @@ height: 50%;
 }
 
 
-p {
-    margin: 0 0 1rem 0;
-    font-size: 1rem;
-}
-
 .buttons, .finished, .distance, .score-message {
     width: 100%;
     text-align: center;
@@ -402,9 +397,6 @@ meter {
 }
 
 @media (min-width: 768px){
-    .mobile-login {
-        display: none;
-    }
 
 }
 
@@ -416,40 +408,14 @@ meter {
 
 
 @media (max-width: 767px) {
-    #copthorne {
-        display: none;
-    }
-      
-    
+   .slideshow {
+	display: none;
+} 
+
     .navbar-header {
         float: left;        
     }    
-    
-    .mobile-login {
-        display: block;   
-        width: 15rem;
-        float:right;        
-    }
-    
-    .mobile-login button, #home {
-        width: 10rem;
-        font-size: 1rem;
-        padding: 0.5rem;
-        margin: 1rem 0 1rem 1rem;
-    } 
-    
-    .welcome {
-        float: none;
-        font-size: 1rem;
-        padding: 0.5rem 0 0 0; 
-        margin: 0 1rem;
-    }     
-    
-   
-    #logout {
-        margin: 0 1rem;
-    }
-       
+          
             
     .score-tables {
         display: none;
