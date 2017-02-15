@@ -249,6 +249,7 @@ height: 50%;
 .btn-success, .btn-success:hover {
     background-color: #b9bb00;
     border-color: #b9bb00;
+    color: #000000;
 }
 
 
