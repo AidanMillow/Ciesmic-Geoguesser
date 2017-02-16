@@ -12,10 +12,14 @@
             <form class="view-image" action = "/view_image" method = 'POST' target = "blank"
             enctype = "multipart/form-data">
                 <button name="image" value="{{image}}" type="submit" class="btn btn-success">View Image in CEISMIC</button>
-            </form>
+            </form>            
             <form class="next" action ="/next_photo" method = 'POST' 
             enctype = "multipart/form-data">
+                {% if round != rounds %}
                 <button value= "next round" type="submit" class="btn btn-success">Play Next Round</button>
+                {% else %}
+                <button value= "next round" type="submit" class="btn btn-success">Finish</button>
+                {% endif %}
             </form>
         </div>
 		{% if locked=='true' %}

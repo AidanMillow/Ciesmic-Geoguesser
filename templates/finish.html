@@ -29,28 +29,5 @@
 				<button style="width:200px;height:50px;font-size:18px" value = "Start Game" class="btn btn-success">Play Again</button>                
 			</form>
         </div>     
-        </div>
-		<!-- table display on this page has been removed for now
-		{% if table != "none" %}
-		<div class="final-score">
-        	<table>
-                <tr>
-				    <th>Rank</th>
-					<th>User</th>
-					<th>Score</th>
-				</tr>
-				{% for item in table %}
-				    <tr>
-					    <td>{{item['ranking']}}</td>
-						{% if item['user']==user.username %}
-						    <td>{{item['user']}} (That's you!)</td>
-						{% else %}
-						    <td>{{item['user']}}</td>
-						{% endif %}
-						<td>{{item['score']}}</td>
-					</tr>
-				{% endfor %}
-			</table>
-        </div>
-		{% endif %}-->
+        </div>		
 {% endblock %}
