@@ -74,7 +74,7 @@ body {
     margin-left: 5rem;
     font-size: 1.5rem;
     text-align: left;
-    height: 20vh;
+    height: 36vh;
 }
 
 
@@ -88,8 +88,8 @@ h3 {
 }
 
 .score-tables {
-    margin-left: 5rem;
-    height: 20vh;   
+    margin-left: 6rem;
+    height: 10vh;   
 }
 
 .score-tables table {
@@ -105,7 +105,7 @@ h3 {
 }
 
 .score-tables th {    
-    color: #D5DDE5;
+    color: #000000;
     font-weight: 100;
     background-color: #b9bb00;
     border: 1px solid #C1C3D1;
@@ -123,7 +123,7 @@ h3 {
 
 
 .start-game {
-   height: 20vh;
+   height: 15vh;
    text-align: center;
    margin: 5rem 0 0 5rem;
    float: left;

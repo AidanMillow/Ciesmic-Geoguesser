@@ -5,8 +5,8 @@
                 <a class="navbar-brand" style="padding:0 0" href="http://www.ceismic.org.nz">
                     <img style="height:9vh" alt="ceismic-logo" src="{{url_for('static', filename='images/CEISMIC_logo.png')}}">
                 </a>
-                <img style="height:9vh" alt="xplore-logo" src="{{url_for('static',
- filename='images/Xplore_logo_white.png')}}">          
+               <a href="/"><img style="height:9vh" alt="xplore-logo" src="{{url_for('static',
+ filename='images/Xplore_logo_white.png')}}"></a>          
             </div> 
            {% if request.path == '/' %}
             <div class="archive">
@@ -22,7 +22,7 @@
                     <form class="navbar-form navbar-right" action = "/" method = 'GET'>   
                         <button id="header-home" style="margin-right:10px" class="btn btn-success">Return Home</button>
                     </form>
-                    {% if request.path != '/finish' %}					
+               			
                     <div class="stats">
                         <div class="round">    
                             <div class="stats_head">ROUND</div>
@@ -33,18 +33,7 @@
                             <div class="stats_value">{{score}}</div>
                         </div>
                     </div>
-					{% endif %}
-                {% endif %}                    
-				<div class="user-error">				    
-                    {% if user_error != None %}
-                        {{ user_error }}
-					{% else %}
-					{% if request.path == '/start'%}
-						{% if guess_made == True %}
-						    <p>Test</p>
-						{% endif %}
-					{% endif %}
-					{% endif %}
+	                {% endif %}
                 </div>
             </div>       
         </div>
