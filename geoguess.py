@@ -204,7 +204,7 @@ def submitScore():
 	player = str(request.form["player"]).lower()
 	bad = {"anus":"ants", "arse":"donkey", "arsehole":"anthill", "ass":"donkey", "asshole":"anthill", "bastard":"mustard", "bitch":"dog", "boner":"loner", "boob":"fruit", 
 	"butt":"tub", "chode":"choir", "cock":"bird", "cooter":"kitten", " cum":" can", "cunt":"cat", "damn":"darn", "dick":"richard", "dildo":"dodo", "douche":"soap", 
-	"fag":"bag", "fuck":"fudge", "gay":"happy", "gringo":"orange", "hell":"well", "jizz":"jazz", "kunt":"cat", "lesbian":"lasagna", "lesbo":"limbo", "nigg":"bigg", 
+	"fag":"bag", "fuck":"fudge", "gay":"happy", "gringo":"orange", "jizz":"jazz", "kunt":"cat", "lesbian":"lasagna", "lesbo":"limbo", "nigg":"bigg", 
 	"penis":"pants", "piss":"pine", "pussy":"kitten", "semen":"sailor", "shit":"soot", "vagina":"kitten" }
 	indb = False
 	for badword, goodword in bad.items():
@@ -215,7 +215,7 @@ def submitScore():
 		db_session.add(User(player, "something"))
 	db_session.add(Score(player, current_score, gameSize))
 	db_session.commit()
-	return redirect(url_for('init'))
+	return redirect(url_for('finished_round'))
 		
 @app.route('/next_photo', methods =['POST', 'GET'])
 def next_photo():
