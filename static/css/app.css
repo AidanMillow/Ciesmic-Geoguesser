@@ -383,9 +383,16 @@ height: 50%;
     float:left;
 }
 
-#facebook{
-    margin: 50px 30% 50px 0px;
-    float:right;
+#share {
+    margin: 50px 30% 50px 0;
+    float: right;
+}
+
+#share button {
+    background-color: #365899;
+    border-color: #365899;
+    color: #ffffff;
+    padding-left: 53px;
 }
 
 .final-score{    
