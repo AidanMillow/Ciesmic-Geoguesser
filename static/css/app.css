@@ -88,12 +88,12 @@ h3 {
 }
 
 .score-tables {
-    margin-left: 6rem;
+    margin-left: 5rem;
     height: 10vh;   
 }
 
 .score-tables table {
-    margin-top: 5vh;
+    margin-top: 3rem;
     margin-right: 2vw;
     border: 1px solid #C1C3D1;
     border-radius: 3px;
