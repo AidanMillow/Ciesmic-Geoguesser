@@ -357,6 +357,7 @@ height: 50%;
 .buttons, .finished, .distance, .score-message {
     width: 100%;
     text-align: center;
+    margin-bottom: 5rem;
 }
 
 .finished {    
@@ -387,15 +388,13 @@ height: 50%;
     float:right;
 }
 
-.final-score, .final-score p{
-    height: 100px;
+.final-score{    
     width: 100%;
     text-align: center;
 }
 
 meter {
     width: 40%;
-    margin-top: 40px;
     
 }
 
