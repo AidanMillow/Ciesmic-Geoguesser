@@ -45,13 +45,12 @@
                            corner, wondering, <i>what used to be here?</i></p>
                         <p>For the past six years, <a href="www.ceismic.org.nz">CEISMIC</a> has been recording these changes. This game takes a series of images from the archive and asks you to locate them on a map of the Four Avenues. Challenge your friends to test their own knowledge and see how you measure up!</p>
 			<p>CEISMIC Xplore is about remembering and reconnecting. Xplore our city in a new and fun way!</p>
-			{% set i = 0 %}
                     </div>
                     <div class="score-tables">
                         {% for table in tables %}
 							
 								<table>
-                                                                   <caption>{{titles[i]}} PHOTOS</caption>                                  
+                                                                   <caption>{{titles[loop.index-1]}} PHOTOS</caption>                                  
 								    <tr>
 									    <th>Rank</th>
 										<th>User</th>
@@ -63,8 +62,7 @@
                                             <td>{{item['score']}}</td>  											
 										</tr>
 									{% endfor %}
-                                </table>									
-								{% set i = i+1 %}							
+                                </table>												
                         {% endfor %}
                     </div>                     
                 </div>
