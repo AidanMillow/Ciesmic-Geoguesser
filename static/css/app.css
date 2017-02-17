@@ -1,8 +1,27 @@
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    padding-top: 59px;
+    margin-bottom: 20px;    
+    }
+
+.header {
+    color: #ffffff;
+    position: fixed;
+    height: 10vh;
+}
+
+.navbar, .fluid, .navbar-header, .navbar-brand{    
+    height: 10vh;    
+}
 
 .archive {
     float: right;
     margin: 0px 10px;
-    width: 35%;
+    width: 22vw;
 }
 
 .archive a {
@@ -17,407 +36,390 @@
 }
 
 
-.score-tables table {       
-        margin-right: 2vw;
-        border: 1px solid #C1C3D1;
-        border-radius: 3px;
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);    
-        border-spacing: 2px;
-        width: 27%; 
-        float: left;
-        font-size: 1.4rem;
-    }
-    
-    .score-tables th {    
-        color: #000000;
-        font-weight: 100;
-        background-color: #b9bb00;
-        border: 1px solid #C1C3D1;
-        
-    }
+.container {
+    padding: 0 0;
+    margin: 0 0;    
+    width: 100vw;
+    height: 80vh;
+    position: absolute;
+    top: 10vh;
+}
 
-    .score-tables td {   
-        border: 1px solid #C1C3D1;
-        
-    }
-
-    .score-tables tr {    
-        border: 1px solid #C1C3D1;
-    }
-    
-    .mySlides, .carousel-item {    
-        max-width: 66vh; 
-        max-height: 50vh;        
-    }
-
-
-    .carousel-caption {
-        position: relative;    
-        background-color: #000000;
-        color: #ffffff;
-        padding: 0px;
-        font-size: 1rem;
-        height: 2rem;
-        width: 66vh;
-        left: 0px; 
-        padding-top: 0.5rem;
-    }
-
-
-
-@media (min-width:320px){
-    html {
-        position: relative;
-        min-height: 100%;
-    }
-    
-    .header {
-        color: #ffffff;
-        position: fixed;
-        height: 10vh;
-    }
-
-    .navbar, .fluid, .navbar-header, .navbar-brand{    
-        height: 10vh;    
-    }
-    
-    .collapse {
-        display: block;
-    }
-    
-    #ceismic-logo {        
-        height: 9vh;
-    }
-    
-    #xplore-logo {
-        height: 9vh;
-    }
-
-    .archive {
-        display:none
-    }    
-
-    .container-fluid {
-        padding: 0 0;
-        margin: 0 0;    
-        width: 100vw;
-        height: 80vh;
-        position: absolute;
-        top: 10vh;
-    }
-
-    .row {    
-        height: 80vh;
-       
-    }
-
-
-    .footer {
-        background-color: #000000;
-        color: #ffffff;
-        width: 100%;
-        position: fixed;
-        height: 10vh;
-        font-size: 8px;     
-        border-top: 1vh solid #b9bb00;
-        padding: 10px;
-        top: 90vh;
-        
-    }
-
-    .creation {    
-        float: right;
-        width: 40%;
-        margin-right: 5%;
-    } 
-
-    .intro {        
-        font-size: 1rem;
-        text-align: left;
-        padding: 0 10%;
-        margin-top: 3rem;
-    }    
-
-
-    h3 {
-        font-size: 3rem;   
-        margin-top: 0px;
-        padding-top: 0px;
-        margin-bottom: 2rem;
-        font-weight: bold;
-
-    }
-
-    .start-game {       
-       margin-top: 2rem;
-       width: 100%;
-       text-align: center;       
-       float: left;
-    }
-
-    .game-size {        
-        font-size: 1.5rem;
-        width: 66vh;
-        float: left;
-    }   
+.row {    
+    height: 80vh;
    
-    .gamesize-label {
-        margin-left: 3rem;
-    }
-
-    input[type=radio] {
-        margin: 4px 0 0 0;
-    }
-    
-     #start-button {        
-        font-size:1.5rem;
-        margin: 1rem 0;
-    }
-    
-    .navbar-right {
-        border: none;
-        margin-right: 0px;
-        padding-right: 0px;
-        margin-top: 0.5rem;
-    }
-
-    .navbar-form {
-        float: right;
-    }
-    .navbar-stats {
-        width: 100vw; 
-        
-    }
-    
-    .stats {        
-        text-align: center;    
-        margin: 1rem;    
-        font-size: 1.5rem;
-    }
-
-    .stats_head {
-        color: grey;    
-        font-size: 1.5rem;
-    }
-
-    .score, .round {        
-        float: right;        
-        padding: 0 8px;
-        color: #ffffff;
-    }
-    
-    .score {
-        border-right: 1px solid grey;
-    }
-
-    table, td, th {
-        padding-right: 10px;
-        padding-left: 10px;
-        border: 1px solid black;    
-    }
-
-    .final-score table {
-        margin: 0 auto 0 auto;
-    }
+}
 
 
-    .thumb {
-    max-width: 200px;
-    max-height: 200px;
-
-    }
-
-    .navbar-inverse {
-        border-color: #b9bb00;
-        border-width: 0 0 1vh;
-        background-color: #000000
-    }   
-
-    .navbar-inverse .navbar-text {
+.footer {
+    background-color: #000000;
     color: #ffffff;
-    }
-
-    .navbar-right {
-    padding-top: 5px;
-    margin-right: 1px;
-    }
-
-
-    .navbar-form  .form-control{
-    font-size: 8px;
-    }
-
-    .navbar-form  .form-control {
-    height: 50%;
-    }
-
-    .navbar-right  button {
-        font-size: 10px;
-        padding: 4px 8px;
-    }
-
-    #header-home {
-        font-size: 1rem;
-        padding: 0 1rem;
-        height: 6vh;
-    }
-
-    .btn-success, .btn-success:hover , .btn-success:active{
-        background-color: #b9bb00;
-        border-color: #b9bb00;
-        color: #000000;
-    }
-
-
-    #guess-mobile {
-        display: none;
-    }
-
-    #guess-desktop {
-        display: block;
-    }   
-
-    .photo {    
-        height: 80vh;
-        text-align: center;        
-        position: absolute;
-        top: 0px;
-        left: 9vw;   
-    }
-
-    .photo-info {   
-        color: #ffffff;
-        float: left;
-        font-size: 10px;
-        
-    }
-
-    #map {    
-        position: absolute;
-        top: 0px;
-        width: 100%; 
-        height: 80vh;
-    }
-
-    .flashes {
-        font-size: 20px;
-        padding-bottom: 10px;
-    }
-
-    .guess {
-        width: 100%;
-        height: 10vh;  
-        position: absolute;
-        top: 70vh;
-        text-align: center;
-    }
-
-    #guess {
-        width:200px;
-        height:50px;
-        font-size:15px;
-    }
-
-    .next {    
-        position: absolute;
-        left: 50%;
-        top: 70vh;
-        width: 50%;
-        
-    }
-
-    .view-image {
-        position: absolute;
-        left: 0;
-        top: 70vh;
-        width: 50%;
-    }
-
-    .next button, .view-image button {
-        display: block;
-        margin: auto;
-        width: 30%;    
-    }
-
-    .game-error {
-        position: absolute;
-        width: 80vw;
-        margin: 0 15vw;        
-        top: 30vh;
-        height: 10vh;
-        text-align: center;
-        font-size: 2rem;
-        color: #ffffff;
-        background-color: rgba(96,96,96,0.9);
-        border-radius: 10px;
-    }
-
-    .report {
-        position: absolute;
-        top: 60vh;
-        text-align: center;
-        font-size: 2rem;
-    }
-
-
-    .buttons, .finished, .distance, .score-message {
-        width: 100%;
-        text-align: center;
-        margin-bottom: 5rem;
-    }
-
-    .finished {    
-        font-size: 4rem;        
-        padding-top: 5rem; 
-        margin-bottom: 0;
-    }
-
-    .distance {    
-        font-size: 1.5rem;
-        width: 100%;    
-    }
-
-    .score-message {    
-        font-size: 15px;
-        width: 100%; 
-        padding-top: 30px;
-    }
-
-    #submit-score {
-        font-size: 1rem;
-    }
-
-    #play {
-        margin: 3rem 0px 5% 3rem;
-        float:left;
-    }
-       
-
-    #share {
-        margin: 3rem 5% 3rem 0;
-        float: right;
-    }
+    width: 100%;
+    position: fixed;
+    max-height: 10vh;
+    font-size: 8px;     
+    border-top: 1vh solid #b9bb00;
+    padding: 10px;
+    top: 90vh;
     
-    #share button {        
-        background-color: #365899;
-        border-color: #365899;
-        color: #ffffff;        
-    }
+}
 
-    .final-score{    
-        width: 100%;
-        text-align: center;
-        font-size: 1rem;
-    }
+.creation {    
+    float: right;
+    width: 300px;
+}
 
-    meter {
-        width: 40%;
-        
-    }
+.intro {
+    margin-top: 10vh;
+    margin-left: 5rem;
+    font-size: 1.5rem;
+    text-align: left;
+    height: 36vh;
+}
+
+
+h3 {
+    font-size: 3rem;   
+    margin-top: 0px;
+    padding-top: 0px;
+    margin-bottom: 4rem;
+    font-weight: bold;
+
+}
+
+.score-tables {
+    margin-left: 5rem;
+    height: 10vh;   
+}
+
+.score-tables table {
+    margin-top: 3rem;
+    margin-right: 2vw;
+    border: 1px solid #C1C3D1;
+    border-radius: 3px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);    
+    border-spacing: 2px;
+    width: 27%; 
+    float: left;
+    font-size: 1.4rem;
+}
+
+.score-tables th {    
+    color: #000000;
+    font-weight: 100;
+    background-color: #b9bb00;
+    border: 1px solid #C1C3D1;
     
-    .slideshow {
+}
+
+.score-tables td {   
+    border: 1px solid #C1C3D1;
+    
+}
+
+.score-tables tr {    
+    border: 1px solid #C1C3D1;
+}
+
+
+.start-game {
+   height: 15vh;
+   text-align: center;
+   margin: 1rem 0 0 1rem;
+   float: left;
+}
+
+.game-size {
+    margin: 1rem 5rem 0 0;
+    font-size: 1.5rem;
+    width: 66vh;
+    float: left;
+}
+
+
+.gamesize-label {
+    margin-left: 3rem;
+}
+
+input[type=radio] {
+    margin: 4px 0 0 0;
+}
+
+#start {
+    width: 66vh;
+    float: left;
+    margin-right: 5rem;
+}
+
+.slideshow {
+    height: 50vh;
+    width: 100%;    
+    margin: 1rem 1rem;
+    display: block;
+}
+
+.mySlides, .carousel-item {    
+    max-width: 66vh; 
+    max-height: 50vh;
+    margin: 10vh 5rem auto auto;
+}
+
+
+.carousel-caption {
+    position: relative;    
+    background-color: #000000;
+    color: #ffffff;
+    padding: 0px;
+    font-size: 1rem;
+    height: 2rem;
+    width: 66vh;
+    left: 0px; 
+    padding-top: 0.5rem;
+}
+
+.stats {    
+    float: right;
+    text-align: center;    
+    margin: 1rem;    
+    font-size: 15px;
+}
+
+.stats_head {
+    color: grey;    
+    font-size: 15px;
+}
+
+.score, .round {
+    float: right;
+    border-right: 1px solid grey;
+    padding: 0 8px;
+    color: #ffffff;
+}
+
+table, td, th {
+	padding-right: 10px;
+	padding-left: 10px;
+	border: 1px solid black;    
+}
+
+.final-score table {
+	margin: 0 auto 0 auto;
+}
+
+
+.thumb {
+max-width: 200px;
+max-height: 200px;
+
+}
+
+.navbar-inverse {
+    border-color: #b9bb00;
+    border-width: 0 0 1vh;
+    background-color: #000000
+}   
+
+.navbar-inverse .navbar-text {
+color: #ffffff;
+}
+
+.navbar-right {
+padding-top: 5px;
+margin-right: 1px;
+}
+
+
+.navbar-form  .form-control{
+font-size: 8px;
+}
+
+.navbar-form  .form-control {
+height: 50%;
+}
+
+.navbar-right  button {
+    font-size: 10px;
+    padding: 4px 8px;
+}
+
+#header-home {
+    font-size: 1.5rem;
+    padding: 0 1rem;
+    height: 6vh;
+}
+
+.btn-success, .btn-success:hover {
+    background-color: #b9bb00;
+    border-color: #b9bb00;
+    color: #000000;
+}
+
+
+#guess-mobile {
+    display: none;
+}
+
+#guess-desktop {
+    display: block;
+}
+
+#start-button {
+    width:15vw;
+    height:7vh;
+    font-size:1.5rem;
+    margin: 1rem 0;
+}
+
+.photo {    
+    height: 80vh;
+    text-align: center;
+    
+}
+
+.photo-info {   
+    color: #ffffff;
+    float: left;
+    font-size: 10px;
+    
+}
+
+#map {    
+    position: absolute;
+    top: 0px;
+    width: 100%; 
+    height: 80vh;
+}
+
+.flashes {
+	font-size: 20px;
+	padding-bottom: 10px;
+}
+
+.guess {
+    width: 100%;
+    height: 10vh;  
+    position: absolute;
+    top: 70vh;
+    text-align: center;
+}
+
+#guess {
+    width:200px;
+    height:50px;
+    font-size:15px;
+}
+
+.next {    
+    position: absolute;
+    left: 50%;
+    top: 70vh;
+    width: 50%;
+    
+}
+
+.view-image {
+    position: absolute;
+    left: 0;
+    top: 70vh;
+    width: 50%;
+}
+
+.next button, .view-image button {
+    display: block;
+    margin: auto;
+    width: 30%;    
+}
+
+.game-error {
+    position: absolute;
+    width: 70vw;
+    margin: 0 15vw;
+    padding: 2rem 0; 
+    top: 30vh;
+    height: 10vh;
+    text-align: center;
+    font-size: 2rem;
+    color: #ffffff;
+    background-color: rgba(96,96,96,0.9);
+    border-radius: 10px;
+}
+
+.report {
+    position: absolute;
+    top: 60vh;
+    text-align: center;
+    font-size: 20px;
+    width: 100%;
+    padding-top: 10px;
+}
+
+
+.buttons, .finished, .distance, .score-message {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 5rem;
+}
+
+.finished {    
+    font-size: 40px;        
+    padding-top: 100px;   
+}
+
+.distance {    
+    font-size: 20px;
+    width: 100%;    
+}
+
+.score-message {    
+    font-size: 15px;
+    width: 100%; 
+    padding-top: 30px;
+}
+
+
+
+#play {
+    margin: 50px 0px 50px 30%;
+    float:left;
+}
+
+#share {
+    margin: 50px 30% 50px 0;
+    float: right;
+}
+
+#share button {
+    background-color: #365899;
+    border-color: #365899;
+    color: #ffffff;
+    padding-left: 53px;
+}
+
+.final-score{    
+    width: 100%;
+    text-align: center;
+}
+
+meter {
+    width: 40%;
+    
+}
+
+@media (min-width: 768px){
+
+}
+
+@media (max-width: 933px){
+    .archive {
+        display:none;
+    }
+}
+
+
+@media (max-width: 767px) {
+   .slideshow {
 	display: none;
-    } 
+} 
 
     .navbar-header {
         float: left;        
@@ -431,7 +433,13 @@
     h3 {
         font-size: 2rem;
         padding: 0;
-    }   
+    }
+    
+    .intro {
+        padding: 2rem 5rem;
+        font-size: 1rem;
+        text-align: left;
+    }
     
     #guess-mobile {
         display: block;
@@ -442,9 +450,12 @@
         display: none;
     }
     
+    .game-size, #start {
+        padding-left: 5rem;
+    }
     
     .next button, .view-image button {    
-        width: 180px;
+        width: auto;
     }    
   
     /* The side navigation menu */
@@ -486,11 +497,12 @@
 
     /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
     #main {
-        transition: margin-left .5s;       
+        transition: margin-left .5s;
+        padding: 20px;
     }
     
     #show-map {
-        width: 15vw;
+        width: 8vw;
         position: absolute;
         top: 0;
         left: 0;        
@@ -499,10 +511,10 @@
     }
     
     #show-image {
-        width: 15vw;
+        width: 8vw;
         position: absolute;
         top: 0;
-        left: 86vw;        
+        left: 92vw;        
         height: 80vh;
         border-radius: 0 4px 4px 0;
     }
@@ -515,8 +527,13 @@
         transform: rotate(-90deg);
         position: absolute;
         left: -3vw;
-    }   
+    }
     
+    .photo {
+        position: absolute;
+        top: 0px;
+        left: 7vw;
+    }
     
     #mobile-map {
         width: 92vw;
@@ -528,202 +545,13 @@
         left: 35vw;
         width: 30vw;
     }
+
 }
 
-@media (min-width:320px) and (orientation: landscape) {    
-    .header, .footer {
-        height: 10vw;
-    }
-    
-    
-    .navbar, .fluid, .navbar-header, .navbar-brand{    
-        height: 10vw;    
-    }
-    
-    #ceismic-logo {        
-        height: 9vw;
-    }
-    
-    #xplore-logo {
-        height: 9vw;
-    }
-    
-    .container-fluid {
-        height: 80vw;
-        top: 10vw;    
-    }
-    
-    
-}
-
-@media (min-width:600px) and (orientation: portrait){
+@media (max-width: 480px)
+ {    
     .archive {
-        display: block;
-    }
-    
-    .col-sm-7 {
-        width: 100%;
-    }
-    
-    
-    .intro {
-        font-size: 1.5rem;
-    }
-    
-    h3 {
-        font-size: 3rem;
-    }
-    
-    .slideshow {
-        display: block;
-        margin: 0 25vw;        
-    }
-    
-    .mySlides, .carousel-item {
-        width: 50vw;
-    }
-    
-    .carousel-caption {
-        width: 50vw;
-    }
-    
-    .start-game {
-        width: 100vw;
-    }
-
-}
-
-@media (min-width:600px) and (orientation: landscape){
-    .archive {
-        display: block;
-        margin-top: 1rem;
-    }
-    
-    .about, .contribute {
-        font-size: 2rem;
-    }
-    
-    .slideshow {
-        margin: 3rem 15% 0 0;
-        display: block;       
-    }
-    
-    .mySlides, .carousel-item {
-        width: 100%;
-    }
-    
-    .carousel-caption {
-        width: 100%;
-    }
-    
-    .intro {
-        font-size: 1.5rem;
-    }
-    
-    .score-tables {
-        display: block;
-        margin-left: 10%;
-    }
-    
-    #guess-mobile {
         display: none;
     }
-    
-    #guess-desktop {
-        display: block;
-    }
-    
-    .report {
-        width: 100%;
-    }
-
-
-}
-
-@media (min-width:1025px) and (orientation: landscape) {
-    .header, .navbar-header, .navbar-brand, .fluid , .navbar-inverse{
-        height: 10vh;
-    }
-    
-    #ceismic-logo, #xplore-logo{
-        height: 9vh;
-    }
-    
-    .archive {
-        margin-top: 0px;
-        width: 22vw;
-    }
-    
-    .about, .contribute {
-        font-size: 1.5rem;
-    }
-    
-    .container-fluid {
-        padding: 0 0;
-        margin: 0 0;
-        width: 100vw;
-        height: 80vh;
-        position: absolute;
-        top: 10vh;
-        }
-    
-    h3 {
-        font-size: 3rem;
-        margin-bottom: 4rem;
-    }
-    
-    .intro {
-        margin-top: 10vh;
-        margin-left: 5rem;
-        font-size: 1.5rem; 
-        padding: 0 0px;
-    }
-    
-    .slideshow {
-        margin: 1rem;
-        display: block;
-        width: 100%;
-        height: 50vh;
-        
-    }
-    
-   
-    .mySlides, .carousel-item {
-        max-width: 66vh;
-        max-height: 50vh;
-        margin: 10vh 5rem auto auto
-    }
-    
-    .carousel-caption {
-        width: 100%;
-    }
-    
-    .score-tables {
-        margin-left: 5rem;
-        margin-top: 3rem;
-    }
-    
-    .start-game {
-        height: 15vh;
-        text-align: center;
-        margin: 1rem 0 0 1rem;
-        float: left;    
-    }
-    
-    #start-button {
-        width: 15vw;
-        height: 7vh;
-        font-size: 1.5rem;
-        margin: 1rem 0;
-    }
-    
-    .creation {
-        width: 15%;
-    }
-    
-    #play, #share {
-        width: 40%;
-    }
-    
-
+  
 }
