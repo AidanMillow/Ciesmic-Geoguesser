@@ -71,6 +71,7 @@ def start_game():
     resp.set_cookie('selection_index', str(selection_index))
     resp.set_cookie('totaldifference', str(totaldifference))
     resp.set_cookie('current_score', str(current_score))
+    resp.set_cookie('submitted', 'False')
     return resp
     
 @app.route('/guess', methods = ['POST', 'GET'])
@@ -159,7 +160,10 @@ def finished_round():
     return resp
 	
 def high_score(score, gameSize):
+	submitted = str(request.cookies.get('submitted'))
 	ranking = 0
+	if submitted == 'True':
+		return "Thank you, your score has been submitted to the leaderboards!"
 	for item in Score.query.filter(Score.category == gameSize).order_by(Score.score.desc()):
 		if score > item.score:
 			return None #The HTML will check for None and display a form if it finds it
@@ -215,7 +219,9 @@ def submitScore():
 		db_session.add(User(player, "something"))
 	db_session.add(Score(player, current_score, gameSize))
 	db_session.commit()
-	return redirect(url_for('finished_round'))
+	resp = make_response(redirect(url_for('finished_round')))
+	resp.set_cookie('submitted', 'True')
+	return resp
 		
 @app.route('/next_photo', methods =['POST', 'GET'])
 def next_photo():
