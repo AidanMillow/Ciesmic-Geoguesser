@@ -19,18 +19,18 @@
             <p>Please enter your name for the leaderboards:</p>
 			<form action = "/submit" method = 'POST'>
 				<input type="text" name="player" maxlength="11"/>               
-				<button style="width:150px;height:40px;font-size:18px" value = "Start Game" class="btn btn-success">Submit Score</button>
+				<button id="submit-score" class="btn btn-success">Submit Score</button>
 			</form>
 		{% endif %}
 		</div>
         <div class="buttons">			
 			<form id="play" action = "/start" method = 'POST'>
 				<input type="hidden" name='length' value='{{gameSize}}'/>
-				<button style="width:200px;height:50px;font-size:18px" class="btn btn-success">Play Again</button>                
+				<button class="btn btn-success">Play Again</button>                
 			</form>
             <form id="share">
 				<input type="hidden" name='length' value='{{Score}}'/>
-				<button id="facebook" style="width:200px;height:50px;font-size:18px;background: url({{url_for('static', filename='images/fb-art.png')}});background-size: 200px 50px; background-repeat: no-repeat" class="btn btn-success">Share your score</button>                
+				<button id="facebook" class="btn btn-success">Share Score</button>                
 			</form>
         </div>     
         </div>
