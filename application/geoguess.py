@@ -32,7 +32,7 @@ def displayscores():
             table = [] 
             ranking = 0 #A score's rank is not recorded in the table, so it is calculated during the loop
             for item in Score.query.filter(Score.category == row.category).order_by(Score.score.desc()):
-                if ranking < 10: #Each table only displays the top ten scores
+                if ranking < 5: #Each table only displays the top ten scores
                     ranking+=1
                     Username=str(item.user.username)
                     displayscore=str(item.score)
