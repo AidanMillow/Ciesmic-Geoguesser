@@ -19,13 +19,13 @@ def displayscores():
     #This is the method used for displaying high score tables on any given page
     scoretable = [] #The array that stores the information in the high scores table
     catlist = []    #The list of different categories that have been guessed
-    for row in Score.query.distinct(Score.category):
+    for row in Score.query.distinct(Score.category).order_by(Score.category.asc()):
         if row.category not in catlist:
             catlist.append(row.category) #The method creates a seperate high score table for each category in the catlist
             table = [] #And assigns each to an array
             ranking = 0 #A score's rank is not recorded in the table, so it is calculated during the loop
             for item in Score.query.filter(Score.category == row.category).order_by(Score.score.desc()):
-                if ranking < 5: #Each table only displays the top ten scores
+                if ranking < 5: #Each table only displays the top five scores
                     ranking+=1
                     Username=str(item.user.username)
                     displayscore=str(item.score)
@@ -168,7 +168,7 @@ def high_score(score, gameSize):
 		if score > item.score:
 			return None #The HTML will check for None and display a form if it finds it
 		ranking += 1
-		if ranking >= 10:
+		if ranking >= 5:
 			return "Score to beat: " + str(item.score)
 	return None
 	
