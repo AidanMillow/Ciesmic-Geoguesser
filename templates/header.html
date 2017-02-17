@@ -1,11 +1,13 @@
 <div class="header">
     <nav class="navbar navbar-inverse navbar-fixed-top">   
-        <div class=" fluid">
+        <div class="fluid">
             <div class="navbar-header">        
+                {% if request.path == '/' %}
                 <a class="navbar-brand" style="padding:0 0" href="http://www.ceismic.org.nz">
-                    <img style="height:9vh" alt="ceismic-logo" src="{{url_for('static', filename='images/CEISMIC_logo.png')}}">
+                    <img id="ceismic-logo" alt="ceismic-logo" src="{{url_for('static', filename='images/CEISMIC_logo.png')}}">
                 </a>
-               <a href="/"><img style="height:9vh" alt="xplore-logo" src="{{url_for('static',
+               {% endif %}
+               <a href="/"><img id="xplore-logo" alt="xplore-logo" src="{{url_for('static',
  filename='images/Xplore_logo_white.png')}}"></a>          
             </div> 
            {% if request.path == '/' %}
@@ -20,7 +22,7 @@
 	{%else%}
             <div id="navbar" class="navbar-collapse collapse">	
                     <form class="navbar-form navbar-right" action = "/" method = 'GET'>   
-                        <button id="header-home" style="margin-right:10px" class="btn btn-success">Return Home</button>
+                        <button id="header-home" class="btn btn-success">Return Home</button>
                     </form>
                			
                     <div class="stats">
