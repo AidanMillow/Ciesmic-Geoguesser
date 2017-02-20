@@ -4,8 +4,12 @@
 	
 	<div class="row">
         <div class="col-sm-12">
-            <div id="map"></div> 
             
+            <div id="map"></div> 
+        </div>
+        </div>
+    <div class="row">
+        <div class="col-sm-12">
             <div class="report">
                 {{ scoreReport|safe }}        
             </div>
@@ -21,12 +25,13 @@
                 <button value= "next round" type="submit" class="btn btn-success">Finish</button>
                 {% endif %}
             </form>
-        </div>
+        
 		{% if locked=='true' %}
 	    <div class="game-error">
 		    You can only submit a score once for each photo
 		</div>
 	  {% endif %}
+        </div>
     </div>
 	<script type="text/javascript">	
 	var style = [{"featureType":"all","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#ffffff"}]},{"featureType":"all","elementType":"geometry.stroke","stylers":[{"visibility":"on"},{"color":"#84d9f4"}]},{"featureType":"all","elementType":"labels.text","stylers":[{"visibility":"simplified"},{"color":"#5f7997"}]},{"featureType":"administrative.country","elementType":"geometry.fill","stylers":[{"color":"#e13a3a"}]},{"featureType":"landscape.man_made","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#bfcce6"},{"saturation":"-76"}]},{"featureType":"landscape.man_made","elementType":"geometry.stroke","stylers":[{"visibility":"on"}]},{"featureType":"poi.business","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#7e94ba"}]}]

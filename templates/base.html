@@ -47,26 +47,7 @@
                            corner, wondering, <i>what used to be here?</i></p>
                         <p>For the past six years, <a href="www.ceismic.org.nz">CEISMIC</a> has been recording these changes. This game takes a series of images from the archive and asks you to locate them on a map of the Four Avenues. Challenge your friends to test their own knowledge and see how you measure up!</p>
 			<p>CEISMIC Xplore is about remembering and reconnecting. Xplore our city in a new and fun way!</p>
-                    </div>
-                    <div class="score-tables">
-                        {% for table in tables %}
-							
-								<table>
-                                                                   <caption>{{titles[loop.index-1]}} PHOTOS</caption>                                  
-								    <tr>
-									    <th>Rank</th>
-										<th>User</th>
-										<th>Score</th>
-								    {% for item in table %}
-									    <tr>                                        
-                                            <td>{{item['ranking']}}</td>    
-                                            <td>{{item['user']}}</td>  
-                                            <td>{{item['score']}}</td>  											
-										</tr>
-									{% endfor %}
-                                </table>												
-                        {% endfor %}
-                    </div>                     
+                    </div>                       
                 </div>
                 <div class="col-sm-5">
                     <div class="slideshow">
@@ -124,24 +105,49 @@
                             <img class="mySlides" src="{{url_for('static', filename='images/carousel/Tuam.jpg')}}"/>
                             <div class="carousel-caption">Jaren Cantlon CC BY-NC 3.0</div>
                         </div>
-                    </div>                    
-                    <div class="start-game">
-                        <form id="start" action = "/start" method = 'POST'>
-                            <label>Number of Photographs:</label>
-                             <br/>
-                            <label style="margin-left:0" class="gamesize-label" for="5">5</label>
-                            <input style="margin-left:0" class="gamesize-input" type="radio" name="length" value="5" id="5" checked>                            
-                            <label class="gamesize-label" for="10">10</label>
-                            <input class="gamesize-input" type="radio" name="length" value="10" id="10">                            
-                            <label class="gamesize-label" for="20">20</label>   
-                            <input class="gamesize-input" type="radio" name="length" value="20" id="20">     
-                            <br/>
-                                      
-                            <button id="start-button" value = "Start Game" class="btn btn-success">Start Game</button>                
-                        </form> 
-                    </div>       
+                    </div>                  
+                         
                 </div>				
             </div>
+            <div class="row">
+                <div class="col-sm-7">
+                    <div class="score-tables">
+                            {% for table in tables %}
+                                
+                                    <table>
+                                                                       <caption>{{titles[loop.index-1]}} PHOTOS</caption>                                  
+                                        <tr>
+                                            <th>Rank</th>
+                                            <th>User</th>
+                                            <th>Score</th>
+                                        {% for item in table %}
+                                            <tr>                                        
+                                                <td>{{item['ranking']}}</td>    
+                                                <td>{{item['user']}}</td>  
+                                                <td>{{item['score']}}</td>  											
+                                            </tr>
+                                        {% endfor %}
+                                    </table>												
+                            {% endfor %}
+                    </div>                                  
+            </div>
+                <div class="col-sm-5">
+                    <div class="start-game">
+                            <form id="start" action = "/start" method = 'POST'>
+                                <label>Number of Photographs:</label>
+                                 <br/>
+                                <label style="margin-left:0" class="gamesize-label" for="5">5</label>
+                                <input style="margin-left:0" class="gamesize-input" type="radio" name="length" value="5" id="5" checked>                            
+                                <label class="gamesize-label" for="10">10</label>
+                                <input class="gamesize-input" type="radio" name="length" value="10" id="10">                            
+                                <label class="gamesize-label" for="20">20</label>   
+                                <input class="gamesize-input" type="radio" name="length" value="20" id="20">     
+                                <br/>
+                                          
+                                <button id="start-button" value = "Start Game" class="btn btn-success">Start Game</button>                
+                            </form> 
+                        </div>  
+                </div>
             {% endblock %}
     </div>
                       
@@ -166,7 +172,7 @@ function carousel() {
     if (slideIndex > x.length) {slideIndex = 1} 
     x[slideIndex-1].style.display = "block"; 
     captions[slideIndex-1].style.display = "block";
-    x[slideIndex-1].style.width = "90%";
+    x[slideIndex-1].style.width = "80%";
     x[slideIndex-1].style.margin = "10% 5% 0 5%";
     setTimeout(carousel, 3000);
 }

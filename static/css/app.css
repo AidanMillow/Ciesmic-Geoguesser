@@ -96,8 +96,7 @@ h3 {
     height: 10%;   
 }
 
-.score-tables table {
-    margin-top: 2%;
+.score-tables table {   
     margin-right: 5%;
     border: 1px solid #C1C3D1;
     border-radius: 3px;
@@ -128,7 +127,7 @@ h3 {
 
 .start-game {
    text-align: center;
-   margin: 0 5% 0 5%;
+   margin: 5% 5% 0 5%;
 }
 
 .game-size {
@@ -157,7 +156,7 @@ input[type=radio] {
     padding: 0px;
     font-size: 1rem;
     height: 2rem;
-    width: 90%;
+    width: 80%;
     left: 5%; 
     padding-top: 0.5rem;
 }
