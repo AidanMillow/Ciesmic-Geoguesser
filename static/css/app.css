@@ -4,8 +4,8 @@ html {
 }
 
 body {
-    padding-top: 59px;
-    margin-bottom: 20px;    
+    padding-top: 70px;
+    margin-bottom: 70px;    
     }
 
 
@@ -156,8 +156,8 @@ input[type=radio] {
     padding: 0px;
     font-size: 1rem;
     height: 2rem;
-    width: 70%;
-    left: 15%; 
+    width: 60%;
+    left: 20%; 
     padding-top: 0.5rem;
 }
 
