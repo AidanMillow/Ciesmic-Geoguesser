@@ -11,6 +11,8 @@
         <link href="{{url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
         <link href="{{url_for('static', filename='css/app.css')}}" rel="stylesheet"> 
       <link rel="shortcut icon" href="{{url_for('static', filename='images/Xplore-favicon.ico')}}"/> 
+
+
 <script>
   window.fbAsyncInit = function() {
     FB.init({
@@ -32,7 +34,7 @@
     </head>	
       {% include 'header.html' %}    
     <body>
-    <div class="container">			
+    <div class="container-fluid">			
             {% block content %}
             <div class="row">
                 <div class="col-sm-7">
@@ -157,11 +159,15 @@ function carousel() {
     for (i = 0; i < x.length; i++) {
       x[i].style.display = "none"; 
       captions[i].style.display = "none";
+      x[i].style.margin = "0 0";
+      x[i].style.width = "0";
     }
     slideIndex++;
     if (slideIndex > x.length) {slideIndex = 1} 
     x[slideIndex-1].style.display = "block"; 
     captions[slideIndex-1].style.display = "block";
+    x[slideIndex-1].style.width = "90%";
+    x[slideIndex-1].style.margin = "10% 5% 0 5%";
     setTimeout(carousel, 3000);
 }
     </script>

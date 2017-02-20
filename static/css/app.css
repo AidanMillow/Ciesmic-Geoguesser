@@ -8,20 +8,26 @@ body {
     margin-bottom: 20px;    
     }
 
-.header {
-    color: #ffffff;
-    position: fixed;
-    height: 10vh;
+
+.navbar-inverse {
+    border-color: #b9bb00;
+    border-width: 0 0 9px;
+    background-color: #000000;
 }
 
-.navbar, .fluid, .navbar-header, .navbar-brand{    
-    height: 10vh;    
+.navbar-inverse .navbar-text {
+    color: #ffffff;
+}
+
+
+.navbar-brand img{
+    height: 70px;
 }
 
 .archive {
     float: right;
     margin: 0px 10px;
-    width: 22vw;
+    width: 22%;
 }
 
 .archive a {
@@ -30,23 +36,24 @@ body {
 
 .about, .contribute {
     float: left;    
-    padding: 3.3vh 1vw;
+    padding: 2rem 1rem;
     font-family: 'Avenir Next LT W01 Bold', Arial, Tahoma, sans-serif;
     font-size: 1.5rem;
 }
 
+.navbar-right, .navbar-left {
+    font-size: 1rem;
+    margin-right: 0;
+}
 
-.container {
+.container-fluid {
     padding: 0 0;
-    margin: 0 0;    
-    width: 100vw;
-    height: 80vh;
-    position: absolute;
-    top: 10vh;
+    margin: 0 0; 
+    min-height: 70px;   
 }
 
 .row {    
-    height: 80vh;
+    height: 100%;
    
 }
 
@@ -56,11 +63,10 @@ body {
     color: #ffffff;
     width: 100%;
     position: fixed;
-    max-height: 10vh;
+    max-height: 10%;
     font-size: 8px;     
     border-top: 1vh solid #b9bb00;
-    padding: 10px;
-    top: 90vh;
+    top: 90%;
     
 }
 
@@ -70,11 +76,9 @@ body {
 }
 
 .intro {
-    margin-top: 10vh;
-    margin-left: 5rem;
     font-size: 1.5rem;
     text-align: left;
-    height: 36vh;
+    margin: 8% 5% 0 5%
 }
 
 
@@ -82,19 +86,19 @@ h3 {
     font-size: 3rem;   
     margin-top: 0px;
     padding-top: 0px;
-    margin-bottom: 4rem;
+    margin-bottom: 3%;
     font-weight: bold;
 
 }
 
 .score-tables {
     margin-left: 5rem;
-    height: 10vh;   
+    height: 10%;   
 }
 
 .score-tables table {
-    margin-top: 3rem;
-    margin-right: 2vw;
+    margin-top: 2%;
+    margin-right: 5%;
     border: 1px solid #C1C3D1;
     border-radius: 3px;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);    
@@ -123,17 +127,13 @@ h3 {
 
 
 .start-game {
-   height: 15vh;
    text-align: center;
-   margin: 1rem 0 0 1rem;
-   float: left;
+   margin: 0 5% 0 5%;
 }
 
 .game-size {
     margin: 1rem 5rem 0 0;
     font-size: 1.5rem;
-    width: 66vh;
-    float: left;
 }
 
 
@@ -145,25 +145,10 @@ input[type=radio] {
     margin: 4px 0 0 0;
 }
 
-#start {
-    width: 66vh;
-    float: left;
-    margin-right: 5rem;
-}
-
 .slideshow {
-    height: 50vh;
     width: 100%;    
-    margin: 1rem 1rem;
     display: block;
 }
-
-.mySlides, .carousel-item {    
-    max-width: 66vh; 
-    max-height: 50vh;
-    margin: 10vh 5rem auto auto;
-}
-
 
 .carousel-caption {
     position: relative;    
@@ -172,8 +157,8 @@ input[type=radio] {
     padding: 0px;
     font-size: 1rem;
     height: 2rem;
-    width: 66vh;
-    left: 0px; 
+    width: 90%;
+    left: 5%; 
     padding-top: 0.5rem;
 }
 
@@ -197,9 +182,9 @@ input[type=radio] {
 }
 
 table, td, th {
-	padding-right: 10px;
-	padding-left: 10px;
-	border: 1px solid black;    
+    padding-right: 10px;
+    padding-left: 10px;
+    border: 1px solid black;    
 }
 
 .final-score table {
@@ -208,33 +193,17 @@ table, td, th {
 
 
 .thumb {
-max-width: 200px;
-max-height: 200px;
-
-}
-
-.navbar-inverse {
-    border-color: #b9bb00;
-    border-width: 0 0 1vh;
-    background-color: #000000
-}   
-
-.navbar-inverse .navbar-text {
-color: #ffffff;
-}
-
-.navbar-right {
-padding-top: 5px;
-margin-right: 1px;
+    max-width: 200px;
+    max-height: 200px;
 }
 
 
 .navbar-form  .form-control{
-font-size: 8px;
+    font-size: 8px;
 }
 
 .navbar-form  .form-control {
-height: 50%;
+    height: 50%;
 }
 
 .navbar-right  button {
@@ -264,30 +233,26 @@ height: 50%;
 }
 
 #start-button {
-    width:15vw;
-    height:7vh;
     font-size:1.5rem;
     margin: 1rem 0;
 }
 
 .photo {    
-    height: 80vh;
-    text-align: center;
-    
+    height: 600px;
+   
 }
 
 .photo-info {   
     color: #ffffff;
     float: left;
-    font-size: 10px;
-    
+  
 }
 
 #map {    
     position: absolute;
     top: 0px;
     width: 100%; 
-    height: 80vh;
+    height: 600px;
 }
 
 .flashes {
@@ -296,47 +261,43 @@ height: 50%;
 }
 
 .guess {
-    width: 100%;
-    height: 10vh;  
+    width: 100%;  
     position: absolute;
-    top: 70vh;
+    top: 480px;
     text-align: center;
 }
 
-#guess {
-    width:200px;
-    height:50px;
-    font-size:15px;
-}
 
 .next {    
     position: absolute;
     left: 50%;
-    top: 70vh;
+    top: 480px;
     width: 50%;
+    height: 200px;
+    background-color: #ffffff;
     
 }
 
 .view-image {
     position: absolute;
     left: 0;
-    top: 70vh;
+    top: 480px;
     width: 50%;
+    height: 200px;
+    background-color: #ffffff;
 }
 
 .next button, .view-image button {
     display: block;
     margin: auto;
-    width: 30%;    
+    min-width: 30%;    
 }
 
 .game-error {
     position: absolute;
-    width: 70vw;
-    margin: 0 15vw;
-    padding: 2rem 0; 
-    top: 30vh;
-    height: 10vh;
+    top: 300px;
+    width: 100%;	 
+    padding: 2rem 2rem; 
     text-align: center;
     font-size: 2rem;
     color: #ffffff;
@@ -346,11 +307,13 @@ height: 50%;
 
 .report {
     position: absolute;
-    top: 60vh;
+    top: 430px;
     text-align: center;
-    font-size: 20px;
+    font-size: 2rem;
     width: 100%;
+    height: 50px;
     padding-top: 10px;
+    background-color: #ffffff;
 }
 
 
@@ -435,11 +398,6 @@ meter {
         padding: 0;
     }
     
-    .intro {
-        padding: 2rem 5rem;
-        font-size: 1rem;
-        text-align: left;
-    }
     
     #guess-mobile {
         display: block;
@@ -450,10 +408,7 @@ meter {
         display: none;
     }
     
-    .game-size, #start {
-        padding-left: 5rem;
-    }
-    
+     
     .next button, .view-image button {    
         width: auto;
     }    
@@ -466,8 +421,8 @@ meter {
         z-index: 1; /* Stay on top */
         top: 10vh;
         left: 0;
+        overflow-x: hidden;
         background-color: #111; /* Black*/
-        overflow-x: hidden; /* Disable horizontal scroll */        
         transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
     }
 
@@ -502,20 +457,20 @@ meter {
     }
     
     #show-map {
-        width: 8vw;
+        width: 10%;
         position: absolute;
         top: 0;
         left: 0;        
-        height: 80vh;
+        height: 100%;
         border-radius: 0 4px 4px 0;
     }
     
     #show-image {
-        width: 8vw;
+        width: 10%;
         position: absolute;
         top: 0;
-        left: 92vw;        
-        height: 80vh;
+        left: 90%;        
+        height: 100%;
         border-radius: 0 4px 4px 0;
     }
     
@@ -536,8 +491,8 @@ meter {
     }
     
     #mobile-map {
-        width: 92vw;
-        height: 80vh;
+        width: 92%;
+        height: 600px;
     }
     
     #mobile-guess {

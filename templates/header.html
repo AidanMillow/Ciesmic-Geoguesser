@@ -1,11 +1,11 @@
 <div class="header">
     <nav class="navbar navbar-inverse navbar-fixed-top">   
-        <div class=" fluid">
+        <div class="container-fluid">
             <div class="navbar-header">        
-                <a class="navbar-brand" style="padding:0 0" href="http://www.ceismic.org.nz">
-                    <img style="height:9vh" alt="ceismic-logo" src="{{url_for('static', filename='images/CEISMIC_logo.png')}}">
+                <a class="navbar-brand" style="padding:0 0;margin-left:0" href="http://www.ceismic.org.nz">
+                    <img alt="ceismic-logo" src="{{url_for('static', filename='images/CEISMIC_logo.png')}}">
                 </a>
-               <a href="/"><img style="height:9vh" alt="xplore-logo" src="{{url_for('static',
+               <a class="navbar-brand" style="padding: 0 0; margin-left:0" href="/"><img alt="xplore-logo" src="{{url_for('static',
  filename='images/Xplore_logo_white.png')}}"></a>          
             </div> 
            {% if request.path == '/' %}
