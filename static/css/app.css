@@ -457,7 +457,7 @@ meter {
     }
     
     #show-map {
-        width: 10%;
+        width: 10vw;
         position: absolute;
         top: 0;
         left: 0;        
@@ -466,11 +466,11 @@ meter {
     }
     
     #show-image {
-        width: 10%;
+        width: 10vw;
         position: absolute;
         top: 0;
-        left: 90%;        
-        height: 100%;
+        left: 90vw;        
+        height: 80vh;
         border-radius: 0 4px 4px 0;
     }
     
@@ -491,8 +491,8 @@ meter {
     }
     
     #mobile-map {
-        width: 92%;
-        height: 550px;
+        width: 92vw;
+        height: 80vh;
     }
     
     #mobile-guess {
