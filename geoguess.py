@@ -59,12 +59,12 @@ def start_game():
     current_score = 0
     PhotoNo = random_photo(photolist,selection_index)
     for photo in photolist:        
-        if PhotoNo == photo['PhotoNum']:            
+        if PhotoNo == photo['PhotoNum']:
             creator = photo['creator']
             license = photo['license']
     error = user_error
     user_error = None
-    resp = make_response(render_template("guess.html", PhotoNo = random_photo(photolist,selection_index), rounds = len(photolist), score = current_score, round = Round, creator = creator, license = license, locked='false', error=flash))
+    resp = make_response(render_template("guess.html", PhotoNo = PhotoNo, rounds = len(photolist), score = current_score, round = Round, creator = creator, license = license, locked='false', error=flash))
     resp.set_cookie('imagenumber', str(Round))
     resp.set_cookie('rounds', str(gameSize))
     resp.set_cookie('photolist', str(photolist))
