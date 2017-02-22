@@ -34,7 +34,17 @@
         </div>
     </div>
 	<script type="text/javascript">	
-	var style = [{"featureType":"all","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#ffffff"}]},{"featureType":"all","elementType":"geometry.stroke","stylers":[{"visibility":"on"},{"color":"#84d9f4"}]},{"featureType":"all","elementType":"labels.text","stylers":[{"visibility":"simplified"},{"color":"#5f7997"}]},{"featureType":"administrative.country","elementType":"geometry.fill","stylers":[{"color":"#e13a3a"}]},{"featureType":"landscape.man_made","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#bfcce6"},{"saturation":"-76"}]},{"featureType":"landscape.man_made","elementType":"geometry.stroke","stylers":[{"visibility":"on"}]},{"featureType":"poi.business","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#7e94ba"}]}]
+	var style = [
+            {"featureType":"all","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#dceddc"}]},
+            {"featureType":"all","elementType":"geometry.stroke","stylers":[{"visibility":"on"},{"color":"#84d9f4"}]},
+            {"featureType":"all","elementType":"labels.text","stylers":[{"visibility":"simplified"},{"color":"#5f7997"}]},
+            {"featureType":"administrative.country","elementType":"geometry.fill","stylers":[{"color":"#e13a3a"}]},
+            {"featureType":"landscape.man_made","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#bfcce6"},{"saturation":"-76"}]},
+            {"featureType":"landscape.man_made","elementType":"geometry.stroke","stylers":[{"visibility":"on"}]},
+            {"featureType":"poi.business","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#7e94ba"}]},
+            {"featureType":"road","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#ffffff"},{"saturation":"-76"}]}, 
+            {"featureType":"water","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#2c3ee8"},{"saturation":"-76"}]},            
+        ]   
     
     var flag = {    url: "{{url_for('static', filename='images/flag.png')}}",
                     scaledSize: new google.maps.Size(30,30)       
