@@ -380,14 +380,33 @@ meter {
 
 
 @media (max-width: 767px) {
+   
+   .footer {
+       top: 90vh;
+       height: 10vh;
+   }
+   
+   .navbar-right {
+    display:none;
+   }
+   
    .slideshow {
 	display: none;
-} 
-
+    } 
+  
+    .navbar-inverse {
+        height: 10vh;
+        border-width: 0 0 1vh;
+    }
+    
+    
     .navbar-header {
         float: left;        
     }    
-          
+    
+    .navbar-brand img {
+        height: 9vh;
+    }    
             
     .score-tables {
         display: none;
@@ -408,7 +427,21 @@ meter {
         display: none;
     }
     
-     
+    .sweet-alert {
+        width: 70vw;
+        top: 50vh;
+        left: 20vw;        
+    }
+    
+    .sweet-alert h2 {
+        font-size: 16px;
+    }
+    
+    .sweet-alert p {
+        font-size: 12px;
+    }
+    
+        
     .next button, .view-image button {    
         width: auto;
     }    
@@ -457,16 +490,16 @@ meter {
     }
     
     #show-map {
-        width: 10vw;
+        width: 15vw;
         position: absolute;
-        top: 0;
+        top: 10vh;
         left: 0;        
-        height: 100%;
+        height: 80vh;;
         border-radius: 0 4px 4px 0;
     }
     
     #show-image {
-        width: 10vw;
+        width: 15vw;
         position: absolute;
         top: 0;
         left: 90vw;        
@@ -481,17 +514,18 @@ meter {
         -o-transform: rotate(-90deg);
         transform: rotate(-90deg);
         position: absolute;
-        left: -3vw;
+        left: -5vw;
     }
     
     .photo {
         position: absolute;
-        top: 0px;
+        top: 10vh;
         left: 7vw;
+        height: 80vh;
     }
     
     #mobile-map {
-        width: 92vw;
+        width: 120vw;
         height: 80vh;
     }
     
