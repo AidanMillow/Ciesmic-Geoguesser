@@ -1,8 +1,7 @@
 {% extends "base.html" %}
 
-{% block content %}  
-	
-    <div id="guess-desktop" class="row">
+{% block content %}
+<div id="guess-desktop" class="row">
         <div class="col-sm-6" style="text-align:center">            
             <img class="photo" src="https://quakestudies.canterbury.ac.nz/store/download/part/{{PhotoNo}}"> 
         </div>
@@ -39,7 +38,14 @@
 		You can only submit a score once for each photo
 	</div>
 	{% endif %}
-    
+     <script>
+               swal({               
+               title: "Just to let you know...",
+               text: "<div style='text-align:left;'><p style='margin-bottom:1rem'>This game includes images of damaged buildings and rubble in the Christchurch Central City.</p><p>We have done our best to remove images that may be sensitive, but if you discover an image that you think should be excluded, please contact us at <a href='mailto:ceismic@canterbury.ac.nz'>ceismic@canterbury.ac.nz</a></p></div>",               
+               html: true,
+               confirmButtonText: "Got it!"
+            });
+        </script>
     <script type="text/javascript">	
         var style = [{"featureType":"all","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#ffffff"}]},{"featureType":"all","elementType":"geometry.stroke","stylers":[{"visibility":"on"},{"color":"#84d9f4"}]},{"featureType":"all","elementType":"labels.text","stylers":[{"visibility":"simplified"},{"color":"#5f7997"}]},{"featureType":"administrative.country","elementType":"geometry.fill","stylers":[{"color":"#e13a3a"}]},{"featureType":"landscape.man_made","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#bfcce6"},{"saturation":"-76"}]},{"featureType":"landscape.man_made","elementType":"geometry.stroke","stylers":[{"visibility":"on"}]},{"featureType":"poi.business","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#7e94ba"}]}]        
 
