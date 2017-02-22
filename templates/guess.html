@@ -72,7 +72,8 @@
         }
         
         function displayMap(map_div,type) {            
-            var map = new google.maps.Map(map_div, {zoom: 14, styles: style, center: new google.maps.LatLng(-43.531,172.632), mapTypeId: google.maps.MapTypeId.ROADMAP});            
+            var map = new google.maps.Map(map_div, {zoom: 14, styles: style, center: new google.maps.LatLng(-43.531,172.632), mapTypeId: google.maps.MapTypeId.ROADMAP});
+            map.setClickableIcons(false);            
             markers=[];
             google.maps.event.addListener(map,'click', function(event){
                 for (var i=0; i < markers.length; i++){
