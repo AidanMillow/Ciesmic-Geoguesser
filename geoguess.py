@@ -25,7 +25,7 @@ def displayscores():
             table = [] #And assigns each to an array
             ranking = 0 #A score's rank is not recorded in the table, so it is calculated during the loop
             for item in Score.query.filter(Score.category == row.category).order_by(Score.score.desc()):
-                if ranking < 5: #Each table only displays the top five scores
+                if ranking < 10: #Each table only displays the top ten scores
                     ranking+=1
                     Username=str(item.user.username)
                     displayscore=str(item.score)
@@ -160,6 +160,7 @@ def finished_round():
     return resp
 	
 def high_score(score, gameSize):
+	#This function determines whether a score is high enough to be put into the high scores
 	submitted = str(request.cookies.get('submitted'))
 	ranking = 0
 	if submitted == 'True':
@@ -168,7 +169,7 @@ def high_score(score, gameSize):
 		if score > item.score:
 			return None #The HTML will check for None and display a form if it finds it
 		ranking += 1
-		if ranking >= 5:
+		if ranking >= 10:
 			return "Score to beat: " + str(item.score)
 	return None
 	
@@ -192,7 +193,7 @@ def display_final_scores():
     return displaytable	
 
 def report(diff):
-    #This function flashes a error for the user depending on how close they got
+    #This function flashes an error for the user depending on how close they got
 	
     error = "Your guess was <b>"+str(diff)+" m</b> away from the correct location."    
     try:
@@ -203,6 +204,7 @@ def report(diff):
 
 @app.route('/submit', methods = ['POST'])
 def submitScore():
+	#Names for the high score table are filtered before being added to the database
 	gameSize = request.cookies.get('rounds')
 	current_score = int(request.cookies.get('current_score'))
 	player = str(request.form["player"]).lower()

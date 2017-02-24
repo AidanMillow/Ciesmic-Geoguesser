@@ -15,7 +15,7 @@
 		{% if highscore != None %}
 			{{ highscore }}
 		{% else %}
-			<p>Your score is in the top five of this category to date!</p>
+			<p>Your score is in the top ten of this category to date!</p>
             <p>Please enter your name for the leaderboards:</p>
 			<form action = "/submit" method = 'POST'>
 				<input type="text" name="player" maxlength="11"/>               
@@ -40,7 +40,7 @@
                 method: 'share',
                 display: 'popup',
                 href: 'http://xplore.ceismic.org.nz',           
-                quote: 'I got a score of ' + {{score}} + ' on CEISMIC Xplore!',
+                quote: 'I got a score of ' + {{score}} + ' for guessing ' + {{gameSize}} + ' photos on CEISMIC Xplore!',
                 description: "This game takes a series of images from CEISMIC archive and asks you to locate them on a map of CHCH's Four Avenues. Challenge your friends to test their own knowledge and see how you measure up! CEISMIC Xplore is about remembering and reconnecting. Xplore our city in a new and fun way!",
               }, function(response){});
             }
