@@ -46,8 +46,13 @@
         {% include 'footer.html' %}
 
         <script>
-            var slideIndex = 0;
-            carousel();
+			try {
+				var slideIndex = 0;
+				carousel();
+			}
+			catch(TypeError){
+				var slideIndex = 0;
+			}
 
             function carousel() {
                 var i;
