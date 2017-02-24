@@ -66,7 +66,8 @@
     bound.extend(new google.maps.LatLng(parseFloat(glat), parseFloat(glong)))
     var center = bound.getCenter()
     
-    var map = new google.maps.Map(document.getElementById('map'), {zoom: 15, styles: style, center: center, mapTypeId: google.maps.MapTypeId.ROADMAP});    
+    var map = new google.maps.Map(document.getElementById('map'), {zoom: 15, styles: style, center: center, mapTypeId: google.maps.MapTypeId.ROADMAP});
+    map.fitBounds(bound); 
 	var GuessMarker = new google.maps.Marker({position: new google.maps.LatLng(parseFloat(glat), parseFloat(glong)), map: map, icon:cross});
 	var LocationMarker = new google.maps.Marker({position: new google.maps.LatLng(parseFloat(actlat), parseFloat(actlong)), map: map, icon:flag});
 	   

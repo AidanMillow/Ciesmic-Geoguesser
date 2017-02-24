@@ -271,7 +271,7 @@ table, td, th {
 .next {    
     position: absolute;
     left: 50%;
-    top: 450px;
+    top: 600px;
     width: 50%;
     height: 100px;
     background-color: #ffffff;
@@ -281,7 +281,7 @@ table, td, th {
 .view-image {
     position: absolute;
     left: 0;
-    top: 450px;
+    top: 600px;
     width: 50%;
     height: 100px;
     background-color: #ffffff;
@@ -307,7 +307,7 @@ table, td, th {
 
 .report {
     position: absolute;
-    top: 400px;
+    top: 550px;
     text-align: center;
     font-size: 1.5rem;
     width: 100%;
