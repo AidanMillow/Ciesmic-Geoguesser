@@ -89,7 +89,7 @@ def new_guess():
             license = photo['license']
     error = user_error
     user_error = None
-    resp = make_response(render_template("guess.html", PhotoNo = random_photo(photolist,selection_index), error = flash, score = current_score, rounds = len(photolist), round = Round, creator = creator, license = license, locked = 'false'))
+    resp = make_response(render_template("guess.html", PhotoNo =PhotoNo, error = flash, score = current_score, rounds = len(photolist), round = Round, creator = creator, license = license, locked = 'false'))
     return resp
 
 @app.route('/check', methods =['POST'])
